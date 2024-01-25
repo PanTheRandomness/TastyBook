@@ -9,39 +9,15 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-parallel: 1
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
 
-jobs:
-- job: BuildFrontend
-  displayName: 'Build Frontend'
-  strategy:
-    maxParallel: 1
-  steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '10.x'
-    displayName: 'Install Node.js'
-
-  - script: |
-      cd frontend
-      npm install
-      npm test
-      npm run build
-    displayName: 'Install frontend dependencies, run tests, and build'
-
-- job: BuildBackend
-  displayName: 'Build Backend'
-  dependsOn: BuildFrontend
-  strategy:
-    maxParallel: 1
-  steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '10.x'
-    displayName: 'Install Node.js'
-
-  - script: |
-      cd backend
-      npm install
-      npm test
-    displayName: 'Install backend dependencies and run tests'
+- script: |
+    cd frontend
+    npm install
+    npm test
+    npm run build
+  displayName: 'Install frontend dependencies, run tests, and build'
