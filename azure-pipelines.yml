@@ -12,6 +12,8 @@ pool:
 jobs:
 - job: BuildFrontend
   displayName: 'Build Frontend'
+  strategy:
+    maxParallel: 1
   steps:
   - task: NodeTool@0
     inputs:
@@ -28,6 +30,8 @@ jobs:
 - job: BuildBackend
   displayName: 'Build Backend'
   dependsOn: BuildFrontend
+  strategy:
+    maxParallel: 1
   steps:
   - task: NodeTool@0
     inputs:
