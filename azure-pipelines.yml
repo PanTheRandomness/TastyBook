@@ -9,6 +9,8 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+parallel: 1
+
 jobs:
 - job: BuildFrontend
   displayName: 'Build Frontend'
