@@ -22,14 +22,14 @@ const SignupPage = ({ onLogin }) => {
     return (
         <div className="contentContainer">
             <form onSubmit={onSignupClicked}>
-                <h1>Rekisteröidy</h1>
+                <h1>Register</h1>
                 {errorMessage && <div>{errorMessage}</div>}
                 <input placeholder="nimimerkki" value={username} onChange={e => setUsername(e.target.value)} />
                 <input placeholder="salasana" type="password" value={password} onChange={e => setPassword(e.target.value)} />
                 <button disabled={!username || !password}>Rekisteröidy</button>
             </form>
             
-            <div>Oletko jo rekisteröitynyt?</div>
+            <div>Have you already registered?</div>
             <button onClick={() => navigate("/login")}>Kirjaudu</button>
         </div>
     );
