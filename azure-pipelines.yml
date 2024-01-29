@@ -9,7 +9,7 @@ pool:
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: 'lts/*'
+    versionSpec: '14.x'
   displayName: 'Install Node.js'
 - script: |
     cd backend
