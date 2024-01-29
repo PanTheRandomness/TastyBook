@@ -1,8 +1,8 @@
 const { executeSQL } = require("./executeSQL");
 
-const findUserByUsername = (username) => {
-    let query = "SELECT * FROM user WHERE username=?";
-    return executeSQL(query, [username]);
+const findUserByUsernameAndEmail = (username, email) => {
+    let query = "SELECT * FROM user WHERE username=? OR email=?";
+    return executeSQL(query, [username, email]);
 }
 
 // 1 if not empty, 0 if empty
@@ -11,11 +11,11 @@ const isUserTableNotEmpty = () => {
     return executeSQL(query, []);
 }
 
-const addUser = (username, name, email, password, registrationState, admin) => {
-    let params = [username, name, email, password, registrationState];
-    let query = "INSERT INTO user (username, name, email, password, registrationState";
+const addUser = (username, name, email, password, admin) => {
+    let params = [username, name, email, password];
+    let query = "INSERT INTO user (username, name, email, password";
     if (admin) query += ", admin";
-    query += ") VALUES (?,?,?,?,?";
+    query += ") VALUES (?,?,?,?";
     if (admin) {
         query += ",?";
         params.push(admin);
@@ -25,4 +25,4 @@ const addUser = (username, name, email, password, registrationState, admin) => {
     return executeSQL(query, params);
 }
 
-module.exports = { findUserByUsername, isUserTableNotEmpty, addUser };
+module.exports = { findUserByUsernameAndEmail, isUserTableNotEmpty, addUser };

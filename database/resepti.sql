@@ -24,7 +24,6 @@ CREATE TABLE IF NOT EXISTS `recipedb`.`User` (
   `email` VARCHAR(255) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   `admin` TINYINT NULL,
-  `registrationState` VARCHAR(45) NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -36,7 +35,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `recipedb`.`Recipe` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `User_id` INT NOT NULL,
-  `hash` VARCHAR(45) NULL,
+  `hash` VARCHAR(45) NOT NULL,
   `header` VARCHAR(45) NOT NULL,
   `description` VARCHAR(2000) NOT NULL,
   `visibleToAll` TINYINT NULL,
