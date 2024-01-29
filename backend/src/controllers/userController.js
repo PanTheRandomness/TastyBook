@@ -23,7 +23,7 @@ const signup = async (req, res) => {
         const token = await signJWT(result.insertId, username);
         res.status(200).json({ token });
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send();
     }
 }
 
