@@ -1,6 +1,6 @@
 var bcrypt = require("bcrypt");
-var jwt = require("jsonwebtoken");
 const sql = require("../db/userSQL");
+const { signJWT } = require("./signJWT");
 
 const signup = async (req, res) => {
     try {
@@ -32,7 +32,7 @@ const login = async (req, res) => {
         const { username, password } = req.body;
         if (!username || !password) return res.status(400).send();
         
-        const user = await sql.findUserByUsername(username);
+        const user = await sql.findUserByUsernameAndEmail(username);
         if (user.length === 0) return res.status(401).send();
 
         const isCorrect = await bcrypt.compare(password, user[0]["password"]);
@@ -43,21 +43,6 @@ const login = async (req, res) => {
     } catch (error) {
         res.status(500).send();
     }
-}
-
-// Signs jwt with user's id and username
-const signJWT = (userId, username) => {
-    return new Promise((resolve, reject) => {
-        jwt.sign(
-            { id: userId, user: username },
-            process.env.JWT_SECRET,
-            { expiresIn: "2h" },
-            (err, token) => {
-                if (err) reject(err);
-                resolve(token);
-            }
-        )
-    });
 }
 
 module.exports = { signup, login };

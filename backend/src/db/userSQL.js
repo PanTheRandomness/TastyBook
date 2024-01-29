@@ -1,8 +1,13 @@
 const { executeSQL } = require("./executeSQL");
 
 const findUserByUsernameAndEmail = (username, email) => {
-    let query = "SELECT * FROM user WHERE username=? OR email=?";
-    return executeSQL(query, [username, email]);
+    let params = [username];
+    let query = "SELECT * FROM user WHERE username=?";
+    if (email) {
+        params.push(email);
+        query += " OR email=?";
+    }
+    return executeSQL(query, params);
 }
 
 // 1 if not empty, 0 if empty
