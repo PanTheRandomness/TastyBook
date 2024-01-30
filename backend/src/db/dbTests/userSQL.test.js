@@ -1,7 +1,7 @@
-const { addUser, findUserByUsernameAndEmail } = require("./userSQL");
-const { executeSQL } = require("./executeSQL");
+const { addUser, findUserByUsernameAndEmail } = require("../userSQL");
+const { executeSQL } = require("../executeSQL");
 
-jest.mock("./executeSQL", () => ({
+jest.mock("../executeSQL", () => ({
     executeSQL: jest.fn(),
 }));
 

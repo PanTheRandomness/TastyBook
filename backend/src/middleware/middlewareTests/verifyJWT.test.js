@@ -1,4 +1,4 @@
-const { verifyJWT } = require("./verifyJWT");
+const { verifyJWT } = require("../verifyJWT");
 const jwt = require("jsonwebtoken");
 
 jest.mock("jsonwebtoken", () => ({
