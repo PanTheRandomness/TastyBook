@@ -29,12 +29,12 @@ describe("verifyJWT middleware", () => {
         const token = "valid-token";
         req.headers.authorization = `Bearer ${token}`;
 
-        jwt.verify.mockReturnValueOnce({ userId: "123", username: "testuser" });
+        jwt.verify.mockReturnValueOnce({ userId: "123", username: "testuser", role: null });
 
         verifyJWT(req, res, next);
 
         expect(jwt.verify).toHaveBeenCalledWith(token, process.env.JWT_SECRET);
-        expect(req.user).toEqual({ userId: "123", username: "testuser" });
+        expect(req.user).toEqual({ userId: "123", username: "testuser", role: null });
         expect(next).toHaveBeenCalled();
         expect(res.status).not.toHaveBeenCalled();
         expect(res.send).not.toHaveBeenCalled();

@@ -18,8 +18,9 @@ let ctrl = require("../controllers/userController");
     Jos username tai email löytyy jo tietokannasta, palauttaa statuskoodin 409
 
     Jos rekisteröityminen onnistuu, palauttaa statuskoodin 200, ja token objektin JSON-muodossa
-    "token": "xxxx.yyyy.zzzz"
-    jossa yyyy on käyttäjä encoded, ja jolla on id ja user kentät (user tarkoittaa usernamea tässä)
+    {"token": "xxxx.yyyy.zzzz"}
+    jossa yyyy on käyttäjä encoded, ja jolla on id, username ja role -kentät (jos käyttäjä on admin, role = "admin", muuten role = null)
+    Tokenilla on kaksi tuntia käyttöaikaa
     
     Jos rekisteröityminen ei onnistu muusta syystä, palauttaa statuskoodin 500
 

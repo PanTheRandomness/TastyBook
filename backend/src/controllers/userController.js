@@ -16,11 +16,15 @@ const signup = async (req, res) => {
 
         // Adds user as admin if user table is empty
         let result;
+        let role = null;
         const notEmpty = await sql.isUserTableNotEmpty();
         if (notEmpty[0]["EXISTS (SELECT 1 FROM user)"]) result = await sql.addUser(username, name, email, passwordHash);
-        else result = await sql.addUser(username, name, email, passwordHash, 1);
+        else {
+            result = await sql.addUser(username, name, email, passwordHash, 1);
+            role = "admin";
+        }
         
-        const token = await signJWT(result.insertId, username);
+        const token = await signJWT(result.insertId, username, role);
         res.status(200).json({ token });
     } catch (error) {
         res.status(500).send();
@@ -37,8 +41,12 @@ const login = async (req, res) => {
 
         const isCorrect = await bcrypt.compare(password, user[0]["password"]);
         if (!isCorrect) return res.status(401).send();
+        
+        let role = null;
+        const admin = user[0]["admin"];
+        if (admin) role = "admin";
 
-        const token = await signJWT(user[0]["id"], username);
+        const token = await signJWT(user[0]["id"], username, role);
         res.status(200).json({ token });
     } catch (error) {
         res.status(500).send();
