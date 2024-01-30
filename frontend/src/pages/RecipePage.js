@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 //Uniikit URL:it
 //poistopainike + varmistus
 
@@ -20,6 +20,7 @@ const Recipe = () =>{
     return(
         <div className='RecipeContainer'>
             <RecipeHead />
+            <h2>Ingredients:</h2>
             <RecipeIngredients ingredients={ingredients}/>
             <RecipeSteps steps={steps}/>
             <RecipeReviews reviews={reviews}/>
@@ -36,7 +37,7 @@ const RecipeHead = (props) =>{
             <p>Description</p>
             <div>kuva sivummalle</div>
             <p>Creator <i>Created</i></p>
-            <div>Star-rating, duration</div>
+            <div>Star-rating, duration h, min</div>
             <div>Keywords_list</div> <br/>
         </div>
     );
@@ -50,7 +51,6 @@ const RecipeIngredients = (props)=>{
 
     return(
         <table>
-            <caption>Ingredients</caption>
             <tbody>{ingredientList}</tbody>
         </table>
     );

@@ -11,7 +11,7 @@ import { AddRecipe } from './pages/AddRecipePage';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Recipe />
+    <AddRecipe />
   </React.StrictMode>
 );
 
