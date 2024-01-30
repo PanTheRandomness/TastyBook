@@ -1,6 +1,6 @@
-const { verifyAdmin } = require("../verifyAdminMiddleware");
+const { verifyAdmin } = require("../verifyAdmin");
 
-describe("verifyAdmin middleware", () => {
+describe("verifyAdmin", () => {
     let req, res, next;
 
     beforeEach(() => {
@@ -20,17 +20,17 @@ describe("verifyAdmin middleware", () => {
         jest.clearAllMocks();
     });
 
-    it("should pass with admin role", async () => {
-        await verifyAdmin(req, res, next);
+    it("should pass with admin role", () => {
+        verifyAdmin(req, res, next);
 
         expect(next).toHaveBeenCalled();
     });
 
-    it("should handle non-admin user with 401 status code", async () => {
+    it("should handle non-admin user with 401 status code", () => {
         // Set the role to a non-admin value
         req.user.role = null;
 
-        await verifyAdmin(req, res, next);
+        verifyAdmin(req, res, next);
 
         expect(res.status).toHaveBeenCalledWith(401);
         expect(res.send).toHaveBeenCalled();

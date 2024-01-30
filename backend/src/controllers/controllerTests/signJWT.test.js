@@ -3,7 +3,7 @@ const { signJWT } = require("../signJWT");
 
 jest.mock("jsonwebtoken");
 
-describe("signJWT function", () => {
+describe("signJWT", () => {
     afterEach(() => {
         jest.resetAllMocks();
     });

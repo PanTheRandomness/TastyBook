@@ -1,11 +1,9 @@
 const { verifyJWT } = require("../verifyJWT");
 const jwt = require("jsonwebtoken");
 
-jest.mock("jsonwebtoken", () => ({
-    verify: jest.fn(),
-}));
+jest.mock("jsonwebtoken");
 
-describe("verifyJWT middleware", () => {
+describe("verifyJWT", () => {
     let req, res, next;
 
     beforeEach(() => {
@@ -29,12 +27,12 @@ describe("verifyJWT middleware", () => {
         const token = "valid-token";
         req.headers.authorization = `Bearer ${token}`;
 
-        jwt.verify.mockReturnValueOnce({ userId: "123", username: "testuser", role: null });
+        jwt.verify.mockReturnValueOnce({ id: 123, username: "testuser", role: null });
 
         verifyJWT(req, res, next);
 
         expect(jwt.verify).toHaveBeenCalledWith(token, process.env.JWT_SECRET);
-        expect(req.user).toEqual({ userId: "123", username: "testuser", role: null });
+        expect(req.user).toEqual({ id: 123, username: "testuser", role: null });
         expect(next).toHaveBeenCalled();
         expect(res.status).not.toHaveBeenCalled();
         expect(res.send).not.toHaveBeenCalled();

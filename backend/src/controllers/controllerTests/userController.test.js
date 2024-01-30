@@ -1,13 +1,13 @@
 const bcrypt = require("bcrypt");
 const { signJWT } = require("../signJWT");
 const sql = require("../../db/userSQL");
-const { signup, login } = require("../userController");
+const { signup, login, getAllUsers, deleteUser } = require("../userController");
 
 jest.mock("bcrypt");
 jest.mock("../signJWT");
 jest.mock("../../db/userSQL");
 
-describe("signup function", () => {
+describe("signup", () => {
     let req, res;
 
     beforeEach(() => {
@@ -75,7 +75,7 @@ describe("signup function", () => {
     });
 });
 
-describe("login function", () => {
+describe("login", () => {
     let req, res;
 
     beforeEach(() => {
@@ -145,6 +145,87 @@ describe("login function", () => {
 
         await login(req, res);
 
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalled();
+    });
+});
+
+describe("getAllUsers", () => {
+    let req, res;
+
+    beforeEach(() => {
+        req = {};
+        res = {
+            status: jest.fn(() => res),
+            json: jest.fn(),
+            send: jest.fn(),
+        };
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+    
+    it("should return users when getAllUsers is successful", async () => {
+        const mockUsers = [{ id: 1, username: "user1" }, { id: 2, username: "user2" }];
+        sql.getAllUsers.mockResolvedValue(mockUsers);
+
+        await getAllUsers(req, res);
+
+        expect(sql.getAllUsers).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ users: mockUsers });
+        expect(res.send).not.toHaveBeenCalled();
+    });
+
+    it("should handle errors and return 500 status on failure", async () => {
+        const mockError = new Error("Database error");
+        sql.getAllUsers.mockRejectedValue(mockError);
+
+        await getAllUsers(req, res);
+
+        expect(sql.getAllUsers).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalled();
+        expect(res.json).not.toHaveBeenCalled();
+    });
+});
+
+describe("deleteUser", () => {
+    const userId = 123;
+    let req, res;
+
+    beforeEach(() => {
+        req = {
+            params: {
+                userId: userId,
+            },
+        };
+        res = {
+            status: jest.fn(() => res),
+            send: jest.fn(),
+        };
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+    it("should delete a user and return 200 status on success", async () => {
+
+        await deleteUser(req, res);
+
+        expect(sql.deleteUser).toHaveBeenCalledWith(userId);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should handle errors and return 500 status on failure", async () => {
+        const mockError = new Error("Database error");
+        sql.deleteUser.mockRejectedValue(mockError);
+
+        await deleteUser(req, res);
+
+        expect(sql.deleteUser).toHaveBeenCalledWith(userId);
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.send).toHaveBeenCalled();
     });

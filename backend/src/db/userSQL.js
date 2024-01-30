@@ -17,17 +17,18 @@ const isUserTableNotEmpty = () => {
 }
 
 const addUser = (username, name, email, password, admin) => {
-    let params = [username, name, email, password];
-    let query = "INSERT INTO user (username, name, email, password";
-    if (admin) query += ", admin";
-    query += ") VALUES (?,?,?,?";
-    if (admin) {
-        query += ",?";
-        params.push(admin);
-    }
-    query += ")";
-
-    return executeSQL(query, params);
+    const query = "INSERT INTO user (username, name, email, password, admin) VALUES (?,?,?,?,?)";
+    return executeSQL(query, [username, name, email, password, admin]);
 }
 
-module.exports = { findUserByUsernameAndEmail, isUserTableNotEmpty, addUser };
+const getAllUsers = () => {
+    const query = "SELECT id, username, name, email FROM user";
+    return executeSQL(query, []);
+}
+
+const deleteUser = (userId) => {
+    const query = "DELETE FROM user WHERE id=?";
+    return executeSQL(query, [userId]);
+}
+
+module.exports = { findUserByUsernameAndEmail, isUserTableNotEmpty, addUser, getAllUsers, deleteUser };
