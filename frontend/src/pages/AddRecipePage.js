@@ -17,6 +17,18 @@ const AddRecipe = () =>{
     const [created, setCreated] = useState('');
     const [modified, setModified] = useState('');
 
+    const [isModalIOpen, setModalIOpen] = useState(false);
+    const [isModalSOpen, setModalSOpen] = useState(false);
+
+    const openModalI = () => setModalIOpen(true);
+    const closeModalI = () => setModalIOpen(false);
+    const openModalS = () => setModalSOpen(true);
+    const closeModalS = () => setModalSOpen(false);
+
+    const saveBtnClicked = () =>{
+
+    }
+
     return(
         <div>
             <table>
@@ -50,38 +62,80 @@ const AddRecipe = () =>{
                     <tr>
                         <th>Image:</th>
                         <td>
-                            <input type='file' value={image} />
+                            <input type='file' value={image} accept="image/*" onChange={(e) => setImage(e.target.value)}/>
                         </td>
                     </tr>
                     <tr>
                         <th>Ingredients:</th>
                         <td>
                             {ingredients.length < 1 ? null : <RecipeIngredients ingredients={ingredients} />}
-                            <AddIngredient />
                         </td>
+                        <td><button onClick={openModalI}>Add</button></td>
                     </tr>
                     <tr>
                         <th>Steps:</th>
                         <td>
                             {steps.length < 1 ? null : <RecipeSteps steps={steps} />}
                         </td>
+                        <td><button onClick={openModalS}>Add</button></td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td>
+                            <button onClick={saveBtnClicked}>Save Recipe</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
+            <IngredientDialog isOpen={isModalIOpen} onClose={closeModalI} />
+            <StepDialog isOpen={isModalSOpen} onClose={closeModalS} />
         </div>
     );
-}
+};
 
-const AddIngredient = (props) =>{
-    return(
-        <table></table>
-    );
-}
+//Näissä vikaa vielä
+const IngredientDialog = ({ isOpen, onClose }) =>{
+    
+    const [unitlist, setUnitlist] = useState(["whole", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups"]);
+    const units = unitlist.map((u,i)=>{
+        return <option key={i}>{u}</option>
+    });
 
-const AddStep = (props) =>{
-    return(
-        <table></table>
-    );
-}
+    return (
+        // Lisää modaalidialogin sisältö ja tyyli tarpeesi mukaan
+        <div className={`modal ${isOpen ? 'open' : ''}`}>
+          <div className="modal-content">
+            <span className="close" onClick={onClose}>&times;</span>
+            <table>
+                    <tbody>
+                        <tr>
+                            <td>Quantity:</td>
+                            <td>
+                                <input type='number'/>
+                                <select>{units}</select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ingredient:</td>
+                            <td><input type='text' /*value={ingredient} onChange={(e)=>setIngredient}*//></td>
+                        </tr>
+                    </tbody>
+                </table>
+          </div>
+        </div>
+      );
+};
 
-export {AddRecipe, AddIngredient, AddStep};
+const StepDialog = ({ isOpen, onClose }) =>{
+    return (
+        // Lisää modaalidialogin sisältö ja tyyli tarpeesi mukaan
+        <div className={`modal ${isOpen ? 'open' : ''}`}>
+          <div className="modal-content">
+            <span className="close" onClick={onClose}>&times;</span>
+            <p>Modal Dialog 2 Content</p>
+          </div>
+        </div>
+      );
+};
+
+export {AddRecipe};
