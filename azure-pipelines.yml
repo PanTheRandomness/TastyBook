@@ -6,13 +6,29 @@ trigger:
 - main
 pool:
   vmImage: ubuntu-latest
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '14.x'
-  displayName: 'Install Node.js'
-- script: |
-    cd backend
-    npm install
-    npm test
-  displayName: 'Install backend dependencies and run tests'
+jobs:
+- job: BackendTests
+  displayName: 'Run Backend Tests'
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '14.x'
+    displayName: 'Install Node.js'
+  - script: |
+      cd backend
+      npm install
+      npm test
+    displayName: 'Install backend dependencies and run tests'
+
+- job: FrontendTests
+  displayName: 'Run Frontend Tests'
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '14.x'
+    displayName: 'Install Node.js'
+  - script: |
+      cd frontend
+      npm install
+      npm test -- --watchAll=false
+    displayName: 'Install frontend dependencies and run tests'
