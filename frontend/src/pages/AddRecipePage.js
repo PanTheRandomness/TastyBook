@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
 import { RecipeIngredients, RecipeSteps } from './RecipePage';
 import '../Styles/Modal.css';
+import '../Styles/AddRecipe.css';
 //myös muokkaus
 
 const AddRecipe = () =>{
-    const [recipeId,setRecipeId] = useState(1);
+    const [recipeId,setRecipeId] = useState(1);//ei oliossa
+    const [recipe, setRecipe] = useState({});
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [durationH, setDurationH] = useState(0);
     const [durationMin, setDurationMin] = useState(0);
-    const [image, setImage] = useState('');
-    const [keywords, setKeywords] = useState([]);
-    const [ingredients, setIngredients] = useState([]);
-    const [steps, setSteps] = useState([]);
+    const [image, setImage] = useState(''); //ei oliossa
+    const [keywords, setKeywords] = useState([]);//miten olioon?
+    const [ingredients, setIngredients] = useState([]);//miten olioon?
+    const [steps, setSteps] = useState([]); //miten olioon?
     const [visibleToAll, setVisibleToAll] = useState(true);
 
     const [isModalIOpen, setModalIOpen] = useState(false);
@@ -46,73 +48,95 @@ const AddRecipe = () =>{
     }
 
     const saveBtnClicked = () =>{
-
+        //virheentarkistus, onko tarpeelliset täytetty
+        //Miten id?
+        //PVM & Creator
+        setRecipe({
+            id : "",
+            header : name,
+            description : description,
+            visibleToAll : visibleToAll,
+            durationHours : durationH,
+            durationMinutes : durationMin,
+            ingredients : ingredients,
+            steps : steps,
+            keywords : keywords
+        });
+        console.log(recipe);
+        setName('');
+        setDescription('');
+        setDurationH(0);
+        setDurationMin(0);
+        setIngredients([]);
+        setSteps([]);
+        setKeywords([]);
+        setVisibleToAll(true);
+        setRecipe({});
     }
 
     return(
         <div>
             <table>
-                <tbody>
-                    <tr>
+                <tbody className='recipeform-container'>
+                    <tr className='recipeform-item'>
                         <th>Recipe name:</th>
-                        <td><input type='text' value={name} onChange={(e) => setName(e.target.value)} /></td>
+                        <td><input className="recipeinput" type='text' value={name} onChange={(e) => setName(e.target.value)} /></td>
                     </tr>
-                    <tr>
+                    <tr className='recipeform-item'>
                         <th>Recipe description:</th>
-                        <td><textarea rows="10" cols="40" value={description} onChange={(e) => setDescription(e.target.value)} /></td>
+                        <td><textarea className="recipeinput" rows="10" cols="40" value={description} onChange={(e) => setDescription(e.target.value)} /></td>
                     </tr>
-                    <tr>
+                    <tr className='recipeform-item'>
                         <th>Visibility:</th>
                         <td>
                             <label>
-                                <input type='checkbox' defaultChecked={true} onChange={(e) => e.target.checked ? setVisibleToAll(true):setVisibleToAll(false)}/>
+                                <input className="recipeinput" type='checkbox' defaultChecked={true} onChange={(e) => e.target.checked ? setVisibleToAll(true):setVisibleToAll(false)}/>
                                 Public
                             </label>
                             {visibleToAll?null:<p style={{color:"red", fontStyle:"italic"}}>Recipe will only be visible to registered users</p>}
                         </td>
                     </tr>
-                    <tr>
+                    <tr className='recipeform-item'>
                         <th>Recipe duration:</th>
                         <td>
                             <label>
-                                <input type='number' value={durationH} min="0" max="200" onChange={(e) => setDurationH(e.target.value)} /> hours 
+                                <input className="recipeinput" type='number' value={durationH} min="0" max="200" onChange={(e) => setDurationH(e.target.value)} /> hours 
                             </label> <br/>
                             <label>
-                                <input type='number' value={durationMin} min="0" max="59" onChange={(e) => setDurationMin(e.target.value)} /> minutes
+                                <input className="recipeinput" type='number' value={durationMin} min="0" max="59" onChange={(e) => setDurationMin(e.target.value)} /> minutes
                             </label>
                         </td>
                     </tr>
-                    <tr>
+                    <tr className='recipeform-item'>
                         <th>Image:</th>
                         <td>
-                            <input type='file' value={image} accept="image/*" onChange={(e) => setImage(e.target.value)}/>
+                            <input className="recipeinput" type='file' value={image} accept="image/*" onChange={(e) => setImage(e.target.value)}/>
                         </td>
                     </tr>
-                    <tr>
+                    <tr className='recipeform-item'>
                         <th>Ingredients:</th>
                         <td>
                             {ingredients.length < 1 ? null : <RecipeIngredients ingredients={ingredients} />}
                         </td>
                         <td><button onClick={openModalI}>Add</button></td>
                     </tr>
-                    <tr>
+                    <tr className='recipeform-item'>
                         <th>Steps:</th>
                         <td>
                             {steps.length < 1 ? null : <RecipeSteps steps={steps} />}
                         </td>
                         <td><button onClick={openModalS}>Add</button></td>
                     </tr>
-                    <tr>
+                    <tr className='recipeform-item'>
                         <th>Keywords:</th>
                         <td>
-                            {steps.length < 1 ? null : <RecipeSteps steps={steps} />}
+                            {keywords.length < 1 ? null : <RecipeKeywords keywords={keywords} />}
                         </td>
                         <td><button onClick={openModalK}>Add</button></td>
                     </tr>
                     <tr>
-                        <th></th>
                         <td>
-                            <button onClick={saveBtnClicked}>Save Recipe</button>
+                            <button className='savebutton' onClick={saveBtnClicked}>Save Recipe</button>
                         </td>
                     </tr>
                 </tbody>
@@ -138,7 +162,7 @@ const RecipeKeywords = (props) =>{
 
 const IngredientDialog = ({ isOpen, onClose, onAdd}) =>{
     const [unitlist, setUnitlist] = useState(["whole", "half", "quarter", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups", "lbs"]);
-    const [qt, setQt] = useState(0);
+    const [qt, setQt] = useState(0); //onko jokin yksinkertaisempi, let tms?
     const [ing, setIng] = useState('');
     const [unit, setUnit] = useState('');
 
@@ -155,19 +179,17 @@ const IngredientDialog = ({ isOpen, onClose, onAdd}) =>{
                         <tr>
                             <td>Quantity:</td>
                             <td>
-                                <input type='number' value={qt} min="0" onChange={(e) =>setQt(e.target.value)}/>
-                                <select value={unit} onChange={(e)=>setUnit(e.target.value)}>{units}</select>
+                                <input type='number' className="modalInput" value={qt} min="0" onChange={(e) =>setQt(e.target.value)}/>
+                                <select value={unit} className="modalInput" onChange={(e)=>setUnit(e.target.value)}>{units}</select>
                             </td>
                         </tr>
                         <tr>
                             <td>Ingredient:</td>
-                            <td><input type='text' value={ing} onChange={(e)=>setIng(e.target.value)}/></td>
-                        </tr>
-                        <tr>
-                            <button onClick={() => onAdd(qt, unit, ing)}>Add Ingredient</button>
+                            <td><input type='text' className="modalInput" value={ing} onChange={(e)=>setIng(e.target.value)}/></td>
                         </tr>
                     </tbody>
                 </table>
+                <button onClick={() => onAdd(qt, unit, ing)}>Add Ingredient</button>
             </div>
         </div>
     );
@@ -182,7 +204,7 @@ const StepDialog = ({ isOpen, onClose, onAdd }) =>{
                 <span className="close" onClick={onClose}>&times;</span>
                 <label>
                     <b>Type instructions:</b><br/>
-                    <textarea rows="10" cols="55" value={text} onChange={(e) => setText(e.target.value)}/><br/>
+                    <textarea rows="10" cols="55" className="modalInput" value={text} onChange={(e) => setText(e.target.value)}/><br/>
                 </label>
                 <button onClick={() => onAdd(text)}>Add Step</button>
             </div>
@@ -199,7 +221,7 @@ const KeywordDialog =({ isOpen, onClose, onAdd }) =>{
                 <span className="close" onClick={onClose}>&times;</span>
                 <label>
                     <b>Type keyword:</b>
-                    <input type='text' value={w} onChange={(e) => setW(e.target.value)}/>
+                    <input type='text' className="modalInput" value={w} onChange={(e) => setW(e.target.value)}/><br/>
                 </label>
                 <button onClick={() => onAdd(w)}>Add Keyword</button>
             </div>

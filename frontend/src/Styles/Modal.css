@@ -6,27 +6,40 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.644);
+    color: #683131;
 }
   
 .modal-content {
-    background-color: #fefefe;
+    background-color: #F1DBBF;
     margin: 15% auto;
     padding: 20px;
-    border: 1px solid #888;
+    border: 5px solid #B99B6B;
     width: 25%;
     border-radius: 25px;
 }
   
 .close {
-    color: #aaa;
-    float: right;
+    color: #683131;
     font-size: 28px;
     font-weight: bold;
+    float:right;
 }
   
 .close:hover,.close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.modal-content > button{
+    float:right;
+    border-radius: 5px;
+    border-style: hidden;
+    background-color: #B99B6B;
+}
+
+.modalInput{
+    border-style:hidden;
+    border-radius: 3px;
 }
