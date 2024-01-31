@@ -2,6 +2,8 @@ import { NavLink, Routes, Route, BrowserRouter as Router } from "react-router-do
 import {Register} from './pages/Register';
 import Admin from './pages/Admin';
 import FrontPage from "./pages/FrontPage";
+import { Recipe } from './pages/RecipePage';
+import { AddRecipe } from './pages/AddRecipePage';
 
 const App = () => {
   return (
@@ -12,6 +14,8 @@ const App = () => {
         <Route path='/' element={<FrontPage />}></Route>
         <Route path='/signup' element={<Register />}></Route>
         <Route path='/admin' element={<Admin />}></Route>
+        <Route path='/recipe' element={<Recipe />}></Route>
+        <Route path='/addnew' element={<AddRecipe />}></Route>
       </Routes>
     </Router>
   );

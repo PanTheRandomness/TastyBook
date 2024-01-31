@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { RecipeIngredients, RecipeSteps } from './RecipePage';
-import '../Modal.css';
+import '../Styles/Modal.css';
 //myös muokkaus
 
 const AddRecipe = () =>{
@@ -106,7 +106,7 @@ const AddRecipe = () =>{
             {isModalSOpen ? <StepDialog isOpen={isModalSOpen} onClose={closeModalS} onAdd={addStep} /> : null}
         </div>
     );
-};
+}
 
 
 const IngredientDialog = ({ isOpen, onClose, onAdd}) =>{
@@ -144,7 +144,7 @@ const IngredientDialog = ({ isOpen, onClose, onAdd}) =>{
             </div>
         </div>
     );
-};
+}
 
 const StepDialog = ({ isOpen, onClose, onAdd }) =>{
     
@@ -156,6 +156,6 @@ const StepDialog = ({ isOpen, onClose, onAdd }) =>{
             </div>
         </div>
     );
-};
+}
 
 export {AddRecipe};
