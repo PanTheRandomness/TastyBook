@@ -1,6 +1,6 @@
 import { NavLink, Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import {Register} from './pages/Register';
-import {Admin} from './pages/Admin';
+import Admin from './pages/Admin';
 import FrontPage from "./pages/FrontPage";
 
 const App = () => {
