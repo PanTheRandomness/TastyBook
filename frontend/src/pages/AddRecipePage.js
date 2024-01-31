@@ -5,7 +5,6 @@ import { RecipeIngredients, RecipeSteps } from './RecipePage';
 const AddRecipe = () =>{
     const [recipeId,setRecipeId] = useState(1);
     const [name, setName] = useState('');
-    const [creator, setCreator] = useState('');
     const [durationH, setDurationH] = useState(0);
     const [durationMin, setDurationMin] = useState(0);
     const [image, setImage] = useState('');
@@ -14,8 +13,6 @@ const AddRecipe = () =>{
     const [ingredient, setIngredient] = useState({});
     const [steps, setSteps] = useState([]);
     const [visibleToAll, setVisibleToAll] = useState(true);
-    const [created, setCreated] = useState('');
-    const [modified, setModified] = useState('');
 
     const [isModalIOpen, setModalIOpen] = useState(false);
     const [isModalSOpen, setModalSOpen] = useState(false);
@@ -95,6 +92,8 @@ const AddRecipe = () =>{
 
 //Näissä vikaa vielä
 const IngredientDialog = ({ isOpen, onClose }) =>{
+
+    const {onClose} = props;
     
     const [unitlist, setUnitlist] = useState(["whole", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups"]);
     const units = unitlist.map((u,i)=>{
@@ -127,6 +126,9 @@ const IngredientDialog = ({ isOpen, onClose }) =>{
 };
 
 const StepDialog = ({ isOpen, onClose }) =>{
+    
+    const {onClose} = props;
+
     return (
         // Lisää modaalidialogin sisältö ja tyyli tarpeesi mukaan
         <div className={`modal ${isOpen ? 'open' : ''}`}>
