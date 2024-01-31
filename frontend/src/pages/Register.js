@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { register } from "../api/userApi";
 
 
 const Register = ({ onLogin }) => {
@@ -6,10 +7,22 @@ const Register = ({ onLogin }) => {
     const [email, setEmail] = useState();
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
+
+    const onRegisterClicked = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await register(username, password);
+            const { token } = response;
+            onLogin(token);
+        } catch (error) {
+            console.error("Rekisteröityminen epäonnistui");
+          
+        }
+    };
       
     return (
         <div className="contentContainer">
-            <form>
+            <form onSubmit={onRegisterClicked}>
                 <h1>Register</h1>
                 <input placeholder="name" value={name} onChange={e => setName(e.target.value)} />
                 <input placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />

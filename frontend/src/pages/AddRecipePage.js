@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { RecipeIngredients, RecipeSteps } from './RecipePage';
+import '../Modal.css';
 //myös muokkaus
 
 const AddRecipe = () =>{
     const [recipeId,setRecipeId] = useState(1);
     const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
     const [durationH, setDurationH] = useState(0);
     const [durationMin, setDurationMin] = useState(0);
     const [image, setImage] = useState('');
@@ -33,6 +35,10 @@ const AddRecipe = () =>{
                     <tr>
                         <th>Recipe name:</th>
                         <td><input type='text' value={name} onChange={(e) => setName(e.target.value)} /></td>
+                    </tr>
+                    <tr>
+                        <th>Recipe description:</th>
+                        <td><input type='text' value={description} onChange={(e) => setDescription(e.target.value)} /></td>
                     </tr>
                     <tr>
                         <th>Visibility:</th>
@@ -84,16 +90,15 @@ const AddRecipe = () =>{
                     </tr>
                 </tbody>
             </table>
-            <IngredientDialog isOpen={isModalIOpen} onClose={closeModalI} />
-            <StepDialog isOpen={isModalSOpen} onClose={closeModalS} />
+            {isModalIOpen ? <IngredientDialog isOpen={isModalIOpen} onClose={closeModalI} /> : null}
+            {isModalSOpen ? <StepDialog isOpen={isModalSOpen} onClose={closeModalS} /> : null}
         </div>
     );
 };
 
-//Näissä vikaa vielä
-const IngredientDialog = ({ isOpen, onClose }) =>{
 
-    const {onClose} = props;
+const IngredientDialog = ({ isOpen, onClose }) =>{
+    console.log();
     
     const [unitlist, setUnitlist] = useState(["whole", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups"]);
     const units = unitlist.map((u,i)=>{
@@ -101,7 +106,7 @@ const IngredientDialog = ({ isOpen, onClose }) =>{
     });
 
     return (
-        // Lisää modaalidialogin sisältö ja tyyli tarpeesi mukaan
+
         <div className={`modal ${isOpen ? 'open' : ''}`}>
           <div className="modal-content">
             <span className="close" onClick={onClose}>&times;</span>
@@ -127,10 +132,7 @@ const IngredientDialog = ({ isOpen, onClose }) =>{
 
 const StepDialog = ({ isOpen, onClose }) =>{
     
-    const {onClose} = props;
-
     return (
-        // Lisää modaalidialogin sisältö ja tyyli tarpeesi mukaan
         <div className={`modal ${isOpen ? 'open' : ''}`}>
           <div className="modal-content">
             <span className="close" onClick={onClose}>&times;</span>
