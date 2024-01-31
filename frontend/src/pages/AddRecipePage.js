@@ -65,11 +65,10 @@ const AddRecipe = () =>{
                         <th>Visibility:</th>
                         <td>
                             <label>
-                                <input type='radio' /> Public
-                            </label><br/>
-                            <label>
-                                <input type='radio' /> Registered only
+                                <input type='checkbox' defaultChecked={true} onChange={(e) => e.target.checked ? setVisibleToAll(true):setVisibleToAll(false)}/>
+                                Public
                             </label>
+                            {visibleToAll?null:<p style={{color:"red", fontStyle:"italic"}}>Recipe will only be visible to registered users</p>}
                         </td>
                     </tr>
                     <tr>
@@ -182,7 +181,7 @@ const StepDialog = ({ isOpen, onClose, onAdd }) =>{
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
                 <label>
-                    <b>Step instructions:</b><br/>
+                    <b>Type instructions:</b><br/>
                     <textarea rows="10" cols="55" value={text} onChange={(e) => setText(e.target.value)}/><br/>
                 </label>
                 <button onClick={() => onAdd(text)}>Add Step</button>
