@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 
 const Recipe = () =>{
     
+    const [created, setCreated] = useState('');
+    const [modified, setModified] = useState('');
+    const [creator, setCreator] = useState('');
     //esimerkkilistoja kehitystä varten
     const [ingredients, setIngredients] = useState([
         {"quantity": "1 dl", "ingredient":"flour"}, 
