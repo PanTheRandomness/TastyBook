@@ -7,7 +7,7 @@ const Recipe = () =>{
     const [created, setCreated] = useState('');
     const [modified, setModified] = useState('');
     const [creator, setCreator] = useState('');
-    
+
     //esimerkkilistoja kehitystä varten
     const [ingredients, setIngredients] = useState([
         {"quantity": "1 dl", "ingredient":"flour"}, 
@@ -52,7 +52,7 @@ const RecipeIngredients = (props)=>{
     //Muotoilu ja asettelu!
 
     const ingredientList = props.ingredients.map((ing,i) =>{
-        return <tr key={i}><th>{ing.quantity}</th><td>{ing.ingredient}</td></tr>
+        return <tr key={i}><th>{ing.quantity} {ing.unit}</th><td>{ing.ingredient}</td></tr>
     });
 
     return(

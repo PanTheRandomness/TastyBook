@@ -17,14 +17,18 @@ const AddRecipe = () =>{
 
     const [isModalIOpen, setModalIOpen] = useState(false);
     const [isModalSOpen, setModalSOpen] = useState(false);
+    const [isModalKOpen, setModalKOpen] = useState(false);
 
     const openModalI = () => setModalIOpen(true);
     const closeModalI = () => setModalIOpen(false);
     const openModalS = () => setModalSOpen(true);
     const closeModalS = () => setModalSOpen(false);
+    const openModalK = () => setModalKOpen(true);
+    const closeModalK = () => setModalKOpen(false);
 
-    const addStep = () =>{
-
+    const addStep = (instuctiontext) =>{
+        setSteps([...steps, instuctiontext]);
+        closeModalS();
     }
 
     const addIngredient = (quantity, unit, ingredient) =>{
@@ -34,6 +38,11 @@ const AddRecipe = () =>{
             ingredient : ingredient
         }]);
         closeModalI();
+    }
+
+    const addKeyword = (keyword) =>{
+        setKeywords([...keywords, keyword]);
+        closeModalK();
     }
 
     const saveBtnClicked = () =>{
@@ -95,6 +104,13 @@ const AddRecipe = () =>{
                         <td><button onClick={openModalS}>Add</button></td>
                     </tr>
                     <tr>
+                        <th>Keywords:</th>
+                        <td>
+                            {steps.length < 1 ? null : <RecipeSteps steps={steps} />}
+                        </td>
+                        <td><button onClick={openModalS}>Add</button></td>
+                    </tr>
+                    <tr>
                         <th></th>
                         <td>
                             <button onClick={saveBtnClicked}>Save Recipe</button>
@@ -104,13 +120,25 @@ const AddRecipe = () =>{
             </table>
             {isModalIOpen ? <IngredientDialog isOpen={isModalIOpen} onClose={closeModalI} onAdd={addIngredient}/> : null}
             {isModalSOpen ? <StepDialog isOpen={isModalSOpen} onClose={closeModalS} onAdd={addStep} /> : null}
+            {isModalKOpen ? <KeywordDialog isOpen={isModalKOpen} onClose={closeModalK} onAdd={addKeyword}/> : null}
         </div>
     );
 }
 
+const RecipeKeywords = (props) =>{
+    const words = props.keywords.map((word, i) =>{
+        return <li key={i}>{word}</li>
+    });
+
+    return(
+        <div>
+            <ul>{words}</ul>
+        </div>
+    );
+}
 
 const IngredientDialog = ({ isOpen, onClose, onAdd}) =>{
-    const [unitlist, setUnitlist] = useState(["whole", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups"]);
+    const [unitlist, setUnitlist] = useState(["whole", "half", "quarter", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups", "lbs"]);
     const [qt, setQt] = useState(0);
     const [ing, setIng] = useState('');
     const [unit, setUnit] = useState('');
@@ -128,7 +156,7 @@ const IngredientDialog = ({ isOpen, onClose, onAdd}) =>{
                         <tr>
                             <td>Quantity:</td>
                             <td>
-                                <input type='number' value={qt} onChange={(e) =>setQt(e.target.value)}/>
+                                <input type='number' value={qt} min="0" onChange={(e) =>setQt(e.target.value)}/>
                                 <select value={unit} onChange={(e)=>setUnit(e.target.value)}>{units}</select>
                             </td>
                         </tr>
@@ -147,15 +175,37 @@ const IngredientDialog = ({ isOpen, onClose, onAdd}) =>{
 }
 
 const StepDialog = ({ isOpen, onClose, onAdd }) =>{
+    const [text, setText] = useState('');
     
     return (
         <div className={`modal ${isOpen ? 'open' : ''}`}>
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
-                <p>Modal Dialog 2 Content</p>
+                <label>
+                    <b>Step instructions:</b><br/>
+                    <textarea rows="10" cols="55" value={text} onChange={(e) => setText(e.target.value)}/><br/>
+                </label>
+                <button onClick={() => onAdd(text)}>Add Step</button>
             </div>
         </div>
     );
 }
 
-export {AddRecipe};
+const KeywordDialog =({isOpen, onClose, onAdd}) =>{
+    const [w, setW] = useState('');
+
+    return(
+        <div className={`modal ${isOpen ? 'open' : ''}`}>
+            <div className="modal-content">
+                <span className="close" onClick={onClose}>&times;</span>
+                <label>
+                    <b>Type keyword:</b><br/>
+                    <input type='text' value={w} onChange={(e) => setW(e.target.value)}/><br/>
+                </label>
+                <button onClick={() => onAdd(w)}>Add Keyword</button>
+            </div>
+        </div>
+    );
+}
+
+export {AddRecipe, RecipeKeywords, IngredientDialog, StepDialog, KeywordDialog};
