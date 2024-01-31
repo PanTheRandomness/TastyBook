@@ -6,6 +6,7 @@ import '../Modal.css';
 const AddRecipe = () =>{
     const [recipeId,setRecipeId] = useState(1);
     const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
     const [durationH, setDurationH] = useState(0);
     const [durationMin, setDurationMin] = useState(0);
     const [image, setImage] = useState('');
@@ -34,6 +35,10 @@ const AddRecipe = () =>{
                     <tr>
                         <th>Recipe name:</th>
                         <td><input type='text' value={name} onChange={(e) => setName(e.target.value)} /></td>
+                    </tr>
+                    <tr>
+                        <th>Recipe description:</th>
+                        <td><input type='text' value={description} onChange={(e) => setDescription(e.target.value)} /></td>
                     </tr>
                     <tr>
                         <th>Visibility:</th>
@@ -101,7 +106,7 @@ const IngredientDialog = ({ isOpen, onClose }) =>{
     });
 
     return (
-        
+
         <div className={`modal ${isOpen ? 'open' : ''}`}>
           <div className="modal-content">
             <span className="close" onClick={onClose}>&times;</span>
