@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
   const [userIdToDelete, setUserIdToDelete] = useState('');
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   useEffect(() => {
-
-
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/users'); // lisää polku
+        const response = await fetch('/api/users'); //Lisää tähän polku
         const data = await response.json();
         setUsers(data);
       } catch (error) {
@@ -21,6 +20,15 @@ const Admin = () => {
   }, []);
 
   const handleDeleteUser = async () => {
+    setShowConfirmationModal(true);
+  };
+
+  const confirmDeletion = async (confirmed) => {
+    setShowConfirmationModal(false);
+
+    if (!confirmed) {
+      return; 
+    }
 
     try {
       await fetch(`/api/users/${userIdToDelete}`, {
@@ -73,6 +81,14 @@ const Admin = () => {
           ))}
         </tbody>
       </table>
+
+      {showConfirmationModal && (
+        <div className="confirmation-modal">
+          <p>Are you sure you want to delete this user?</p>
+          <button onClick={() => confirmDeletion(true)}>Yes</button>
+          <button onClick={() => confirmDeletion(false)}>No</button>
+        </div>
+      )}
     </div>
   );
 };
