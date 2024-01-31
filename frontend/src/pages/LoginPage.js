@@ -11,8 +11,8 @@ const LoginPage = ({onLogin}) => {
             const response = await login(username, password);
             const { token } = response;
             onLogin(token)
-        } catch {
-            "Error, you are not signed in.";
+        } catch (error) {
+            console.error("Rekisteröityminen epäonnistui");
         }
     }
 

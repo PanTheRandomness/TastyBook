@@ -14,9 +14,9 @@ const Register = ({ onLogin }) => {
             const response = await register(username, password);
             const { token } = response;
             onLogin(token);
-            navigate("/user");
         } catch (error) {
-            setErrorMessage(error.message);
+            console.error("Rekisteröityminen epäonnistui");
+          
         }
     };
       
