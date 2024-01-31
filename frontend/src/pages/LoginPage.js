@@ -1,11 +1,11 @@
 import { useState } from "react";
-//import { login } from "";
+import { login } from "../api/userApi";
 
 const LoginPage = ({onLogin}) => {
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
 
-    {/*const onLoginClicked = async (event) => {
+    const onLoginClicked = async (event) => {
         event.preventDefault();
         try {
             const response = await login(username, password);
@@ -14,7 +14,7 @@ const LoginPage = ({onLogin}) => {
         } catch {
             "Error, you are not signed in.";
         }
-    }*/}
+    }
 
     return(
     <div>
