@@ -44,7 +44,7 @@ const Search = () => {
     <div>
       <h2>Recipe Search</h2>
       <label>
-        Search by Name or Author:
+        Search by name or author:
         <input
           type="text"
           value={searchTerm}
