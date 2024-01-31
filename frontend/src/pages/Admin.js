@@ -7,7 +7,7 @@ const Admin = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      try {
+      try {                             // Tee tähän http pyyntö ja useEffect kutsuu
         const response = await fetch('/api/users'); //Lisää tähän polku
         const data = await response.json();
         setUsers(data);

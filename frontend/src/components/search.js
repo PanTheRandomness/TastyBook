@@ -7,9 +7,9 @@ const Search = () => {
   useEffect(() => {
 
 
-    const fetchRecipes = async () => {
+    const fetchRecipes = async () => {  // Tee tähän http pyyntö
       try {
-        const response = await fetch('/api/recipes'); 
+        const response = await fetch('/api/recipes'); //Polku
         const data = await response.json();
         setRecipes(data);
       } catch (error) {
