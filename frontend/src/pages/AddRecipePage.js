@@ -108,7 +108,7 @@ const AddRecipe = () =>{
                         <td>
                             {steps.length < 1 ? null : <RecipeSteps steps={steps} />}
                         </td>
-                        <td><button onClick={openModalS}>Add</button></td>
+                        <td><button onClick={openModalK}>Add</button></td>
                     </tr>
                     <tr>
                         <th></th>
@@ -191,7 +191,7 @@ const StepDialog = ({ isOpen, onClose, onAdd }) =>{
     );
 }
 
-const KeywordDialog =({isOpen, onClose, onAdd}) =>{
+const KeywordDialog =({ isOpen, onClose, onAdd }) =>{
     const [w, setW] = useState('');
 
     return(
@@ -199,8 +199,8 @@ const KeywordDialog =({isOpen, onClose, onAdd}) =>{
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
                 <label>
-                    <b>Type keyword:</b><br/>
-                    <input type='text' value={w} onChange={(e) => setW(e.target.value)}/><br/>
+                    <b>Type keyword:</b>
+                    <input type='text' value={w} onChange={(e) => setW(e.target.value)}/>
                 </label>
                 <button onClick={() => onAdd(w)}>Add Keyword</button>
             </div>
