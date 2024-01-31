@@ -1,4 +1,4 @@
-const { addUser, findUserByUsernameAndEmail, isUserTableNotEmpty, getAllUsers, deleteUser } = require("../userSQL");
+const { addUser, findUserByUsernameAndEmail, getAllUsers, deleteUser } = require("../userSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
@@ -27,32 +27,6 @@ describe("findUserByUsernameAndEmail", () => {
         await findUserByUsernameAndEmail(username, email);
 
         expect(executeSQL).toHaveBeenCalledWith(expectedQuery, [username, email]);
-    });
-});
-
-describe("isUserTableNotEmpty", () => {
-    afterEach(() => {
-        jest.resetAllMocks();
-    });
-
-    it("should return 1 if user table is not empty", async () => {
-        executeSQL.mockResolvedValueOnce([{ "EXISTS (SELECT 1 FROM user)": 1 }]);
-
-        const result = await isUserTableNotEmpty();
-
-        expect(executeSQL).toHaveBeenCalledWith("SELECT EXISTS (SELECT 1 FROM user)", []);
-
-        expect(result).toEqual([{ "EXISTS (SELECT 1 FROM user)": 1 }]);
-    });
-
-    it("should return 0 if user table is empty", async () => {
-        executeSQL.mockResolvedValueOnce([{ "EXISTS (SELECT 1 FROM user)": 0 }]);
-
-        const result = await isUserTableNotEmpty();
-
-        expect(executeSQL).toHaveBeenCalledWith("SELECT EXISTS (SELECT 1 FROM user)", []);
-
-        expect(result).toEqual([{ "EXISTS (SELECT 1 FROM user)": 0 }]);
     });
 });
 

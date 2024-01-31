@@ -4,24 +4,25 @@ const { signJWT } = require("./signJWT");
 
 const signup = async (req, res) => {
     try {
-        const { username, name, email, password } = req.body;
+        const { username, name, email, password, api_key } = req.body;
         if (!username || !name || !email || !password) return res.status(400).send();
+        if (api_key && api_key !== process.env.ADMIN_REGISTRATION_API_KEY) return res.status(401).send();
 
         // Checks if user already exists
         const duplicateUser = await sql.findUserByUsernameAndEmail(username, email);
         if (duplicateUser.length > 0) return res.status(409).send();
 
         const WORK_FACTOR = 10;
-        const passwordHash = await bcrypt.hash(password, WORK_FACTOR);
 
-        // Adds user as admin if user table is empty
         let result;
         let role = null;
-        const notEmpty = await sql.isUserTableNotEmpty();
-        if (notEmpty[0]["EXISTS (SELECT 1 FROM user)"]) result = await sql.addUser(username, name, email, passwordHash, null);
-        else {
+        if (api_key) {
+            const passwordHash = await bcrypt.hash(password, WORK_FACTOR);
             result = await sql.addUser(username, name, email, passwordHash, 1);
             role = "admin";
+        } else {
+            const passwordHash = await bcrypt.hash(password, WORK_FACTOR);
+            result = await sql.addUser(username, name, email, passwordHash, null);
         }
         
         const token = await signJWT(result.insertId, username, role);

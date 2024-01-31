@@ -40,10 +40,9 @@ describe("signup", () => {
         expect(res.send).toHaveBeenCalled();
       });
 
-    it("should handle successful signup", async () => {
+    it("should handle successful signup without api key", async () => {
         // Mocking the necessary functions for successful signup
         sql.findUserByUsernameAndEmail.mockResolvedValue([]);
-        sql.isUserTableNotEmpty.mockResolvedValue([{ "EXISTS (SELECT 1 FROM user)": 0 }]);
         sql.addUser.mockResolvedValue({ insertId: 1 });
         bcrypt.hash.mockResolvedValue("hashedpassword");
         signJWT.mockResolvedValue("mockedtoken");
@@ -52,6 +51,32 @@ describe("signup", () => {
 
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({ token: "mockedtoken" });
+    });
+
+    it("should handle successful signup with valid API key", async () => {
+        // Set API key in the request body
+        req.body.api_key = process.env.ADMIN_REGISTRATION_API_KEY;
+
+        // Mocking the necessary functions for successful signup with API key
+        sql.findUserByUsernameAndEmail.mockResolvedValue([]);
+        sql.addUser.mockResolvedValue({ insertId: 1 });
+        bcrypt.hash.mockResolvedValue("hashedpassword");
+        signJWT.mockResolvedValue("mockedtoken");
+
+        await signup(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ token: "mockedtoken" });
+    });
+
+    it("should handle invalid API key with 401 status code", async () => {
+        // Set an invalid API key in the request body
+        req.body.api_key = "invalidapikey";
+
+        await signup(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.send).toHaveBeenCalled();
     });
 
     it("should handle duplicate user", async () => {

@@ -10,12 +10,6 @@ const findUserByUsernameAndEmail = (username, email) => {
     return executeSQL(query, params);
 }
 
-// 1 if not empty, 0 if empty
-const isUserTableNotEmpty = () => {
-    const query = "SELECT EXISTS (SELECT 1 FROM user)";
-    return executeSQL(query, []);
-}
-
 const addUser = (username, name, email, password, admin) => {
     const query = "INSERT INTO user (username, name, email, password, admin) VALUES (?,?,?,?,?)";
     return executeSQL(query, [username, name, email, password, admin]);
@@ -31,4 +25,4 @@ const deleteUser = (userId) => {
     return executeSQL(query, [userId]);
 }
 
-module.exports = { findUserByUsernameAndEmail, isUserTableNotEmpty, addUser, getAllUsers, deleteUser };
+module.exports = { findUserByUsernameAndEmail, addUser, getAllUsers, deleteUser };

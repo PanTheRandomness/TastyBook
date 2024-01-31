@@ -14,6 +14,8 @@ let ctrl = require("../controllers/userController");
     }
 
     Jos username, name, email tai password puuttuu, palauttaa statuskoodin 400
+
+    Jos bodyssä on myös "api_key" ja se on väärin, palauttaa statuskoodin 401
     
     Jos username tai email löytyy jo tietokannasta, palauttaa statuskoodin 409
 
@@ -24,7 +26,7 @@ let ctrl = require("../controllers/userController");
     
     Jos rekisteröityminen ei onnistu muusta syystä, palauttaa statuskoodin 500
 
-    Jos tietokannassa ei ole yhtään käyttäjää, rekisteröityvä käyttäjä on admin
+    Jos bodyssä oli api_key ja se oli oikein, rekisteröinyt käyttäjä saa adminin oikeudet
 */
 
 router.route("/api/signup").post(ctrl.signup);
