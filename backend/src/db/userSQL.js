@@ -1,18 +1,18 @@
 const { executeSQL } = require("./executeSQL");
 
-const findUserByUsernameAndEmail = (username, email) => {
-    let params = [username];
-    let query = "SELECT * FROM user WHERE username=?";
-    if (email) {
-        params.push(email);
-        query += " OR email=?";
-    }
-    return executeSQL(query, params);
+const findUserInfo = (username) => {
+    let query = "SELECT id, password, admin FROM user WHERE username=?";
+    return executeSQL(query, [username]);
 }
 
-const addUser = (username, name, email, password, admin) => {
-    const query = "INSERT INTO user (username, name, email, password, admin) VALUES (?,?,?,?,?)";
-    return executeSQL(query, [username, name, email, password, admin]);
+const addEmail = (email) => {
+    const query = "INSERT INTO email (email) VALUES (?);";
+    return executeSQL(query, [email]);
+}
+
+const addUser = (username, name, emailId, password, admin) => {
+    const query = "INSERT INTO user (username, name, Email_id, password, admin) VALUES (?,?,?,?,?);";
+    return executeSQL(query, [username, name, emailId, password, admin]);
 }
 
 const getAllUsers = () => {
@@ -25,4 +25,4 @@ const deleteUser = (userId) => {
     return executeSQL(query, [userId]);
 }
 
-module.exports = { findUserByUsernameAndEmail, addUser, getAllUsers, deleteUser };
+module.exports = { findUserInfo, addEmail, addUser, getAllUsers, deleteUser };

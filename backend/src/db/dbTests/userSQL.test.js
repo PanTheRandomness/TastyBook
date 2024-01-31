@@ -1,34 +1,8 @@
-const { addUser, findUserByUsernameAndEmail, getAllUsers, deleteUser } = require("../userSQL");
+const { addUser, getAllUsers, deleteUser } = require("../userSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
 
-describe("findUserByUsernameAndEmail", () => {
-    afterEach(() => {
-        jest.resetAllMocks();
-    });
-
-    it("should execute the correct SQL query for username only", async () => {
-        const username = "testUser";
-        const expectedQuery = "SELECT * FROM user WHERE username=?";
-        executeSQL.mockResolvedValueOnce([]);
-
-        await findUserByUsernameAndEmail(username);
-
-        expect(executeSQL).toHaveBeenCalledWith(expectedQuery, [username]);
-    });
-
-    it("should execute the correct SQL query for username and email", async () => {
-        const username = "testUser";
-        const email = "test@example.com";
-        const expectedQuery = "SELECT * FROM user WHERE username=? OR email=?";
-        executeSQL.mockResolvedValueOnce([]);
-
-        await findUserByUsernameAndEmail(username, email);
-
-        expect(executeSQL).toHaveBeenCalledWith(expectedQuery, [username, email]);
-    });
-});
 
 describe("addUser", () => {
     it("should insert a user into the database", async () => {
@@ -36,15 +10,15 @@ describe("addUser", () => {
 
         const username = "testuser";
         const name = "Test User";
-        const email = "test@example.com";
+        const email_id = 1;
         const password = "hashedpassword";
         const admin = null;
 
-        const result = await addUser(username, name, email, password, admin);
+        const result = await addUser(username, name, email_id, password, admin);
 
         expect(executeSQL).toHaveBeenCalledWith(
-            "INSERT INTO user (username, name, email, password, admin) VALUES (?,?,?,?,?)",
-            [username, name, email, password, admin]
+            "INSERT INTO user (username, name, Email_id, password, admin) VALUES (?,?,?,?,?);",
+            [username, name, email_id, password, admin]
         );
 
         expect(result).toEqual({ insertId: 1 });

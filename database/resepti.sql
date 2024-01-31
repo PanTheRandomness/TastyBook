@@ -15,17 +15,36 @@ CREATE SCHEMA IF NOT EXISTS `recipedb` DEFAULT CHARACTER SET utf8 ;
 USE `recipedb` ;
 
 -- -----------------------------------------------------
+-- Table `recipedb`.`Email`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `recipedb`.`Email` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `recipedb`.`User`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `recipedb`.`User` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `Email_id` INT NOT NULL,
   `username` VARCHAR(45) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
-  `email` VARCHAR(255) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   `admin` TINYINT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  PRIMARY KEY (`id`, `Email_id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_User_Email1_idx` (`Email_id` ASC) VISIBLE,
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
+  CONSTRAINT `fk_User_Email1`
+    FOREIGN KEY (`Email_id`)
+    REFERENCES `recipedb`.`Email` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -34,20 +53,22 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `recipedb`.`Recipe` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `User_id` INT NOT NULL,
+  `User_id` INT NULL,
   `hash` VARCHAR(45) NOT NULL,
   `header` VARCHAR(45) NOT NULL,
   `description` VARCHAR(2000) NOT NULL,
   `visibleToAll` TINYINT NULL,
   `created` DATETIME NULL,
   `modified` DATETIME NULL,
-  PRIMARY KEY (`id`, `User_id`),
+  `durationHours` INT NULL,
+  `durationMinutes` INT NULL,
+  PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_Recipe_User1_idx` (`User_id` ASC) VISIBLE,
   CONSTRAINT `fk_Recipe_User1`
     FOREIGN KEY (`User_id`)
     REFERENCES `recipedb`.`User` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE SET NULL
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -77,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `recipedb`.`RecipesIngredient` (
   CONSTRAINT `fk_RecipesIngredient_Recipe1`
     FOREIGN KEY (`Recipe_id`)
     REFERENCES `recipedb`.`Recipe` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_RecipesIngredient_Ingredient1`
     FOREIGN KEY (`Ingredient_id`)
@@ -92,23 +113,23 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `recipedb`.`Review` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `Recipe_id` INT NOT NULL,
+  `User_id` INT NULL,
   `rating` INT NOT NULL,
   `text` VARCHAR(2000) NOT NULL,
-  `User_id` INT NOT NULL,
-  `Recipe_id` INT NOT NULL,
-  PRIMARY KEY (`id`, `User_id`, `Recipe_id`),
+  PRIMARY KEY (`id`, `Recipe_id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_Review_User1_idx` (`User_id` ASC) VISIBLE,
   INDEX `fk_Review_Recipe1_idx` (`Recipe_id` ASC) VISIBLE,
-  CONSTRAINT `fk_Review_User1`
-    FOREIGN KEY (`User_id`)
-    REFERENCES `recipedb`.`User` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  INDEX `fk_Review_User1_idx` (`User_id` ASC) VISIBLE,
   CONSTRAINT `fk_Review_Recipe1`
     FOREIGN KEY (`Recipe_id`)
     REFERENCES `recipedb`.`Recipe` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Review_User1`
+    FOREIGN KEY (`User_id`)
+    REFERENCES `recipedb`.`User` (`id`)
+    ON DELETE SET NULL
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -138,12 +159,12 @@ CREATE TABLE IF NOT EXISTS `recipedb`.`Favourite` (
   CONSTRAINT `fk_Favourites_Recipe1`
     FOREIGN KEY (`Recipe_id`)
     REFERENCES `recipedb`.`Recipe` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Favourite_User1`
     FOREIGN KEY (`User_id`)
     REFERENCES `recipedb`.`User` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -162,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `recipedb`.`RecipesKeyword` (
   CONSTRAINT `fk_RecipesKeyword_Recipe1`
     FOREIGN KEY (`Recipe_id`)
     REFERENCES `recipedb`.`Recipe` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_RecipesKeyword_Keyword1`
     FOREIGN KEY (`Keyword_id`)
@@ -177,15 +198,34 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `recipedb`.`Image` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `filename` VARCHAR(255) NOT NULL,
   `Recipe_id` INT NOT NULL,
+  `filename` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`, `Recipe_id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_Image_Recipe1_idx` (`Recipe_id` ASC) VISIBLE,
   CONSTRAINT `fk_Image_Recipe1`
     FOREIGN KEY (`Recipe_id`)
     REFERENCES `recipedb`.`Recipe` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `recipedb`.`RecipeSteps`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `recipedb`.`RecipeSteps` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `Recipe_id` INT NOT NULL,
+  `step` VARCHAR(255) NOT NULL,
+  `number` INT NOT NULL,
+  PRIMARY KEY (`id`, `Recipe_id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_RecipeSteps_Recipe1_idx` (`Recipe_id` ASC) VISIBLE,
+  CONSTRAINT `fk_RecipeSteps_Recipe1`
+    FOREIGN KEY (`Recipe_id`)
+    REFERENCES `recipedb`.`Recipe` (`id`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 

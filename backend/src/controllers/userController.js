@@ -1,6 +1,7 @@
 var bcrypt = require("bcrypt");
 const sql = require("../db/userSQL");
 const { signJWT } = require("./signJWT");
+const { executeSQL } = require("../db/executeSQL");
 
 const signup = async (req, res) => {
     try {
@@ -8,26 +9,34 @@ const signup = async (req, res) => {
         if (!username || !name || !email || !password) return res.status(400).send();
         if (api_key && api_key !== process.env.ADMIN_REGISTRATION_API_KEY) return res.status(401).send();
 
-        // Checks if user already exists
-        const duplicateUser = await sql.findUserByUsernameAndEmail(username, email);
-        if (duplicateUser.length > 0) return res.status(409).send();
-
         const WORK_FACTOR = 10;
 
         let result;
         let role = null;
-        if (api_key) {
-            const passwordHash = await bcrypt.hash(password, WORK_FACTOR);
-            result = await sql.addUser(username, name, email, passwordHash, 1);
-            role = "admin";
-        } else {
-            const passwordHash = await bcrypt.hash(password, WORK_FACTOR);
-            result = await sql.addUser(username, name, email, passwordHash, null);
+        const passwordHash = await bcrypt.hash(password, WORK_FACTOR);
+
+        // Tämä estää emailin tallennuksen, jos username on jo olemassa
+        await executeSQL("BEGIN;");
+        try {
+            const emailResult = await sql.addEmail(email);
+
+            if (api_key) {
+                result = await sql.addUser(username, name, emailResult.insertId, passwordHash, 1);
+                role = "admin";
+            } else {
+                result = await sql.addUser(username, name, emailResult.insertId, passwordHash, null);
+            }
+
+            await executeSQL("COMMIT;");
+
+            const token = await signJWT(result.insertId, username, role);
+            res.status(200).json({ token });
+        } catch (error) {
+            await executeSQL("ROLLBACK;");
+            throw error;
         }
-        
-        const token = await signJWT(result.insertId, username, role);
-        res.status(200).json({ token });
     } catch (error) {
+        if (error.code === "ER_DUP_ENTRY") return res.status(409).send();
         res.status(500).send();
     }
 }
@@ -37,17 +46,17 @@ const login = async (req, res) => {
         const { username, password } = req.body;
         if (!username || !password) return res.status(400).send();
         
-        const user = await sql.findUserByUsernameAndEmail(username);
-        if (user.length === 0) return res.status(401).send();
+        const userInfo = await sql.findUserInfo(username);
+        if (userInfo.length === 0) return res.status(401).send();
 
-        const isCorrect = await bcrypt.compare(password, user[0]["password"]);
+        const isCorrect = await bcrypt.compare(password, userInfo[0]["password"]);
         if (!isCorrect) return res.status(401).send();
         
         let role = null;
-        const admin = user[0]["admin"];
+        const admin = userInfo[0]["admin"];
         if (admin) role = "admin";
 
-        const token = await signJWT(user[0]["id"], username, role);
+        const token = await signJWT(userInfo[0]["id"], username, role);
         res.status(200).json({ token });
     } catch (error) {
         res.status(500).send();
@@ -66,7 +75,6 @@ const getAllUsers = async (req, res) => {
 const deleteUser = async (req, res) => {
     try {
         const { userId } = req.params;
-        // ei poistu jos on avaimena muissa tauluissa, pitäisikö olla cascade?
         await sql.deleteUser(userId);
         res.status(200).send();
     } catch (error) {

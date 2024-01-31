@@ -6,6 +6,7 @@ const { signup, login, getAllUsers, deleteUser } = require("../userController");
 jest.mock("bcrypt");
 jest.mock("../signJWT");
 jest.mock("../../db/userSQL");
+jest.mock("../../db/executeSQL");
 
 describe("signup", () => {
     let req, res;
@@ -42,7 +43,7 @@ describe("signup", () => {
 
     it("should handle successful signup without api key", async () => {
         // Mocking the necessary functions for successful signup
-        sql.findUserByUsernameAndEmail.mockResolvedValue([]);
+        sql.addEmail.mockResolvedValue({ insertId: 1 });
         sql.addUser.mockResolvedValue({ insertId: 1 });
         bcrypt.hash.mockResolvedValue("hashedpassword");
         signJWT.mockResolvedValue("mockedtoken");
@@ -58,7 +59,7 @@ describe("signup", () => {
         req.body.api_key = process.env.ADMIN_REGISTRATION_API_KEY;
 
         // Mocking the necessary functions for successful signup with API key
-        sql.findUserByUsernameAndEmail.mockResolvedValue([]);
+        sql.addEmail.mockResolvedValue({ insertId: 1 });
         sql.addUser.mockResolvedValue({ insertId: 1 });
         bcrypt.hash.mockResolvedValue("hashedpassword");
         signJWT.mockResolvedValue("mockedtoken");
@@ -80,18 +81,39 @@ describe("signup", () => {
     });
 
     it("should handle duplicate user", async () => {
-        // Mocking the necessary functions for duplicate user
-        sql.findUserByUsernameAndEmail.mockResolvedValue([{ username: "testuser", email: "test@example.com" }]);
+        // Mocking the necessary functions and calls
+        bcrypt.hash.mockResolvedValue("hashedpassword");
+
+        // Mock the functions from your SQL module
+        const originalAddEmail = require("../../db/userSQL").addEmail;
+        const originalAddUser = require("../../db/userSQL").addUser;
+
+        // Mock the addEmail function to throw an error with code 'ER_DUP_ENTRY'
+        require("../../db/userSQL").addEmail = jest.fn(() => {
+            throw { code: 'ER_DUP_ENTRY' };
+        });
+
+        // Mock the addUser function to throw an error with code 'ER_DUP_ENTRY'
+        require("../../db/userSQL").addUser = jest.fn(() => {
+            throw { code: 'ER_DUP_ENTRY' };
+        });
+
+        // Mock the return value for executeSQL("BEGIN;");
+        jest.spyOn(require("../../db/executeSQL"), "executeSQL").mockResolvedValue();
 
         await signup(req, res);
 
         expect(res.status).toHaveBeenCalledWith(409);
         expect(res.send).toHaveBeenCalled();
+
+        // Restore the original functions after the test
+        require("../../db/userSQL").addEmail = originalAddEmail;
+        require("../../db/userSQL").addUser = originalAddUser;
     });
 
     it("should handle internal server error", async () => {
         // Mocking the necessary functions for internal server error
-        sql.findUserByUsernameAndEmail.mockRejectedValue(new Error("Database error"));
+        sql.addEmail.mockRejectedValue(new Error("Database error"));
 
         await signup(req, res);
 
@@ -123,7 +145,7 @@ describe("login", () => {
 
     it("should handle successful login", async () => {
         // Mocking the necessary functions for successful login
-        sql.findUserByUsernameAndEmail.mockResolvedValue([{ id: 1, username: req.body.username, name: "Test User", email: "test@example.com", password: "hashedpassword", admin: null }]);
+        sql.findUserInfo.mockResolvedValue([{ id: 1, name: "Test User", email: "test@example.com", password: "hashedpassword", admin: null }]);
         bcrypt.compare.mockResolvedValue(true);
         signJWT.mockResolvedValue("mockedtoken");
 
@@ -145,7 +167,7 @@ describe("login", () => {
 
     it("should handle user not found with 401 status code", async () => {
         // Mocking the necessary functions for user not found
-        sql.findUserByUsernameAndEmail.mockResolvedValue([]);
+        sql.findUserInfo.mockResolvedValue([]);
 
         await login(req, res);
 
@@ -155,7 +177,7 @@ describe("login", () => {
 
     it("should handle incorrect password with 401 status code", async () => {
         // Mocking the necessary functions for incorrect password
-        sql.findUserByUsernameAndEmail.mockResolvedValue([{ id: 1, username: req.body.username, name: "Test User", email: "test@example.com", password: "hashedpassword", admin: null }]);
+        sql.findUserInfo.mockResolvedValue([{ id: 1, name: "Test User", email: "test@example.com", password: "hashedpassword", admin: null }]);
         bcrypt.compare.mockResolvedValue(false);
 
         await login(req, res);
@@ -166,7 +188,7 @@ describe("login", () => {
 
     it("should handle internal server error", async () => {
         // Mocking the necessary functions for internal server error
-        sql.findUserByUsernameAndEmail.mockRejectedValue(new Error("Database error"));
+        sql.findUserInfo.mockRejectedValue(new Error("Database error"));
 
         await login(req, res);
 
