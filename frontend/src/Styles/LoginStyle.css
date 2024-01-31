@@ -1,0 +1,6 @@
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    gap: 0.9rem; /* Määrittele haluttu etäisyys kenttien välille */
+  }
