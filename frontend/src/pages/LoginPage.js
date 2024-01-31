@@ -1,4 +1,5 @@
 import { useState } from "react";
+//import { login } from "";
 
 const LoginPage = ({onLogin}) => {
     const [username, setUsername] = useState();
@@ -17,7 +18,7 @@ const LoginPage = ({onLogin}) => {
 
     return(
     <div>
-        <form>
+        <form onSubmit={onLoginClicked}>
             <h1>Login</h1>
             <input placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
             <input placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
