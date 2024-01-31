@@ -1,6 +1,6 @@
 var bcrypt = require("bcrypt");
-var jwt = require("jsonwebtoken");
 const sql = require("../db/userSQL");
+const { signJWT } = require("./signJWT");
 
 const signup = async (req, res) => {
     try {
@@ -16,14 +16,18 @@ const signup = async (req, res) => {
 
         // Adds user as admin if user table is empty
         let result;
+        let role = null;
         const notEmpty = await sql.isUserTableNotEmpty();
-        if (notEmpty[0]["EXISTS (SELECT 1 FROM user)"]) result = await sql.addUser(username, name, email, passwordHash);
-        else result = await sql.addUser(username, name, email, passwordHash, 1);
+        if (notEmpty[0]["EXISTS (SELECT 1 FROM user)"]) result = await sql.addUser(username, name, email, passwordHash, null);
+        else {
+            result = await sql.addUser(username, name, email, passwordHash, 1);
+            role = "admin";
+        }
         
-        const token = await signJWT(result.insertId, username);
+        const token = await signJWT(result.insertId, username, role);
         res.status(200).json({ token });
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send();
     }
 }
 
@@ -32,32 +36,41 @@ const login = async (req, res) => {
         const { username, password } = req.body;
         if (!username || !password) return res.status(400).send();
         
-        const user = await sql.findUserByUsername(username);
+        const user = await sql.findUserByUsernameAndEmail(username);
         if (user.length === 0) return res.status(401).send();
 
         const isCorrect = await bcrypt.compare(password, user[0]["password"]);
         if (!isCorrect) return res.status(401).send();
+        
+        let role = null;
+        const admin = user[0]["admin"];
+        if (admin) role = "admin";
 
-        const token = await signJWT(user[0]["id"], username);
+        const token = await signJWT(user[0]["id"], username, role);
         res.status(200).json({ token });
     } catch (error) {
         res.status(500).send();
     }
 }
 
-// Signs jwt with user's id and username
-const signJWT = (userId, username) => {
-    return new Promise((resolve, reject) => {
-        jwt.sign(
-            { id: userId, user: username },
-            process.env.JWT_SECRET,
-            { expiresIn: "2h" },
-            (err, token) => {
-                if (err) reject(err);
-                resolve(token);
-            }
-        )
-    });
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await sql.getAllUsers();
+        res.status(200).json({ users });
+    } catch (error) {
+        res.status(500).send();
+    }
 }
 
-module.exports = { signup, login };
+const deleteUser = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        // ei poistu jos on avaimena muissa tauluissa, pitäisikö olla cascade?
+        await sql.deleteUser(userId);
+        res.status(200).send();
+    } catch (error) {
+        res.status(500).send();
+    }
+}
+
+module.exports = { signup, login, getAllUsers, deleteUser };

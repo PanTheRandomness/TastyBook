@@ -21,6 +21,9 @@ app.use(recipeRoutes);
 const userRoutes = require("./src/routes/userRoutes");
 app.use(userRoutes);
 
+const adminRoutes = require("./src/routes/adminRoutes");
+app.use(adminRoutes);
+
 const port = 3004;
 const hostname = "127.0.0.1";
 

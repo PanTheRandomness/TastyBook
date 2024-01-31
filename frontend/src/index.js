@@ -5,11 +5,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {Register} from './pages/Register';
 import {LoginPage} from './pages/LoginPage';
+import { Recipe } from './pages/RecipePage';
+import { AddRecipe } from './pages/AddRecipePage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <LoginPage />
+    <AddRecipe />
   </React.StrictMode>
 );
 
