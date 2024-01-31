@@ -45,6 +45,8 @@ const RecipeHead = (props) =>{
 
 const RecipeIngredients = (props)=>{
 
+    //Muotoilu ja asettelu!
+
     const ingredientList = props.ingredients.map((ing,i) =>{
         return <tr key={i}><th>{ing.quantity}</th><td>{ing.ingredient}</td></tr>
     });

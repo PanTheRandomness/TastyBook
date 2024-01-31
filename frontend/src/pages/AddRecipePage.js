@@ -95,6 +95,8 @@ const AddRecipe = () =>{
 
 //Näissä vikaa vielä
 const IngredientDialog = ({ isOpen, onClose }) =>{
+
+    const {onClose} = props;
     
     const [unitlist, setUnitlist] = useState(["whole", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups"]);
     const units = unitlist.map((u,i)=>{
@@ -127,6 +129,9 @@ const IngredientDialog = ({ isOpen, onClose }) =>{
 };
 
 const StepDialog = ({ isOpen, onClose }) =>{
+    
+    const {onClose} = props;
+    
     return (
         // Lisää modaalidialogin sisältö ja tyyli tarpeesi mukaan
         <div className={`modal ${isOpen ? 'open' : ''}`}>
