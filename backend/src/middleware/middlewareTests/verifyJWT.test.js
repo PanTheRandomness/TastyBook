@@ -12,17 +12,10 @@ describe("verifyJWT", () => {
         next = jest.fn();
     });
 
-    // If this test is second expect(jwt.verify).not.toHaveBeenCalled() fails???
-    it("should return 401 status if token is missing", () => {
-        verifyJWT(req, res, next);
-        
-        expect(jwt.verify).not.toHaveBeenCalled();
-        expect(req.user).toBeUndefined();
-        expect(next).not.toHaveBeenCalled();
-        expect(res.status).toHaveBeenCalledWith(401);
-        expect(res.send).toHaveBeenCalled();
+    afterEach(() => {
+        jest.resetAllMocks();
     });
-
+    
     it("should call next if token is valid", () => {
         const token = "valid-token";
         req.headers.authorization = `Bearer ${token}`;
@@ -36,6 +29,16 @@ describe("verifyJWT", () => {
         expect(next).toHaveBeenCalled();
         expect(res.status).not.toHaveBeenCalled();
         expect(res.send).not.toHaveBeenCalled();
+    });
+
+    it("should return 401 status if token is missing", () => {
+        verifyJWT(req, res, next);
+        
+        expect(jwt.verify).not.toHaveBeenCalled();
+        expect(req.user).toBeUndefined();
+        expect(next).not.toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.send).toHaveBeenCalled();
     });
 
     it("should return 401 status if token is invalid", () => {

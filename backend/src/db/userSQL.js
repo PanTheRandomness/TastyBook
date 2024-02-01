@@ -16,7 +16,7 @@ const addUser = (username, name, emailId, password, admin) => {
 }
 
 const getAllUsers = () => {
-    const query = "SELECT id, username, name, email FROM user";
+    const query = "SELECT u.id, u.username, u.name, e.email, u.admin FROM user u LEFT JOIN email e ON u.Email_id=e.id";
     return executeSQL(query, []);
 }
 

@@ -41,9 +41,9 @@ router.route("/api/signup").post(ctrl.signup);
     
     Jos username tai password puuttuu, palauttaa statuskoodin 400
 
-    Jos käyttäjää ei usernamen perusteella löydy tietokannasta, palauttaa statuskoodin 409
+    Jos käyttäjää ei usernamen perusteella löydy tietokannasta, palauttaa statuskoodin 401
 
-    Jos salasana ei ole oikein kyseiselle käyttäjälle, palauttaa statuskoodin 409
+    Jos salasana ei ole oikein kyseiselle käyttäjälle, palauttaa statuskoodin 401
 
     Jos kirjautuminen onnistuu, palauttaa statuskoodin 200, ja token objektin
 

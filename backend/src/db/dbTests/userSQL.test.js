@@ -1,8 +1,31 @@
-const { addUser, getAllUsers, deleteUser } = require("../userSQL");
+const { findUserInfo, addEmail, addUser, getAllUsers, deleteUser } = require("../userSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
 
+describe("findUserInfo", () => {
+    it("should return user info from the database", async () => {
+        executeSQL.mockResolvedValueOnce({ id: 1, password: "password", admin: null});
+        const username = "testuser";
+
+        const result = await findUserInfo(username);
+
+        expect(executeSQL).toHaveBeenCalledWith("SELECT id, password, admin FROM user WHERE username=?", [username]);
+        expect(result).toEqual({ id: 1, password: "password", admin: null});
+    });
+});
+
+describe("addEmail", () => {
+    it("should insert an email into the database", async () => {
+        executeSQL.mockResolvedValueOnce({ insertId: 1 });
+        const email = "test@example.com";
+
+        const result = await addEmail(email);
+
+        expect(executeSQL).toHaveBeenCalledWith("INSERT INTO email (email) VALUES (?);", [email]);
+        expect(result).toEqual({ insertId: 1 });
+    });
+});
 
 describe("addUser", () => {
     it("should insert a user into the database", async () => {
@@ -28,15 +51,15 @@ describe("addUser", () => {
 describe("getAllUsers", () => {
     it("should return all users from the database", async () => {
         const mockUsers = [
-            { id: 1, username: "user1", name: "User One", email: "user1@example.com" },
-            { id: 2, username: "user2", name: "User Two", email: "user2@example.com" },
+            { id: 1, username: "user1", name: "User One", email: "user1@example.com", admin: null },
+            { id: 2, username: "user2", name: "User Two", email: "user2@example.com", admin: 1 },
         ];
 
         executeSQL.mockResolvedValueOnce(mockUsers);
 
         const result = await getAllUsers();
 
-        expect(executeSQL).toHaveBeenCalledWith("SELECT id, username, name, email FROM user", []);
+        expect(executeSQL).toHaveBeenCalledWith("SELECT u.id, u.username, u.name, e.email, u.admin FROM user u LEFT JOIN email e ON u.Email_id=e.id", []);
 
         expect(result).toEqual(mockUsers);
     });
