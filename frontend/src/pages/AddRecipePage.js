@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { RecipeIngredients, RecipeSteps } from './RecipePage';
 import '../Styles/Modal.css';
-import '../Styles/AddRecipe.css';
+import '../Styles/Recipe.css';
 //myös muokkaus
 
 const AddRecipe = () =>{

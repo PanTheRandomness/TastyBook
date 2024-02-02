@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import '../Styles/Modal.css';
+import '../Styles/Recipe.css';
 //Uniikit URL:it
-//poistopainike + varmistus
+//poistopainike + varmistus(window.confirm())
 
 const Recipe = () =>{
     
@@ -20,30 +22,47 @@ const Recipe = () =>{
         {"username":"t", "rating":"2/5", "text":"Liian helppo :("},
         {"username":"möh", "rating":"4/4", "text":"Maukas"}
     ]);
+    const [keywords, setKeywords] = useState(["Eka sana", "Toka sana", "Kolmas sana"]);
 
     return(
-        <div className='RecipeContainer'>
-            <RecipeHead />
-            <h2>Ingredients:</h2>
-            <RecipeIngredients ingredients={ingredients}/>
-            <RecipeSteps steps={steps}/>
-            <RecipeReviews reviews={reviews}/>
+        <div>
+            <div>Yläosa</div>
+            <div className='recipe-container'>
+                <RecipeHead keywords={keywords}/>
+                <div className='recipe-foot'>
+                    <div className='recipe'>
+                        <RecipeIngredients ingredients={ingredients}/>
+                        <RecipeSteps steps={steps}/>
+                    </div>
+                    <RecipeReviews reviews={reviews}/>
+                </div>
+            </div>
         </div>
     );
 }
 
-//Palauttaa muotoillun 
 const RecipeHead = (props) =>{
-    //HUOM! Asettelu gridiin keskelle!
     return(
-        <div>
+        <div className='recipe-head'>
             <h1>Name</h1>
             <p>Description</p>
             <div>kuva sivummalle</div>
             <p>Creator <i>Created</i></p>
             <div>Star-rating, duration h, min</div>
-            <div>Keywords_list</div> <br/>
+            <RecipeKeywords keywords={props.keywords}/> <br/>
         </div>
+    );
+}
+
+const RecipeKeywords = (props) =>{
+    const words = props.keywords.map((w, i)=>{
+        return <li key={i}>{w}</li>
+    });
+
+    return(
+        <ul className='keywords'>
+            {words}
+        </ul>
     );
 }
 
@@ -56,7 +75,7 @@ const RecipeIngredients = (props)=>{
     });
 
     return(
-        <table>
+        <table className='recipe-ingredients'>
             <tbody>{ingredientList}</tbody>
         </table>
     );
@@ -68,7 +87,7 @@ const RecipeSteps = (props) =>{
     });
 
     return(
-        <div>
+        <div className='recipe-steps'>
             <ol>{steps}</ol>
         </div>
     );
@@ -81,7 +100,7 @@ const RecipeReviews = (props) =>{
     });
 
     return(
-        <table>
+        <table className='recipe-reviews'>
             <tbody>{reviews}</tbody>
         </table>
     );

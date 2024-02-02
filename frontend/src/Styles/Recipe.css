@@ -1,0 +1,94 @@
+body{
+    background-color: #506350;
+}
+
+.recipeform-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    background-color:#698269;
+    align-items:left;
+    border-radius: 20px;
+}
+
+.recipeform-item{
+    margin:10px;
+    border-radius: 5px;
+}
+
+.recipeinput{
+    border-style:hidden;
+    border-radius: 3px;
+}
+
+.recipeform-item > td > button{
+    float:right;
+    border-radius: 5px;
+    border-style: hidden;
+}
+
+.savebutton{
+    position: relative;
+    border-radius: 5px;
+    border-style: hidden;
+    /*Miksei mene oikealle?*/
+}
+
+.recipe-container{
+    display: flex;
+    flex-direction: column;
+    background-color: #B99B6B;
+    width: 45%;
+    border-radius: 25px;
+    margin: 30px;
+}
+
+.recipe-head{
+    background-color: #AA5656;
+    border-radius: 20px;
+    margin: 10px;
+}
+
+.recipe-head > h1, div, p {
+    color:#F1DBBF;
+}
+
+.recipe-head > button{
+    background-color: #506350;
+}
+
+.keywords > li{
+    background-color: #506350;
+    border-radius: 10px;
+    display: inline;
+    padding: 2px;
+    margin: 5px;
+}
+
+.recipe-foot{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.recipe{
+    background-color: #F1DBBF;
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    border-radius: 20px;
+    flex-basis: 70%;
+    align-items: start;
+    color: #3c493c;
+}
+
+.recipe-steps{
+    color: #3c493c;
+}
+
+.recipe-reviews{
+    background-color: #AA5656;
+    border-radius: 20px;
+    margin: 10px;
+    color: #F1DBBF;
+    flex-basis: 25%;
+}
