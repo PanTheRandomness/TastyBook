@@ -1,0 +1,36 @@
+.registerForm {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    gap: 0.9rem; 
+    max-width: 400px; 
+     margin: auto;
+     align-self: center;
+     
+  }
+
+  .registerForm input {
+    width: 120%; 
+    padding: 0.8rem; 
+    margin-bottom: 1rem;
+  }
+ 
+  .registerForm button {
+    width: 30%;
+    padding: 0.8rem;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .registerContainer {
+  background-color: #AA5656;;
+  padding: 60px; 
+  border-radius: 8px;
+
+  }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { register } from "../api/userApi";
+import '../Styles/Register.css';
 
 
 const Register = ({ onLogin }) => {
@@ -21,18 +22,18 @@ const Register = ({ onLogin }) => {
     };
       
     return (
-        <div className="contentContainer">
-            <form onSubmit={onRegisterClicked}>
+        <div className="registerContainer">
+            <form className="loginForm" onSubmit={onRegisterClicked}>
                 <h1>Register</h1>
                 <input placeholder="name" value={name} onChange={e => setName(e.target.value)} />
                 <input placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
                 <input placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
                 <input placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-                <button disabled={!username || !password}>Register</button>
-            </form>
-            
+                <button className="register" disabled={!username || !password}>Register</button>
+        
             <div>Have you already registered?</div>
             <button >Login</button>
+            </form>
         </div>
     );
 }
