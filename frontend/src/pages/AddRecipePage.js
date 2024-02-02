@@ -15,7 +15,7 @@ const AddRecipe = () =>{
     const [ingredients, setIngredients] = useState([]);
     const [steps, setSteps] = useState([]); 
     const [visibleToAll, setVisibleToAll] = useState(1);
-    const [postquery, setPostQuery] = useState('');
+    const [postQuery, setPostQuery] = useState('');
 
     const [isModalIOpen, setModalIOpen] = useState(false);
     const [isModalSOpen, setModalSOpen] = useState(false);
@@ -27,6 +27,17 @@ const AddRecipe = () =>{
     const closeModalS = () => setModalSOpen(false);
     const openModalK = () => setModalKOpen(true);
     const closeModalK = () => setModalKOpen(false);
+
+    useEffect(()=>{
+        const postRecipe = async () =>{
+            try {
+                
+            } catch (error) {
+                console.error("Unable to post recipe: ", error);
+            }
+        }
+        if(postQuery != '') postRecipe();
+    },[postQuery]);
 
     const addStep = (instuctiontext) =>{
         setSteps([...steps, instuctiontext]);
@@ -47,9 +58,7 @@ const AddRecipe = () =>{
         closeModalK();
     }
 
-    const saveBtnClicked = () =>{
-        //virheentarkistus, onko tarpeelliset täytetty
-
+    const postBtnClicked = () =>{
         if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any coryright-violations contained-in or corcerning this recipe.")){
             setRecipe({
                 header : name,
@@ -61,17 +70,18 @@ const AddRecipe = () =>{
                 steps : steps,
                 keywords : keywords
             });
-        }
+            setPostQuery(recipe);
 
-        setName('');
-        setDescription('');
-        setDurationH(0);
-        setDurationMin(0);
-        setIngredients([]);
-        setSteps([]);
-        setKeywords([]);
-        setVisibleToAll(true);
-        setRecipe({});
+            setName('');
+            setDescription('');
+            setDurationH(0);
+            setDurationMin(0);
+            setIngredients([]);
+            setSteps([]);
+            setKeywords([]);
+            setVisibleToAll(true);
+            setRecipe({});
+        }
     }
 
     return(
@@ -93,7 +103,7 @@ const AddRecipe = () =>{
                                 <input className="recipeinput" type='checkbox' defaultChecked={true} onChange={(e) => e.target.checked ? setVisibleToAll(1):setVisibleToAll(0)}/>
                                 Public
                             </label>
-                            {visibleToAll?null:<p style={{color:"red", fontStyle:"italic"}}>Recipe will only be visible to registered users</p>}
+                            {visibleToAll?null:<p style={{color:"#3c493c", fontStyle:"italic"}}>Recipe will only be visible to registered users</p>}
                         </td>
                     </tr>
                     <tr className='recipeform-item'>
@@ -136,7 +146,7 @@ const AddRecipe = () =>{
                     </tr>
                     <tr>
                         <td>
-                            <button className='savebutton' onClick={saveBtnClicked}>Save Recipe</button>
+                            <button className='postbutton' onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1  || keywords.length < 1 }>Save & Post Recipe</button>
                         </td>
                     </tr>
                 </tbody>
@@ -189,7 +199,7 @@ const IngredientDialog = ({ isOpen, onClose, onAdd}) =>{
                         </tr>
                     </tbody>
                 </table>
-                <button onClick={() => onAdd(qt, unit, ing)}>Add Ingredient</button>
+                <button onClick={() => onAdd(qt, unit, ing)} disabled={qt == 0 || !ing}>Add Ingredient</button>
             </div>
         </div>
     );
@@ -206,7 +216,7 @@ const StepDialog = ({ isOpen, onClose, onAdd }) =>{
                     <b>Type instructions:</b><br/>
                     <textarea rows="10" cols="55" className="modalInput" value={text} onChange={(e) => setText(e.target.value)}/><br/>
                 </label>
-                <button onClick={() => onAdd(text)}>Add Step</button>
+                <button onClick={() => onAdd(text)} disabled={!text}>Add Step</button>
             </div>
         </div>
     );
@@ -223,7 +233,7 @@ const KeywordDialog =({ isOpen, onClose, onAdd }) =>{
                     <b>Type keyword:</b>
                     <input type='text' className="modalInput" value={w} onChange={(e) => setW(e.target.value)}/><br/>
                 </label>
-                <button onClick={() => onAdd(w)}>Add Keyword</button>
+                <button onClick={() => onAdd(w)} disabled={!w}>Add Keyword</button>
             </div>
         </div>
     );

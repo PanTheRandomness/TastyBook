@@ -7,8 +7,8 @@ const Admin = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      try {                             // Tee tähän http pyyntö ja useEffect kutsuu
-        const response = await fetch('/api/users'); //Lisää tähän polku
+      try {
+        const response = await fetch('/api/users');  //Lisää tänne http jutut
         const data = await response.json();
         setUsers(data);
       } catch (error) {
@@ -19,22 +19,28 @@ const Admin = () => {
     fetchUsers();
   }, []);
 
-  const handleDeleteUser = async () => {
+  const handleEditUser = (userId) => {
+    // Lisää toiminnallisuus käyttäjän muokkaamiseen tässä
+    console.log(`Edit user with ID: ${userId}`);
+  };
+
+  const handleDeleteUser = (userId) => {
     setShowConfirmationModal(true);
+    setUserIdToDelete(userId);
   };
 
   const confirmDeletion = async (confirmed) => {
     setShowConfirmationModal(false);
 
     if (!confirmed) {
-      return; 
+      return;
     }
 
     try {
       await fetch(`/api/users/${userIdToDelete}`, {
         method: 'DELETE',
       });
-      setUsers(users.filter(user => user.id !== userIdToDelete));
+      setUsers(users.filter((user) => user.id !== userIdToDelete));
       setUserIdToDelete('');
     } catch (error) {
       console.error('Error deleting user', error);
@@ -44,19 +50,6 @@ const Admin = () => {
   return (
     <div>
       <h2>Admin Page</h2>
-      <form>
-        <label>
-          User ID for deletion:
-          <input
-            type="text"
-            value={userIdToDelete}
-            onChange={(e) => setUserIdToDelete(e.target.value)}
-          />
-        </label>
-        <button type="button" onClick={handleDeleteUser}>
-          Delete User
-        </button>
-      </form>
       <table>
         <thead>
           <tr>
@@ -67,14 +60,17 @@ const Admin = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map(user => (
+          {users.map((user) => (
             <tr key={user.id}>
               <td>{user.id}</td>
               <td>{user.username}</td>
               <td>{user.email}</td>
               <td>
-                <button onClick={() => setUserIdToDelete(user.id)}>
-                  Set for Deletion
+                <button onClick={() => handleEditUser(user.id)}>
+                  Edit
+                </button>
+                <button onClick={() => handleDeleteUser(user.id)}>
+                  Delete
                 </button>
               </td>
             </tr>
