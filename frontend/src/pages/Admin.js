@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../Styles/Modal.css';
+import '../Styles/Admin.css';
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
@@ -9,7 +9,7 @@ const Admin = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/users');  //Lisää tänne http jutut
+        const response = await fetch('/api/users');
         const data = await response.json();
         setUsers(data);
       } catch (error) {
@@ -49,35 +49,37 @@ const Admin = () => {
   };
 
   return (
-    <div>
+    <div className="adminContainer">
       <h2>Admin Page</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td>{user.id}</td>
-              <td>{user.username}</td>
-              <td>{user.email}</td>
-              <td>
-                <button onClick={() => handleEditUser(user.id)}>
-                  Edit
-                </button>
-                <button onClick={() => handleDeleteUser(user.id)}>
-                  Delete
-                </button>
-              </td>
+      <div className="adminHead">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td>{user.username}</td>
+                <td>{user.email}</td>
+                <td>
+                  <button onClick={() => handleEditUser(user.id)}>
+                    Edit
+                  </button>
+                  <button onClick={() => handleDeleteUser(user.id)}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {showConfirmationModal && (
         <div className="confirmation-modal">
