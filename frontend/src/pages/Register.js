@@ -22,14 +22,14 @@ const Register = ({ onLogin }) => {
     };
       
     return (
-        <div className="registerContainer">
+        <div className="registerFormbody">
             <form className="loginForm" onSubmit={onRegisterClicked}>
                 <h1>Register</h1>
                 <input placeholder="name" value={name} onChange={e => setName(e.target.value)} />
                 <input placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
                 <input placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
                 <input placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-                <button className="register" disabled={!username || !password}>Register</button>
+                <button className="registerFormbutton" disabled={!username || !password}>Register</button>
         
             <div>Have you already registered?</div>
             <button >Login</button>
