@@ -2,7 +2,7 @@ import { useState } from "react";
 import { login } from "../api/userApi";
 import '../Styles/LoginStyle.css';
 
-const LoginPage = ({onLogin}) => {
+const Login = ({onLogin}) => {
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
 
@@ -28,4 +28,4 @@ const LoginPage = ({onLogin}) => {
     </div>
 );}
 
-export {LoginPage}
+export {Login}

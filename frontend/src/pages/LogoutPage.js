@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const LogoutPage = () =>{
+const Logout = () =>{
     
     return (
         <h1>You have been logged out.</h1>
@@ -9,4 +9,4 @@ const LogoutPage = () =>{
 
 }
 
-export {LogoutPage}
+export {Logout}
