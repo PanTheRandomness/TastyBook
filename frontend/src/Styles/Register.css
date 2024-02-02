@@ -20,7 +20,7 @@
     padding: 0.8rem;
   }
 
-  body {
+  .registerForm body {
     display: flex;
     align-items: center;
     justify-content: center;
