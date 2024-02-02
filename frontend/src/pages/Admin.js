@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../Styles/Modal.css';
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
@@ -20,7 +21,7 @@ const Admin = () => {
   }, []);
 
   const handleEditUser = (userId) => {
-    // Lisää toiminnallisuus käyttäjän muokkaamiseen tässä
+    // Lisää toiminnallisuus käyttäjän muokkaamiseen
     console.log(`Edit user with ID: ${userId}`);
   };
 
