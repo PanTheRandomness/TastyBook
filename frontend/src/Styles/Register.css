@@ -9,18 +9,19 @@
      
   }
 
-  .registerForm input {
+  .registerForminput {
     width: 120%; 
     padding: 0.8rem; 
     margin-bottom: 1rem;
   }
  
-  .registerForm button {
-    width: 30%;
-    padding: 0.8rem;
+  .registerFormbutton {
+    width: auto;
+    padding: 0.8rem 2rem;
+    box-sizing: content-box;
   }
 
-  .registerForm body {
+  .registerFormbody {
     display: flex;
     align-items: center;
     justify-content: center;

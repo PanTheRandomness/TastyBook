@@ -1,3 +1,13 @@
+
+.loginFormbody {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #506350;
+}
+
 .loginForm {
     display: flex;
     flex-direction: column;
@@ -6,6 +16,9 @@
     max-width: 400px; 
      margin: auto;
      align-self: center;
+     background-color: #AA5656;;
+    padding: 60px; 
+   border-radius: 8px;
      
   }
 
@@ -18,19 +31,4 @@
   .loginForm button {
     width: 30%;
     padding: 0.8rem;
-  }
-
-  .loginForm body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
-  }
-
-  .loginContainer {
-  background-color: #AA5656;;
-  padding: 60px; 
-  border-radius: 8px;
-
   }
