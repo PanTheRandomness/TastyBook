@@ -5,17 +5,17 @@ import '../Styles/Recipe.css';
 //myös muokkaus
 
 const AddRecipe = () =>{
-    const [recipeId,setRecipeId] = useState(1);//ei oliossa
-    const [recipe, setRecipe] = useState({});
     const [name, setName] = useState('');
+    const [recipe, setRecipe] = useState({});
     const [description, setDescription] = useState('');
     const [durationH, setDurationH] = useState(0);
     const [durationMin, setDurationMin] = useState(0);
     const [image, setImage] = useState(''); //ei oliossa
-    const [keywords, setKeywords] = useState([]);//miten olioon?
-    const [ingredients, setIngredients] = useState([]);//miten olioon?
-    const [steps, setSteps] = useState([]); //miten olioon?
-    const [visibleToAll, setVisibleToAll] = useState(true);
+    const [keywords, setKeywords] = useState([]);
+    const [ingredients, setIngredients] = useState([]);
+    const [steps, setSteps] = useState([]); 
+    const [visibleToAll, setVisibleToAll] = useState(1);
+    const [postquery, setPostQuery] = useState('');
 
     const [isModalIOpen, setModalIOpen] = useState(false);
     const [isModalSOpen, setModalSOpen] = useState(false);
@@ -34,9 +34,9 @@ const AddRecipe = () =>{
     }
 
     const addIngredient = (quantity, unit, ingredient) =>{
+        let q = quantity + " " + unit;
         setIngredients([...ingredients, {
-            quantity : quantity,
-            unit : unit,
+            quantity : q,
             ingredient : ingredient
         }]);
         closeModalI();
@@ -49,20 +49,20 @@ const AddRecipe = () =>{
 
     const saveBtnClicked = () =>{
         //virheentarkistus, onko tarpeelliset täytetty
-        //Miten id?
-        //PVM & Creator
-        setRecipe({
-            id : "",
-            header : name,
-            description : description,
-            visibleToAll : visibleToAll,
-            durationHours : durationH,
-            durationMinutes : durationMin,
-            ingredients : ingredients,
-            steps : steps,
-            keywords : keywords
-        });
-        console.log(recipe);
+
+        if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any coryright-violations contained-in or corcerning this recipe.")){
+            setRecipe({
+                header : name,
+                description : description,
+                visibleToAll : visibleToAll,
+                durationHours : durationH,
+                durationMinutes : durationMin,
+                ingredients : ingredients,
+                steps : steps,
+                keywords : keywords
+            });
+        }
+
         setName('');
         setDescription('');
         setDurationH(0);
@@ -90,7 +90,7 @@ const AddRecipe = () =>{
                         <th>Visibility:</th>
                         <td>
                             <label>
-                                <input className="recipeinput" type='checkbox' defaultChecked={true} onChange={(e) => e.target.checked ? setVisibleToAll(true):setVisibleToAll(false)}/>
+                                <input className="recipeinput" type='checkbox' defaultChecked={true} onChange={(e) => e.target.checked ? setVisibleToAll(1):setVisibleToAll(0)}/>
                                 Public
                             </label>
                             {visibleToAll?null:<p style={{color:"red", fontStyle:"italic"}}>Recipe will only be visible to registered users</p>}
