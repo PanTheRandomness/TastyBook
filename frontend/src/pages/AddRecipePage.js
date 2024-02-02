@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { RecipeIngredients, RecipeSteps } from './RecipePage';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
@@ -15,7 +15,6 @@ const AddRecipe = () =>{
     const [ingredients, setIngredients] = useState([]);
     const [steps, setSteps] = useState([]); 
     const [visibleToAll, setVisibleToAll] = useState(1);
-    const [postQuery, setPostQuery] = useState('');
 
     const [isModalIOpen, setModalIOpen] = useState(false);
     const [isModalSOpen, setModalSOpen] = useState(false);
@@ -28,16 +27,16 @@ const AddRecipe = () =>{
     const openModalK = () => setModalKOpen(true);
     const closeModalK = () => setModalKOpen(false);
 
-    useEffect(()=>{
-        const postRecipe = async () =>{
-            try {
+    const postRecipe = async () =>{
+        try {
+            //Yritä pan nyt ymmrätää
+            console.log(recipe);
+            //avaa reseptisivu
                 
-            } catch (error) {
-                console.error("Unable to post recipe: ", error);
-            }
+        } catch (error) {
+            window.alert("Unable to post recipe: ", error);
         }
-        if(postQuery != '') postRecipe();
-    },[postQuery]);
+    }
 
     const addStep = (instuctiontext) =>{
         setSteps([...steps, instuctiontext]);
@@ -59,33 +58,23 @@ const AddRecipe = () =>{
     }
 
     const postBtnClicked = () =>{
-        if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any coryright-violations contained-in or corcerning this recipe.")){
+        if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any coryright-violations contained-in or corcerning this recipe. You will be able to modify the recipe later.")){
             setRecipe({
-                header : name,
-                description : description,
-                visibleToAll : visibleToAll,
-                durationHours : durationH,
-                durationMinutes : durationMin,
-                ingredients : ingredients,
-                steps : steps,
-                keywords : keywords
+                "header" : name,
+                "description" : description,
+                "visibleToAll" : visibleToAll,
+                "durationHours" : durationH,
+                "durationMinutes" : durationMin,
+                "ingredients" : ingredients,
+                "steps" : steps,
+                "keywords" : keywords
             });
-            setPostQuery(recipe);
-
-            setName('');
-            setDescription('');
-            setDurationH(0);
-            setDurationMin(0);
-            setIngredients([]);
-            setSteps([]);
-            setKeywords([]);
-            setVisibleToAll(true);
-            setRecipe({});
+            postRecipe();
         }
     }
 
     return(
-        <div>
+        <div className='recipeform-body'>
             <table>
                 <tbody className='recipeform-container'>
                     <tr className='recipeform-item'>
@@ -133,7 +122,7 @@ const AddRecipe = () =>{
                     <tr className='recipeform-item'>
                         <th>Steps:</th>
                         <td>
-                            {steps.length < 1 ? null : <RecipeSteps steps={steps} />}
+                            {steps.length < 1 ? null : <RecipeSteps steps={steps} page="recipeform"/>}
                         </td>
                         <td><button onClick={openModalS}>Add</button></td>
                     </tr>
@@ -172,7 +161,7 @@ const RecipeKeywords = (props) =>{
 
 const IngredientDialog = ({ isOpen, onClose, onAdd}) =>{
     const [unitlist, setUnitlist] = useState(["whole", "half", "quarter", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups", "lbs"]);
-    const [qt, setQt] = useState(0); //onko jokin yksinkertaisempi, let tms?
+    const [qt, setQt] = useState(0);
     const [ing, setIng] = useState('');
     const [unit, setUnit] = useState('');
 

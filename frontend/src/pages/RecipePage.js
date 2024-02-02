@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 //Uniikit URL:it
@@ -32,7 +32,7 @@ const Recipe = () =>{
                 <div className='recipe-foot'>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={ingredients}/>
-                        <RecipeSteps steps={steps}/>
+                        <RecipeSteps steps={steps} page="recipepage"/>
                     </div>
                     <RecipeReviews reviews={reviews}/>
                 </div>
@@ -82,13 +82,14 @@ const RecipeIngredients = (props)=>{
 }
 
 const RecipeSteps = (props) =>{
+    let page = props.page;
     const steps = props.steps.map((step, i) =>{
         return <li key={i}>{step}</li>
     });
 
     return(
         <div className='recipe-steps'>
-            <ol>{steps}</ol>
+            <ol className={page == "recipeform" ? "recipeform-step": "recipepage-step"}>{steps}</ol>
         </div>
     );
 }

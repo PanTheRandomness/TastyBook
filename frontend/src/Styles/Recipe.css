@@ -5,8 +5,13 @@
 body{
     background-color: #506350;
 }
+.recipeform-body, .recipeform-step{
+    display: flex;
+    justify-content: center;
+    color:#F1DBBF;
+}
 
-.recipeform-container {
+.recipeform-container{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
