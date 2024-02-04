@@ -1,13 +1,13 @@
 const BASE_URL = "http://localhost:3004";
 
-export const register = async (username, password) => {
+export const register = async (username, name, email, password) => {
     try {
         const response = await fetch(`${BASE_URL}/api/signup`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify({ username, name, email, password }),
         });
 
         if (!response.ok) {

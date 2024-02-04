@@ -5,8 +5,13 @@ export const useUser = () => {
     const [token] = useToken();
 
     const getPayloadFromToken = (token) => {
-        const encodedPayload = token.split(".")[1];
-        return JSON.parse(atob(encodedPayload));
+        try {
+            const encodedPayload = token.split(".")[1];
+            const decodedPayload = atob(encodedPayload);
+            return JSON.parse(decodedPayload);
+        } catch (error) {
+            return null;
+        }
     }
 
     const [user, setUser] = useState(null);

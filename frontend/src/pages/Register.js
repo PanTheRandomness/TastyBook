@@ -12,7 +12,7 @@ const Register = ({ onLogin }) => {
     const onRegisterClicked = async (event) => {
         event.preventDefault();
         try {
-            const response = await register(username, password);
+            const response = await register(username, name, email, password);
             const { token } = response;
             onLogin(token);
         } catch (error) {
