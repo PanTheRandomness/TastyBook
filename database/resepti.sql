@@ -54,7 +54,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `recipedb`.`Recipe` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `User_id` INT NULL,
-  `hash` VARCHAR(45) NOT NULL,
+  `hash` VARCHAR(64) NOT NULL,
   `header` VARCHAR(45) NOT NULL,
   `description` VARCHAR(2000) NOT NULL,
   `visibleToAll` TINYINT NULL,
@@ -77,9 +77,10 @@ ENGINE = InnoDB;
 -- Table `recipedb`.`Ingredient`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `recipedb`.`Ingredient` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
@@ -141,7 +142,8 @@ CREATE TABLE IF NOT EXISTS `recipedb`.`Keyword` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `word` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  UNIQUE INDEX `word_UNIQUE` (`word` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
@@ -173,7 +175,7 @@ ENGINE = InnoDB;
 -- Table `recipedb`.`RecipesKeyword`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `recipedb`.`RecipesKeyword` (
-  `id` INT ZEROFILL NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `Recipe_id` INT NOT NULL,
   `Keyword_id` INT NOT NULL,
   PRIMARY KEY (`id`, `Recipe_id`, `Keyword_id`),

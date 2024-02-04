@@ -7,6 +7,7 @@ const signup = async (req, res) => {
     try {
         const { username, name, email, password, api_key } = req.body;
         if (!username || !name || !email || !password) return res.status(400).send();
+        if (typeof username !== "string" || typeof name !== "string" || typeof email !== "string" || typeof password !== "string") return res.status(400).send();
         if (api_key && api_key !== process.env.ADMIN_REGISTRATION_API_KEY) return res.status(401).send();
 
         const WORK_FACTOR = 10;
@@ -45,6 +46,7 @@ const login = async (req, res) => {
     try {
         const { username, password } = req.body;
         if (!username || !password) return res.status(400).send();
+        if (typeof username !== "string" || typeof password !== "string") return res.status(400).send();
         
         const userInfo = await sql.findUserInfo(username);
         if (userInfo.length === 0) return res.status(401).send();

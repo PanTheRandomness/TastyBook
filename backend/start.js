@@ -24,6 +24,9 @@ app.use(userRoutes);
 const adminRoutes = require("./src/routes/adminRoutes");
 app.use(adminRoutes);
 
+const errorHandling = require("./src/middleware/errorHandling");
+app.use(errorHandling);
+
 const port = 3004;
 const hostname = "127.0.0.1";
 

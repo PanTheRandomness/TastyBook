@@ -15,11 +15,26 @@ const getAllRecipes = async (req, res) => {
 const addRecipe = async (req, res) => {
     try {
         const { header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients } = req.body;
-        if (!header || !description) return res.status(400).send();
+        if (typeof header !== "string" ||
+            typeof description !== "string" ||
+            !(visibleToAll === 0 || visibleToAll === 1) ||
+            typeof durationHours !== "number" || durationHours < 0 ||
+            typeof durationMinutes !== "number" || durationMinutes < 0 || durationMinutes > 59)
+            return res.status(400).send();
+
+        if (!Array.isArray(steps) || !steps.every(step => typeof step === "string")) return res.status(400).send();
+
+        if (!Array.isArray(keywords) || !keywords.every(word=> typeof word === "string")) return res.status(400).send();
+
+        if (!Array.isArray(ingredients) || !ingredients.every(ingredient =>
+            typeof ingredient === "object" &&
+            typeof ingredient.ingredient === "string" &&
+            typeof ingredient.quantity === "string"))
+            return res.status(400).send();
+
         const userId = req.user.id;
 
-        const time = Date.now();
-        const hash = calculateSHA256(`${header}:${time}`);
+        const hash = crypto.createHash("sha256").update(`${header}:${Date.now()}`).digest("hex");
 
         const result = await sql.addRecipe(userId, header, hash, description, visibleToAll, durationHours, durationMinutes);
 
@@ -35,16 +50,10 @@ const addRecipe = async (req, res) => {
             await addRecipesIngredient(ingredient, result.insertId)
         ));
 
-        res.status(201).json(hash);
+        res.status(201).json({ hash });
     } catch (error) {
         res.status(500).send();
     }
-}
-
-const calculateSHA256 = (data) => {
-    const hash = crypto.createHash("sha256");
-    hash.update(data);
-    return hash.digest("hex");
 }
 
 module.exports = { getAllRecipes, addRecipe };
