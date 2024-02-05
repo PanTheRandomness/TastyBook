@@ -1,40 +1,53 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 //Uniikit URL:it
 //poistopainike + varmistus(window.confirm())
 
 const Recipe = () =>{
-    
-    const [created, setCreated] = useState('');
-    const [modified, setModified] = useState('');
-    const [creator, setCreator] = useState('');
+    //esimerkkiresepti kehitystä varten, poista tiedot kun reseptejä voidaan tarkkailla
+    const [recipe, setRecipe] = useState({
+        "header" : "Reseptin nimi",
+        "description" : "Nami nami ruokaa",
+        "visibleToAll" : true,
+        "creator" : "Joku Heppu",
+        "created" : '1-1-2024',
+        "rating" : 5,
+        "durationHours" : 2,
+        "durationMinutes" : 15,
+        "ingredients" : [
+            {"quantity": "1 dl", "ingredient":"flour"}, 
+            {"quantity": "2 tsp", "ingredient":"salt"},
+            {"quantity": "1 tbsp", "ingredient":"pepper"}
+        ],
+        "steps" : ["Eka kohta", "Toka kohta", "Kolmas kohta", "jne"],
+        "keywords" : ["Eka sana", "Toka sana", "Kolmas sana"], 
+        "reviews" : [
+            {"username":"joku", "rating":"5/5", "text":"Oli kyllä mainio!"},
+            {"username":"t", "rating":"2/5", "text":"Liian helppo :("},
+            {"username":"möh", "rating":"4/4", "text":"Maukas"}
+        ]
+    });
 
-    //esimerkkilistoja kehitystä varten
-    const [ingredients, setIngredients] = useState([
-        {"quantity": "1 dl", "ingredient":"flour"}, 
-        {"quantity": "2 tsp", "ingredient":"salt"},
-        {"quantity": "1 tbsp", "ingredient":"pepper"}
-    ]);
-    const [steps, setSteps] = useState(["Eka kohta", "Toka kohta", "Kolmas kohta", "jne"]);
-    const [reviews, setReviews] = useState([
-        {"username":"joku", "rating":"5/5", "text":"Oli kyllä mainio!"},
-        {"username":"t", "rating":"2/5", "text":"Liian helppo :("},
-        {"username":"möh", "rating":"4/4", "text":"Maukas"}
-    ]);
-    const [keywords, setKeywords] = useState(["Eka sana", "Toka sana", "Kolmas sana"]);
+    useEffect(()=>{
+        const getRecipe = async () =>{
+            //URL: reseptin id?
+            const response = await fetch("http://localhost:3004/");
+            let r = await response.json();
+            setRecipe(r);
+        }
+    },[]);
 
     return(
         <div>
-            <div>Yläosa</div>
             <div className='recipe-container'>
-                <RecipeHead keywords={keywords}/>
+                <RecipeHead recipe={recipe}/>
                 <div className='recipe-foot'>
                     <div className='recipe'>
-                        <RecipeIngredients ingredients={ingredients}/>
-                        <RecipeSteps steps={steps} page="recipepage"/>
+                        <RecipeIngredients ingredients={recipe.ingredients}/>
+                        <RecipeSteps steps={recipe.steps} page="recipepage"/>
                     </div>
-                    <RecipeReviews reviews={reviews}/>
+                    <RecipeReviews reviews={recipe.reviews}/>
                 </div>
             </div>
         </div>
@@ -42,14 +55,15 @@ const Recipe = () =>{
 }
 
 const RecipeHead = (props) =>{
+    const recipe = props.recipe;
     return(
         <div className='recipe-head'>
-            <h1>Name</h1>
-            <p>Description</p>
+            <h1>{recipe.header} <img src='rating_star.png' alt="Star Rating"/>{recipe.rating}</h1>
+            <p>{recipe.description}</p>
             <div>kuva sivummalle</div>
-            <p>Creator <i>Created</i></p>
-            <div>Star-rating, duration h, min</div>
-            <RecipeKeywords keywords={props.keywords}/> <br/>
+            <p>{recipe.creator} <i>{recipe.created}</i></p>
+            <div><i>Duration: </i>{recipe.durationHours}h {recipe.durationMinutes}min</div>
+            <RecipeKeywords keywords={recipe.keywords}/> <br/>
         </div>
     );
 }

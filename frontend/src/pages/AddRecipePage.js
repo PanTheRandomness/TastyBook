@@ -2,15 +2,19 @@ import { useState } from 'react';
 import { RecipeIngredients, RecipeSteps } from './RecipePage';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
-//myös muokkaus
 
+import { useToken } from '../customHooks/useToken';
+
+//myös muokkaus
 const AddRecipe = () =>{
+    //oliko näin?
+    const [token,] = useToken();
+
     const [name, setName] = useState('');
-    const [recipe, setRecipe] = useState({});
     const [description, setDescription] = useState('');
     const [durationH, setDurationH] = useState(0);
     const [durationMin, setDurationMin] = useState(0);
-    const [image, setImage] = useState(''); //ei oliossa
+    const [image, setImage] = useState(''); //ei oliossa vielä tässä iteraatiossa
     const [keywords, setKeywords] = useState([]);
     const [ingredients, setIngredients] = useState([]);
     const [steps, setSteps] = useState([]); 
@@ -28,11 +32,30 @@ const AddRecipe = () =>{
     const closeModalK = () => setModalKOpen(false);
 
     const postRecipe = async () =>{
+        const requestOptions ={
+            method:'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization' : "Bearer " + token
+            },
+            body: JSON.stringify({
+                "header" : name,
+                "description" : description,
+                "visibleToAll" : visibleToAll,
+                "durationHours" : durationH,
+                "durationMinutes" : durationMin,
+                "ingredients" : ingredients,
+                "steps" : steps,
+                "keywords" : keywords
+            })
+        }
+
         try {
-            //Yritä pan nyt ymmrätää
-            console.log(recipe);
-            //avaa reseptisivu
-                
+            //MIKÄ URL
+            const response = await fetch("http://localhost:3004", requestOptions);
+            if(response.ok){
+                //avaa tässä luotu reseptisivu
+            }
         } catch (error) {
             window.alert("Unable to post recipe: ", error);
         }
@@ -59,16 +82,6 @@ const AddRecipe = () =>{
 
     const postBtnClicked = () =>{
         if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any coryright-violations contained-in or corcerning this recipe. You will be able to modify the recipe later.")){
-            setRecipe({
-                "header" : name,
-                "description" : description,
-                "visibleToAll" : visibleToAll,
-                "durationHours" : durationH,
-                "durationMinutes" : durationMin,
-                "ingredients" : ingredients,
-                "steps" : steps,
-                "keywords" : keywords
-            });
             postRecipe();
         }
     }
