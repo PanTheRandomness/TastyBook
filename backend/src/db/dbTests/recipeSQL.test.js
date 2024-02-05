@@ -1,15 +1,63 @@
-const { addRecipe, addStep, getAllRecipeHashes, getSteps } = require("../recipeSQL");
+const { addRecipe, addStep, getAllRecipeHashes, getSteps, getRecipes } = require("../recipeSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
 
 describe("getAllRecipeHashes", () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it("should return all hashes from recipe table", async () => {
         executeSQL.mockReturnValueOnce([{ hash: "123"}, { hash: "234" }]);
-        const result = await getAllRecipeHashes();
+        const result = await getAllRecipeHashes(true);
 
         expect(executeSQL).toHaveBeenCalledWith("SELECT hash FROM recipe", []);
         expect(result).toEqual([{ hash: "123"}, { hash: "234" }]);
+    });
+
+    it("should return all hashes that are visible to all if no argument given", async () => {
+        executeSQL.mockReturnValueOnce([{ hash: "123"}, { hash: "234" }]);
+
+        const result = await getAllRecipeHashes();
+
+        expect(executeSQL).toHaveBeenCalledWith("SELECT hash FROM recipe WHERE visibleToAll=1", []);
+        expect(result).toEqual([{ hash: "123"}, { hash: "234" }]);
+    });
+});
+
+describe("getRecipes", () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+    
+    it("should fetch all recipes if no hash is given", async () => {
+        executeSQL.mockReturnValueOnce([{ id: 1 }, { id: 2 }]);
+
+        const result = await getRecipes(null, true);
+
+        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes FROM recipe r LEFT JOIN user u ON r.User_id=u.id WHERE 1=1", []);
+        expect(result).toEqual([{ id: 1 }, { id: 2 }]);
+    });
+
+    it("should add hash to params if hash is given", async () => {
+        const hash = "123";
+        executeSQL.mockReturnValueOnce([{ id: 1 }]);
+
+        const result = await getRecipes(hash, true);
+
+        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes FROM recipe r LEFT JOIN user u ON r.User_id=u.id WHERE 1=1 AND r.hash=?", [hash]);
+        expect(result).toEqual([{ id: 1 }]);
+    });
+
+    it("should only fetch recipes that are visible to all if no logged in", async () => {
+        const hash = "123";
+        executeSQL.mockReturnValueOnce([{ id: 1 }]);
+
+        const result = await getRecipes(null, false);
+
+        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes FROM recipe r LEFT JOIN user u ON r.User_id=u.id WHERE 1=1 AND r.visibleToAll=1", []);
+        expect(result).toEqual([{ id: 1 }]);
     });
 });
 

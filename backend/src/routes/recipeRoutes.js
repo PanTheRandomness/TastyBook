@@ -2,11 +2,11 @@ var express = require("express");
 var router = express.Router();
 
 let ctrl = require("../controllers/recipeController");
-let jwtMiddleware = require("../middleware/verifyJWT");
+let userMiddleware = require("../middleware/verifyUser");
 
-router.route("/api/recipes").get(ctrl.getAllRecipes);
+router.route("/api/recipes").get(userMiddleware.isUserLoggedIn, ctrl.getAllRecipes);
 
-router.route("/api/recipe/urls").get(ctrl.getAllRecipeHashes);
+router.route("/api/recipe/urls").get(userMiddleware.isUserLoggedIn, ctrl.getAllRecipeHashes);
 
 /*  /api/recipe/:hash GET
 
@@ -61,7 +61,7 @@ router.route("/api/recipe/urls").get(ctrl.getAllRecipeHashes);
     Steps on aina oikeassa järjestyksessä
 */
 
-router.route("/api/recipe/:hash").get(ctrl.getRecipe);
+router.route("/api/recipe/:hash").get(userMiddleware.isUserLoggedIn, ctrl.getRecipe);
 
 /*  /api/recipe POST
     Esimerkki body:
@@ -84,6 +84,6 @@ router.route("/api/recipe/:hash").get(ctrl.getRecipe);
     Jos onnistuu, palauttaa statuskoodin 201 ja hashin, joka on reitti luodulle reseptille
 */
 
-router.route("/api/recipe").post(jwtMiddleware.verifyJWT, ctrl.addRecipe);
+router.route("/api/recipe").post(userMiddleware.verifyJWT, ctrl.addRecipe);
 
 module.exports = router;

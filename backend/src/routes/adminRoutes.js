@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 
 let ctrl = require("../controllers/userController");
-let jwtMiddleware = require("../middleware/verifyJWT");
+let jwtMiddleware = require("../middleware/verifyUser");
 let adminMiddleware = require("../middleware/verifyAdmin");
 
 /*  /api/users GET

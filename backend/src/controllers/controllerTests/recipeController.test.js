@@ -13,6 +13,7 @@ describe("getAllRecipeHashes", () => {
     let req, res;
 
     beforeEach(() => {
+        req = {};
         res = {
             status: jest.fn(() => res),
             json: jest.fn(),
@@ -62,7 +63,7 @@ describe("getRecipe", () => {
     });
 
     it("should return 404 if there is no recipe for the hash", async () => {
-        sql.getRecipe.mockResolvedValue([]);
+        sql.getRecipes.mockResolvedValue([]);
 
         await getRecipe(req, res);
 
@@ -73,7 +74,7 @@ describe("getRecipe", () => {
 
     it("should handle fetching recipe from the database", async () => {
         // sql.getRecipe(hash) palauttaa todellisuudessa kaikki reseptin tiedot
-        sql.getRecipe.mockResolvedValue([{ id: 1 }]);
+        sql.getRecipes.mockResolvedValue([{ id: 1, visibleToAll: 1 }]);
         sql.getSteps.mockResolvedValue([{ number: 1, step: "eka" }, { number: 2, step: "toka" }]);
         getRecipesIngredients.mockResolvedValue([{ id: 1, name: "potato", quantity: "5kg"}, { id: 2, name: "tomato", quantity: "2"}]);
         getRecipesKeywords.mockResolvedValue([{ id: 1, word: "Soup" }, { id: 2, word: "Meat" }]);
@@ -84,6 +85,40 @@ describe("getRecipe", () => {
         expect(res.json).toHaveBeenCalledWith(
             {
                 id: 1,
+                visibleToAll: 1,
+                steps: [{ number: 1, step: "eka" }, { number: 2, step: "toka" }],
+                ingredients: [{ id: 1, name: "potato", quantity: "5kg"}, { id: 2, name: "tomato", quantity: "2"}],
+                keywords: [{ id: 1, word: "Soup" }, { id: 2, word: "Meat" }]
+            }
+        );
+    });
+
+    /* 404 vai 401 ????
+    it("should return 401 if recipe is not marked visible to all and user is not logged in", async () => {
+        sql.getRecipes.mockResolvedValue([{ id: 1, visibleToAll: 0 }]);
+
+        await getRecipe(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.send).toHaveBeenCalled();
+    });
+    */
+
+    it("should handle fetching recipe from the database if recipe is not marked visible to all but user is logged in", async () => {
+        // sql.getRecipe(hash) palauttaa todellisuudessa kaikki reseptin tiedot
+        req.loggedIn = true;
+        sql.getRecipes.mockResolvedValue([{ id: 1, visibleToAll: 0 }]);
+        sql.getSteps.mockResolvedValue([{ number: 1, step: "eka" }, { number: 2, step: "toka" }]);
+        getRecipesIngredients.mockResolvedValue([{ id: 1, name: "potato", quantity: "5kg"}, { id: 2, name: "tomato", quantity: "2"}]);
+        getRecipesKeywords.mockResolvedValue([{ id: 1, word: "Soup" }, { id: 2, word: "Meat" }]);
+
+        await getRecipe(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith(
+            {
+                id: 1,
+                visibleToAll: 0,
                 steps: [{ number: 1, step: "eka" }, { number: 2, step: "toka" }],
                 ingredients: [{ id: 1, name: "potato", quantity: "5kg"}, { id: 2, name: "tomato", quantity: "2"}],
                 keywords: [{ id: 1, word: "Soup" }, { id: 2, word: "Meat" }]
@@ -92,7 +127,7 @@ describe("getRecipe", () => {
     });
 
     it("should handle internal server error", async () => {
-        sql.getRecipe.mockRejectedValue(new Error("Database error"));
+        sql.getRecipes.mockRejectedValue(new Error("Database error"));
 
         await getRecipe(req, res);
 

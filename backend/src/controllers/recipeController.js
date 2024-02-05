@@ -5,7 +5,7 @@ const crypto = require("crypto");
 
 const getAllRecipes = async (req, res) => {
     try {
-        const recipes = await sql.getAllRecipes();
+        const recipes = await sql.getRecipes(req.loggedIn);
         res.status(200).json(recipes);
     } catch (error) {
         res.status(500).send();
@@ -14,7 +14,8 @@ const getAllRecipes = async (req, res) => {
 
 const getAllRecipeHashes = async (req, res) => {
     try {
-        const hashes = await sql.getAllRecipeHashes();
+        // Jos käyttäjä ei ole kirjautunut, voiko käyttäjä tietää, että reitti/resepti on olemassa?
+        const hashes = await sql.getAllRecipeHashes(req.loggedIn);
         res.status(200).json(hashes);
     } catch (error) {
         res.status(500).send();
@@ -26,10 +27,13 @@ const getRecipe = async (req, res) => {
         const { hash } = req.params;
         if (!hash) return res.status(400).send();
 
-        const result = await sql.getRecipe(hash);
+        // Jos käyttäjä ei ole kirjautunut, 404 vai 401 ???
+        const result = await sql.getRecipes(hash, req.loggedIn);
         if (result.length !== 1) return res.status(404).send();
 
         let recipe = result[0];
+        
+        // if (recipe.visibleToAll === 0 && !req.loggedIn) return res.status(401).send();
         const ingredients = await getRecipesIngredients(recipe.id);
         recipe.ingredients = ingredients;
         const steps = await sql.getSteps(recipe.id);
