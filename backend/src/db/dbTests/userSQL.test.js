@@ -5,13 +5,13 @@ jest.mock("../executeSQL");
 
 describe("findUserInfo", () => {
     it("should return user info from the database", async () => {
-        executeSQL.mockResolvedValueOnce({ id: 1, password: "password", admin: null});
+        executeSQL.mockResolvedValueOnce([{ id: 1, password: "password", admin: null }]);
         const username = "testuser";
 
         const result = await findUserInfo(username);
 
         expect(executeSQL).toHaveBeenCalledWith("SELECT id, password, admin FROM user WHERE username=?", [username]);
-        expect(result).toEqual({ id: 1, password: "password", admin: null});
+        expect(result).toEqual([{ id: 1, password: "password", admin: null }]);
     });
 });
 

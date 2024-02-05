@@ -15,4 +15,9 @@ const addRecipesIngredient = (ingredientId, quantity, recipeId) => {
     return executeSQL(query, [ingredientId, quantity, recipeId]);
 }
 
-module.exports = { addIngredient, getIngredientId, addRecipesIngredient };
+const getRecipesIngredients = (recipeId) => {
+    const query = "SELECT i.id, i.name, ri.quantity FROM recipesingredient ri LEFT JOIN ingredient i ON ri.Ingredient_id=i.id WHERE ri.Recipe_id=?";
+    return executeSQL(query, [recipeId]);
+}
+
+module.exports = { addIngredient, getIngredientId, addRecipesIngredient, getRecipesIngredients };

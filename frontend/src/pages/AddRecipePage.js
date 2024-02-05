@@ -39,20 +39,20 @@ const AddRecipe = () =>{
                 'Authorization' : "Bearer " + token
             },
             body: JSON.stringify({
-                "header" : name,
-                "description" : description,
-                "visibleToAll" : visibleToAll,
-                "durationHours" : durationH,
-                "durationMinutes" : durationMin,
-                "ingredients" : ingredients,
-                "steps" : steps,
-                "keywords" : keywords
+                header : name,
+                description : description,
+                visibleToAll : visibleToAll,
+                durationHours : durationH,
+                durationMinutes : durationMin,
+                ingredients : ingredients,
+                steps : steps,
+                keywords : keywords
             })
         }
 
         try {
             //MIKÄ URL
-            const response = await fetch("http://localhost:3004", requestOptions);
+            const response = await fetch("http://localhost:3004/api/recipe", requestOptions);
             if(response.ok){
                 //avaa tässä luotu reseptisivu
             }
@@ -112,10 +112,10 @@ const AddRecipe = () =>{
                         <th>Recipe duration:</th>
                         <td>
                             <label>
-                                <input className="recipeinput" type='number' value={durationH} min="0" max="200" onChange={(e) => setDurationH(e.target.value)} /> hours 
+                                <input className="recipeinput" type='number' value={durationH} min="0" max="200" onChange={(e) => setDurationH(parseInt(e.target.value))} /> hours 
                             </label> <br/>
                             <label>
-                                <input className="recipeinput" type='number' value={durationMin} min="0" max="59" onChange={(e) => setDurationMin(e.target.value)} /> minutes
+                                <input className="recipeinput" type='number' value={durationMin} min="0" max="59" onChange={(e) => setDurationMin(parseInt(e.target.value))} /> minutes
                             </label>
                         </td>
                     </tr>

@@ -11,4 +11,13 @@ const addRecipesKeyword = async (word, recipeId) => {
     }
 }
 
-module.exports = { addRecipesKeyword };
+const getRecipesKeywords = async (recipeId) => {
+    try {
+        const result = await sql.getRecipesKeywords(recipeId);
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = { addRecipesKeyword, getRecipesKeywords };

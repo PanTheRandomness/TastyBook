@@ -1,4 +1,4 @@
-const { addKeyword, getKeywordId, addRecipesKeyword } = require("../keywordSQL");
+const { addKeyword, getKeywordId, addRecipesKeyword, getRecipesKeywords } = require("../keywordSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
@@ -33,5 +33,16 @@ describe("addRecipesKeyword", () => {
         await addRecipesKeyword(keywordId, recipeId);
 
         expect(executeSQL).toHaveBeenCalledWith("INSERT INTO recipeskeyword (Keyword_id, Recipe_id) VALUES (?,?)", [keywordId, recipeId]);
+    });
+});
+
+describe("getRecipesKeywords", () => {
+    it("should return all recipes keywords", async () => {
+        const recipeId = 1;
+        executeSQL.mockResolvedValueOnce([{ id: 1, word: "Soup" }, { id: 2, word: "Meat" }]);
+        const result = await getRecipesKeywords(recipeId);
+
+        expect(executeSQL).toHaveBeenCalledWith("SELECT k.id, k.word FROM recipeskeyword rk LEFT JOIN keyword k ON rk.Keyword_id=k.id WHERE rk.Recipe_id=?", [recipeId]);
+        expect(result).toEqual([{ id: 1, word: "Soup" }, { id: 2, word: "Meat" }]);
     });
 });

@@ -15,4 +15,9 @@ const addRecipesKeyword = (keywordId, recipeId) => {
     return executeSQL(query, [keywordId, recipeId]);
 }
 
-module.exports = { addKeyword, getKeywordId, addRecipesKeyword };
+const getRecipesKeywords = (recipeId) => {
+    const query = "SELECT k.id, k.word FROM recipeskeyword rk LEFT JOIN keyword k ON rk.Keyword_id=k.id WHERE rk.Recipe_id=?";
+    return executeSQL(query, [recipeId]);
+}
+
+module.exports = { addKeyword, getKeywordId, addRecipesKeyword, getRecipesKeywords };

@@ -1,12 +1,43 @@
 const sql = require("../db/recipeSQL");
-const { addRecipesKeyword } = require("./keywordController");
-const { addRecipesIngredient } = require("./ingredientController");
+const { addRecipesKeyword, getRecipesKeywords } = require("./keywordController");
+const { addRecipesIngredient, getRecipesIngredients } = require("./ingredientController");
 const crypto = require("crypto");
 
 const getAllRecipes = async (req, res) => {
     try {
         const recipes = await sql.getAllRecipes();
         res.status(200).json(recipes);
+    } catch (error) {
+        res.status(500).send();
+    }
+}
+
+const getAllRecipeHashes = async (req, res) => {
+    try {
+        const hashes = await sql.getAllRecipeHashes();
+        res.status(200).json(hashes);
+    } catch (error) {
+        res.status(500).send();
+    }
+}
+
+const getRecipe = async (req, res) => {
+    try {
+        const { hash } = req.params;
+        if (!hash) return res.status(400).send();
+
+        const result = await sql.getRecipe(hash);
+        if (result.length !== 1) return res.status(404).send();
+
+        let recipe = result[0];
+        const ingredients = await getRecipesIngredients(recipe.id);
+        recipe.ingredients = ingredients;
+        const steps = await sql.getSteps(recipe.id);
+        recipe.steps = steps;
+        const keywords = await getRecipesKeywords(recipe.id);
+        recipe.keywords = keywords;
+
+        res.status(200).json(recipe);
     } catch (error) {
         res.status(500).send();
     }
@@ -56,4 +87,4 @@ const addRecipe = async (req, res) => {
     }
 }
 
-module.exports = { getAllRecipes, addRecipe };
+module.exports = { getAllRecipes, getAllRecipeHashes, getRecipe, addRecipe };

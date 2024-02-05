@@ -1,4 +1,4 @@
-const { addIngredient, getIngredientId, addRecipesIngredient } = require("../ingredientSQL");
+const { addIngredient, getIngredientId, addRecipesIngredient, getRecipesIngredients } = require("../ingredientSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
@@ -34,5 +34,17 @@ describe("addRecipesKeyword", () => {
         await addRecipesIngredient(ingredientId, quantity, recipeId);
 
         expect(executeSQL).toHaveBeenCalledWith("INSERT INTO recipesingredient (Ingredient_id, quantity, Recipe_id) VALUES (?,?,?)", [ingredientId, quantity, recipeId]);
+    });
+});
+
+describe("getRecipesIngredients", () => {
+    it("should return all recipes ingredients", async () => {
+        const recipeId = 1;
+        executeSQL.mockResolvedValueOnce([{ id: 1, name: "potato", quantity: "5kg"}, { id: 2, name: "tomato", quantity: "2"}]);
+
+        const result = await getRecipesIngredients(recipeId);
+
+        expect(executeSQL).toHaveBeenCalledWith("SELECT i.id, i.name, ri.quantity FROM recipesingredient ri LEFT JOIN ingredient i ON ri.Ingredient_id=i.id WHERE ri.Recipe_id=?", [recipeId]);
+        expect(result).toEqual([{ id: 1, name: "potato", quantity: "5kg"}, { id: 2, name: "tomato", quantity: "2"}]);
     });
 });
