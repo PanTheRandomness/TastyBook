@@ -13,7 +13,7 @@ const AdminRegister = ({ onLogin }) => {
     const onRegisterClicked = async (event) => {
         event.preventDefault();
         try {
-            const response = await register(username, name, email, password, api_key);
+            const response = await adminregister(username, name, email, password, api_key);
             const { token } = response;
             onLogin(token);
         } catch (error) {
