@@ -12,7 +12,7 @@ describe("getAllRecipeHashes", () => {
         executeSQL.mockReturnValueOnce([{ hash: "123"}, { hash: "234" }]);
         const result = await getAllRecipeHashes(true);
 
-        expect(executeSQL).toHaveBeenCalledWith("SELECT hash FROM recipe", []);
+        expect(executeSQL).toHaveBeenCalledWith("SELECT id, hash FROM recipe", []);
         expect(result).toEqual([{ hash: "123"}, { hash: "234" }]);
     });
 
@@ -21,7 +21,7 @@ describe("getAllRecipeHashes", () => {
 
         const result = await getAllRecipeHashes();
 
-        expect(executeSQL).toHaveBeenCalledWith("SELECT hash FROM recipe WHERE visibleToAll=1", []);
+        expect(executeSQL).toHaveBeenCalledWith("SELECT id, hash FROM recipe WHERE visibleToAll=1", []);
         expect(result).toEqual([{ hash: "123"}, { hash: "234" }]);
     });
 });
