@@ -81,7 +81,7 @@ const AddRecipe = () =>{
     }
 
     const postBtnClicked = () =>{
-        if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any coryright-violations contained-in or corcerning this recipe. You will be able to modify the recipe later.")){
+        if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any copyright-violations contained-in or concerning this recipe. You will be able to modify the recipe later.")){
             postRecipe();
         }
     }
@@ -189,7 +189,7 @@ const IngredientDialog = ({ isOpen, onClose, onAdd}) =>{
                 <table>
                     <tbody>
                         <tr>
-                            <td>Quantity:</td>
+                            <td className="modal-text">Quantity:</td>
                             <td>
                                 <input type='number' className="modalInput" value={qt} min="0" onChange={(e) =>setQt(e.target.value)}/>
                                 <select value={unit} className="modalInput" onChange={(e)=>setUnit(e.target.value)}>{units}</select>
@@ -215,7 +215,7 @@ const StepDialog = ({ isOpen, onClose, onAdd }) =>{
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
                 <label>
-                    <b>Type instructions:</b><br/>
+                    <b className="modal-text">Type instructions:</b><br/>
                     <textarea rows="10" cols="55" className="modalInput" value={text} onChange={(e) => setText(e.target.value)}/><br/>
                 </label>
                 <button onClick={() => onAdd(text)} disabled={!text}>Add Step</button>
@@ -232,7 +232,7 @@ const KeywordDialog =({ isOpen, onClose, onAdd }) =>{
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
                 <label>
-                    <b>Type keyword:</b>
+                    <b className="modal-text">Type keyword:</b>
                     <input type='text' className="modalInput" value={w} onChange={(e) => setW(e.target.value)}/><br/>
                 </label>
                 <button onClick={() => onAdd(w)} disabled={!w}>Add Keyword</button>

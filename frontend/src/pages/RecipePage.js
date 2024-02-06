@@ -98,7 +98,7 @@ const RecipeIngredients = (props)=>{
 const RecipeSteps = (props) =>{
     let page = props.page;
     const steps = props.steps.map((step, i) =>{
-        return <li key={i}>{step}</li>
+        return <li key={i}>{step} </li>
     });
 
     return(
