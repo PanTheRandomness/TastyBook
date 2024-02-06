@@ -5,15 +5,20 @@ const Admin = () => {
   const [users, setUsers] = useState([]);
   const [userIdToDelete, setUserIdToDelete] = useState('');
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await fetch('/api/users');
+        if (!response.ok) {
+          throw new Error('Failed to fetch users');
+        }
         const data = await response.json();
         setUsers(data);
       } catch (error) {
         console.error('Error fetching user data', error);
+        setError('Error fetching user data');
       }
     };
 
@@ -45,12 +50,14 @@ const Admin = () => {
       setUserIdToDelete('');
     } catch (error) {
       console.error('Error deleting user', error);
+      setError('Error deleting user');
     }
   };
 
   return (
     <div className="adminContainer">
       <h2>Admin Page</h2>
+      {error && <p className="error-message">{error}</p>}
       <div className="adminHead">
         <table>
           <thead>
