@@ -5,6 +5,7 @@ import '../Styles/Recipe.css';
 //poistopainike + varmistus(window.confirm())
 
 const Recipe = () =>{
+    const [hash, setHash] = useState('');
     //esimerkkiresepti kehitystä varten, poista tiedot kun reseptejä voidaan tarkkailla
     const [recipe, setRecipe] = useState({
         "header" : "Reseptin nimi",
@@ -31,12 +32,12 @@ const Recipe = () =>{
 
     useEffect(()=>{
         const getRecipe = async () =>{
-            //URL: reseptin id?
-            const response = await fetch("http://localhost:3004/");
+            const response = await fetch("http://localhost:3004/recipe/" + hash);
             let r = await response.json();
             setRecipe(r);
         }
-    },[]);
+        if(hash!= '') getRecipe();
+    },[hash]);
 
     return(
         <div>
@@ -116,7 +117,15 @@ const RecipeReviews = (props) =>{
 
     return(
         <table className='recipe-reviews'>
-            <tbody>{reviews}</tbody>
+            <tbody>
+                {props.reviews.length > 0 ? reviews : <i className='review-placeholder'>No reviews have been posted yet.</i>}
+                <tr> {/*Jos kirjauduttu sisään */}
+                    <td>
+                        <button className='review-button'>Add review</button>
+                    </td>
+                </tr>
+            </tbody>
+
         </table>
     );
 }

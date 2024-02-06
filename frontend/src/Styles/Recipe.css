@@ -94,10 +94,17 @@ body{
     color: #3c493c;
 }
 
-.recipe-reviews{
+.recipe-reviews, .review-placeholder{
     background-color: #AA5656;
     border-radius: 20px;
     margin: 10px;
     color: #F1DBBF;
     flex-basis: 25%;
+}
+
+.review-button{
+    border-style: none;
+    border-radius: 10px;
+    background-color:#506350;
+    color:#F1DBBF;
 }

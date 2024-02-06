@@ -2,14 +2,12 @@ import { useState } from 'react';
 import { RecipeIngredients, RecipeSteps } from './RecipePage';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
-
 import { useToken } from '../customHooks/useToken';
+import { useNavigate } from 'react-router-dom';
 
 //myös muokkaus
 const AddRecipe = () =>{
-    //oliko näin?
     const [token,] = useToken();
-
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [durationH, setDurationH] = useState(0);
@@ -30,6 +28,8 @@ const AddRecipe = () =>{
     const closeModalS = () => setModalSOpen(false);
     const openModalK = () => setModalKOpen(true);
     const closeModalK = () => setModalKOpen(false);
+    
+    const navigate = useNavigate();
 
     const postRecipe = async () =>{
         const requestOptions ={
@@ -51,10 +51,9 @@ const AddRecipe = () =>{
         }
 
         try {
-            //MIKÄ URL
             const response = await fetch("http://localhost:3004/api/recipe", requestOptions);
             if(response.ok){
-                //avaa tässä luotu reseptisivu
+                navigate("/recipe"); //Miten se hash laitetaan tähän?
             }
         } catch (error) {
             window.alert("Unable to post recipe: ", error);
