@@ -55,6 +55,7 @@ const App = () => {
         <Route path='/login' element={<Login onLogin={onLogin} />}></Route>
         <Route path='/logout' element={<Logout />}></Route>
         <Route path='/admin' element={<Admin />}></Route>
+        <Route path='/adminregister' element={<AdminRegister />}></Route>
         <Route path='/recipe' element={<Recipe />}></Route>
         <Route path='/newrecipe' element={<AddRecipe addRecipeRoute={addRecipeRoute} />}></Route>
 

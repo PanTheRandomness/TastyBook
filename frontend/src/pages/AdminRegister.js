@@ -25,7 +25,7 @@ const AdminRegister = ({ onLogin }) => {
     return (
         <div className="registerFormbody">
             <form className="registerForm" onSubmit={onRegisterClicked}>
-                <h1>Register</h1>
+                <h1>Admin register</h1>
                 <input className="registerForminput" placeholder="name" value={name} onChange={e => setName(e.target.value)} />
                 <input className="registerForminput" placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
                 <input  className="registerForminput" placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
