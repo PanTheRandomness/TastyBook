@@ -26,7 +26,7 @@ const Recipe = () =>{
         "reviews" : [
             {"username":"joku", "rating":"5/5", "text":"Oli kyllä mainio!"},
             {"username":"t", "rating":"2/5", "text":"Liian helppo :("},
-            {"username":"möh", "rating":"4/4", "text":"Maukas"}
+            {"username":"möh", "rating":"4/5", "text":"Maukas"}
         ]
     });
 
@@ -71,7 +71,7 @@ const RecipeHead = (props) =>{
 
 const RecipeKeywords = (props) =>{
     const words = props.keywords.map((w, i)=>{
-        return <li key={i}>{w}</li>
+        return <li key={i}><a>{w}</a></li>
     });
 
     return(
@@ -115,17 +115,17 @@ const RecipeReviews = (props) =>{
         return <tr key={i}><th>{r.rating}</th><td>{r.username}:</td><td><i>{r.text}</i></td></tr>
     });
 
+    //nappi ohjaa kirjautumaan, jos ei vielä ole
     return(
         <table className='recipe-reviews'>
             <tbody>
-                {props.reviews.length > 0 ? reviews : <i className='review-placeholder'>No reviews have been posted yet.</i>}
-                <tr> {/*Jos kirjauduttu sisään */}
+                {props.reviews.length > 0 ? reviews : <tr><td><i className='review-placeholder'>No reviews have been posted yet.</i></td></tr>}
+                <tr> 
                     <td>
                         <button className='review-button'>Add review</button>
                     </td>
                 </tr>
             </tbody>
-
         </table>
     );
 }
