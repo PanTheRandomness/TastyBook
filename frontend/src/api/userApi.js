@@ -39,3 +39,23 @@ export const login = async (username, password) => {
         throw error;
     }
 }
+
+export const adminregister = async (username, name, email, password, api_key) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/signup`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, name, email, password, api_key }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Registering failed: ${response.statusText}`);
+        }
+
+        return response.json();
+    } catch (error) {
+        throw error;
+    }
+}

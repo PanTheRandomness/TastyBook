@@ -3,6 +3,7 @@ import {Register} from './pages/Register';
 import {Login} from './pages/LoginPage';
 import {Logout} from './pages/LogoutPage';
 import Admin from './pages/Admin';
+import {AdminRegister} from './pages/AdminRegister';
 import FrontPage from "./pages/FrontPage";
 import { Recipe } from './pages/RecipePage';
 import { AddRecipe } from './pages/AddRecipePage';
