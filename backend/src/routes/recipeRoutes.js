@@ -86,4 +86,17 @@ router.route("/api/recipe/:hash").get(userMiddleware.isUserLoggedIn, ctrl.getRec
 
 router.route("/api/recipe").post(userMiddleware.verifyJWT, ctrl.addRecipe);
 
+/*  /api/recipe/:hash DELETE
+
+    Pitää olla token mukana
+    
+    Jos poistaminen onnistuu, palauttaa statuskoodin 200
+
+    Jos reseptiä ei ole, palauttaa statuskoodin 404
+
+    Jos ei muusta syystä onnistu, palauttaa stauskoodin 500
+*/
+
+router.route("/api/recipe/:hash").delete(userMiddleware.verifyJWT, ctrl.deleteRecipe);
+
 module.exports = router;

@@ -1,4 +1,4 @@
-const { addRecipe, getAllRecipeHashes, getRecipe } = require("../recipeController");
+const { addRecipe, getAllRecipeHashes, getRecipe, deleteRecipe } = require("../recipeController");
 const sql = require("../../db/recipeSQL");
 const { addRecipesKeyword, getRecipesKeywords } = require("../keywordController");
 const { addRecipesIngredient, getRecipesIngredients } = require("../ingredientController");
@@ -197,6 +197,51 @@ describe("addRecipe", () => {
         sql.addRecipe.mockRejectedValue(new Error("Database error"));
 
         await addRecipe(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalled();
+    });
+});
+
+describe("deleteRecipe", () => {
+    let req, res;
+
+    beforeEach(() => {
+        req = {
+            params: { hash: "123" },
+            user: { id: 1 }
+        }
+        res = {
+            status: jest.fn(() => res),
+            json: jest.fn(),
+            send: jest.fn(),
+        };
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should handle deleting recipe and sending statuscode 200", async () => {
+        sql.deleteRecipe.mockReturnValue({ affectedRows: 1 });
+        await deleteRecipe(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should return 404 if no recipe was found", async () => {
+        sql.deleteRecipe.mockReturnValue({ affectedRows: 0 });
+        await deleteRecipe(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should handle internal server error", async () => {
+        sql.deleteRecipe.mockRejectedValue(new Error("Database error"));
+
+        await deleteRecipe(req, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.send).toHaveBeenCalled();

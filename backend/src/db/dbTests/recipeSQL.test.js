@@ -1,4 +1,4 @@
-const { addRecipe, addStep, getAllRecipeHashes, getSteps, getRecipes } = require("../recipeSQL");
+const { addRecipe, addStep, getAllRecipeHashes, getSteps, getRecipes, deleteRecipe } = require("../recipeSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
@@ -104,5 +104,16 @@ describe("getSteps", () => {
 
         expect(executeSQL).toHaveBeenCalledWith("SELECT number, step FROM recipesteps WHERE Recipe_id=? ORDER BY number", [recipeId]);
         expect(result).toEqual([{ number: 1, step: "eka" }, { number: 2, step: "toka" }]);
+    });
+});
+
+describe("deleteRecipe", () => {
+    it("should delete recipe from database", async () => {
+        const hash = "123";
+        const userId = 1;
+
+        await deleteRecipe(hash, userId);
+
+        expect(executeSQL).toHaveBeenCalledWith("DELETE FROM recipe WHERE hash=? AND User_id=?", [hash, userId]);
     });
 });

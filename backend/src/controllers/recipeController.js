@@ -91,4 +91,18 @@ const addRecipe = async (req, res) => {
     }
 }
 
-module.exports = { getAllRecipes, getAllRecipeHashes, getRecipe, addRecipe };
+const deleteRecipe = async (req, res) => {
+    try {
+        const hash = req.params.hash;
+        const userId = req.user.id;
+
+        const result = await sql.deleteRecipe(hash, userId);
+
+        if (result.affectedRows === 0) return res.status(404).send();
+        res.status(200).send();
+    } catch (error) {
+        res.status(500).send();
+    }
+}
+
+module.exports = { getAllRecipes, getAllRecipeHashes, getRecipe, addRecipe, deleteRecipe };

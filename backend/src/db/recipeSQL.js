@@ -32,4 +32,9 @@ const getSteps = (recipeId) => {
     return executeSQL(query, [recipeId]);
 }
 
-module.exports = { getAllRecipeHashes, getRecipes, addRecipe, addStep, getSteps };
+const deleteRecipe = (hash, userId) => {
+    const query = "DELETE FROM recipe WHERE hash=? AND User_id=?";
+    return executeSQL(query, [hash, userId]);
+}
+
+module.exports = { getAllRecipeHashes, getRecipes, addRecipe, addStep, getSteps, deleteRecipe };
