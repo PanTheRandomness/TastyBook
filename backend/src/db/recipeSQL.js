@@ -1,7 +1,7 @@
 const { executeSQL } = require("./executeSQL");
 
 const getAllRecipeHashes = (loggedIn) => {
-    let query = "SELECT hash FROM recipe";
+    let query = "SELECT id, hash FROM recipe";
     if (!loggedIn) query += " WHERE visibleToAll=1";
     return executeSQL(query, []);
 }

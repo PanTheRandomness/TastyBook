@@ -38,7 +38,7 @@ const signup = async (req, res) => {
         }
     } catch (error) {
         if (error.code === "ER_DUP_ENTRY") return res.status(409).send();
-        res.status(500).send(error);
+        res.status(500).send();
     }
 }
 

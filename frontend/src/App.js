@@ -7,9 +7,29 @@ import FrontPage from "./pages/FrontPage";
 import { Recipe } from './pages/RecipePage';
 import { AddRecipe } from './pages/AddRecipePage';
 import { useToken } from "./customHooks/useToken";
+import { useEffect, useState } from "react";
+import { getRecipeRoutes } from "./api/recipeApi";
 
 const App = () => {
-  const [, setToken] = useToken();
+  const [token, setToken] = useToken();
+  const [recipeRoutes, setRecipeRoutes] = useState([]);
+
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      try {
+        const response = await getRecipeRoutes(token);
+        setRecipeRoutes(response);
+      } catch (error) {
+        // TODO: show error
+      }
+    }
+
+    fetchRoutes();
+  }, []);
+
+  const addRecipeRoute = (route) => {
+    setRecipeRoutes([...recipeRoutes, { hash: route }]);
+  }
 
   const onLogin = (token) => {
     setToken(token);
@@ -35,7 +55,13 @@ const App = () => {
         <Route path='/logout' element={<Logout />}></Route>
         <Route path='/admin' element={<Admin />}></Route>
         <Route path='/recipe' element={<Recipe />}></Route>
-        <Route path='/newrecipe' element={<AddRecipe />}></Route>
+        <Route path='/newrecipe' element={<AddRecipe addRecipeRoute={addRecipeRoute} />}></Route>
+
+        {
+          recipeRoutes.map((route) => (
+            <Route key={route.id} path={`/recipe/${route.hash}`} element={<Recipe route={route.hash} />}></Route>
+          ))
+        }
       </Routes>
     </Router>
   );

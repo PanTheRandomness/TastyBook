@@ -6,7 +6,8 @@ import { useToken } from '../customHooks/useToken';
 import { useNavigate } from 'react-router-dom';
 
 //myös muokkaus
-const AddRecipe = () =>{
+const AddRecipe = (props) =>{
+    const { addRecipeRoute } = props;
     const [token,] = useToken();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -53,7 +54,9 @@ const AddRecipe = () =>{
         try {
             const response = await fetch("http://localhost:3004/api/recipe", requestOptions);
             if(response.ok){
-                navigate("/recipe"); //Miten se hash laitetaan tähän?
+                const data = await response.json();
+                addRecipeRoute(data.hash);
+                navigate("/recipe/" + data.hash); //Miten se hash laitetaan tähän?
             }
         } catch (error) {
             window.alert("Unable to post recipe: ", error);

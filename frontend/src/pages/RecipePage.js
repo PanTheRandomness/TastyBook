@@ -4,8 +4,8 @@ import '../Styles/Recipe.css';
 //Uniikit URL:it
 //poistopainike + varmistus(window.confirm())
 
-const Recipe = () =>{
-    const [hash, setHash] = useState('');
+const Recipe = (props) =>{
+    const { route } = props;
     //esimerkkiresepti kehitystä varten, poista tiedot kun reseptejä voidaan tarkkailla
     const [recipe, setRecipe] = useState({
         "header" : "Reseptin nimi",
@@ -32,12 +32,16 @@ const Recipe = () =>{
 
     useEffect(()=>{
         const getRecipe = async () =>{
-            const response = await fetch("http://localhost:3004/recipe/" + hash);
-            let r = await response.json();
-            setRecipe(r);
+            try {
+                const response = await fetch("http://localhost:3004/api/recipe/" + route);
+                let r = await response.json();
+                setRecipe(r);
+            } catch (error) {
+                // TODO: handle error
+            }
         }
-        if(hash!= '') getRecipe();
-    },[hash]);
+        getRecipe();
+    },[]);
 
     return(
         <div>
@@ -48,7 +52,7 @@ const Recipe = () =>{
                         <RecipeIngredients ingredients={recipe.ingredients}/>
                         <RecipeSteps steps={recipe.steps} page="recipepage"/>
                     </div>
-                    <RecipeReviews reviews={recipe.reviews}/>
+                    {/*<RecipeReviews reviews={recipe.reviews}/>*/}
                 </div>
             </div>
         </div>
@@ -71,7 +75,7 @@ const RecipeHead = (props) =>{
 
 const RecipeKeywords = (props) =>{
     const words = props.keywords.map((w, i)=>{
-        return <li key={i}><a>{w}</a></li>
+        return <li key={i}><a>{w.word}</a></li>
     });
 
     return(
@@ -99,7 +103,7 @@ const RecipeIngredients = (props)=>{
 const RecipeSteps = (props) =>{
     let page = props.page;
     const steps = props.steps.map((step, i) =>{
-        return <li key={i}>{step} </li>
+        return <li key={i}>{step.step} </li>
     });
 
     return(
@@ -108,7 +112,7 @@ const RecipeSteps = (props) =>{
         </div>
     );
 }
-
+/*
 const RecipeReviews = (props) =>{
     //HUOM! Mieti asettelu!
     const reviews = props.reviews.map((r, i) =>{
@@ -129,5 +133,5 @@ const RecipeReviews = (props) =>{
         </table>
     );
 }
-
-export  {Recipe, RecipeHead, RecipeIngredients, RecipeSteps, RecipeReviews};
+*/
+export  {Recipe, RecipeHead, RecipeIngredients, RecipeSteps };
