@@ -16,7 +16,7 @@ const Register = ({ onLogin }) => {
             const { token } = response;
             onLogin(token);
         } catch (error) {
-            console.error("Rekisteröityminen epäonnistui");
+            console.error("Registering failed");
           
         }
     };

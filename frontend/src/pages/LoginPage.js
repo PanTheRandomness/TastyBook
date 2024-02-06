@@ -13,7 +13,7 @@ const Login = ({onLogin}) => {
             const { token } = response;
             onLogin(token)
         } catch (error) {
-            console.error("Rekisteröityminen epäonnistui");
+            console.error("Logging in failed.");
         }
     }
 
