@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../Styles/Admin.css';
+const BASE_URL = "http://localhost:3004";
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
@@ -10,7 +11,7 @@ const Admin = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/users');
+        const response = await fetch(`${BASE_URL}/local/api/users`,);
         if (!response.ok) {
           throw new Error('Failed to fetch users');
         }
