@@ -21,9 +21,9 @@ const Login = ({onLogin}) => {
     <div className="loginFormbody">
         <form className="loginForm" onSubmit={onLoginClicked}>
             <h1>Login</h1>
-            <input placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
-            <input placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-            <button disabled={!username || !password}>Login</button>
+            <input className="loginForminput"  placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
+            <input className="loginForminput" placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+            <button className="loginFormbutton" disabled={!username || !password}>Login</button>
         </form>
     </div>
 );}
