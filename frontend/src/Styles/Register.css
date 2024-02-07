@@ -13,26 +13,45 @@
     align-items:center;
     gap: 0.9rem; 
     max-width: 400px; 
-     margin: auto;
-     align-self: center;
-     background-color: #AA5656;;
-     padding: 60px; 
-     border-radius: 15px;
-     border: 15px solid #B99B6B;
-     
+    margin: auto;
+    align-self: center;
+    background-color: #AA5656;
+    padding: 60px; 
+    border-radius: 15px;
+    border: 15px solid #B99B6B;
+    text-align: center;
+  }
+  .registerForm h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color:#F1DBBF;
+  }
+  .registerForm h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color:#F1DBBF;
   }
 
-  .registerForminput {
-    width: 120%; 
-    padding: 0.8rem; 
+  .registerForm input {
+    width: 90%; /* Muutettu 120% -> 100% */
+    padding: 1rem; 
     margin-bottom: 1rem;
   }
  
-  .registerFormbutton {
-    width: auto;
+  .registerForm button {
+  
     padding: 0.8rem 2rem;
     box-sizing: content-box;
+    margin-top: 1rem;
+    align-self: center;
+   
   }
 
-  
-
+.registerFormLoginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  color: #ffffff;
+ 
+}
