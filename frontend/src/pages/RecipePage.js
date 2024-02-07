@@ -63,10 +63,10 @@ const RecipeHead = (props) =>{
     const recipe = props.recipe;
     return(
         <div className='recipe-head'>
-            <h1>{recipe.header} <img src='rating_star.png' alt="Star Rating"/>{recipe.rating}</h1>
+            <h1>{recipe.header} {/*<img src='rating_star.png' alt="Star Rating"/>{recipe.rating}*/}</h1>
             <p>{recipe.description}</p>
             <div>kuva sivummalle</div>
-            <p>{recipe.creator} <i>{recipe.created}</i></p>
+            <p>Created By:{/*Tähän tekijä*/} Creation date: <i>{recipe.created}</i></p>
             <div><i>Duration: </i>{recipe.durationHours}h {recipe.durationMinutes}min</div>
             <RecipeKeywords keywords={recipe.keywords}/> <br/>
         </div>
@@ -102,8 +102,8 @@ const RecipeIngredients = (props)=>{
 
 const RecipeSteps = (props) =>{
     let page = props.page;
-    const steps = props.steps.map((step, i) =>{
-        return <li key={i}>{step.step} </li>
+    const steps = props.steps.map((step) =>{
+        return <li key={step.id}>{step.step} </li>
     });
 
     return(
