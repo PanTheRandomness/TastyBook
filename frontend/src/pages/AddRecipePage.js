@@ -56,7 +56,7 @@ const AddRecipe = (props) =>{
             if(response.ok){
                 const data = await response.json();
                 addRecipeRoute(data.hash);
-                navigate("/recipe/" + data.hash); //Miten se hash laitetaan tähän?
+                navigate("/recipe/" + data.hash);
             }
         } catch (error) {
             window.alert("Unable to post recipe: ", error);
