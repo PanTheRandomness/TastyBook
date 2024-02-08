@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
+import '../Styles/Ellipsis.css';
 //Uniikit URL:it
 //poistopainike + varmistus(window.confirm())
 
 const Recipe = (props) =>{
     const { route } = props;
+    
     //esimerkkiresepti kehitystä varten, poista tiedot kun reseptejä voidaan tarkkailla
     const [recipe, setRecipe] = useState({
         "header" : "Reseptin nimi",
@@ -63,7 +65,10 @@ const RecipeHead = (props) =>{
     const recipe = props.recipe;
     return(
         <div className='recipe-head'>
-            <h1>{recipe.header} {/*<img src='rating_star.png' alt="Star Rating"/>{recipe.rating}*/}</h1>
+            <div>
+                <h1>{recipe.header} {/*<img src='rating_star.png' alt="Star Rating"/>{recipe.rating}*/}</h1>
+                <EllipsisMenu />
+            </div>
             <p>{recipe.description}</p>
             <div>kuva sivummalle</div>
             <p>Created By:{/*Tähän tekijä*/} Creation date: <i>{recipe.created}</i></p>
@@ -134,4 +139,41 @@ const RecipeReviews = (props) =>{
     );
 }
 */
-export  {Recipe, RecipeHead, RecipeIngredients, RecipeSteps };
+const EllipsisMenu = () => {
+    const [isOpen, setIsOpen] = useState(false);
+  
+    const toggleMenu = () => {
+      setIsOpen(!isOpen);
+    };
+
+    const handleEditClick = () => {
+        console.log('Edit recipe selected...');
+        //tästä takaisin lisäyssivulle, vie nyk. reseptin tiedot
+    };
+    
+    const handleDeleteClick = () => {
+        if(window.confirm("Are you sure you want to delete this recipe? Deletion cannot be undone.")){
+            console.log("Starting deletion...")
+        }
+    };
+  
+    return (
+      <div className="ellipsis-menu">
+        <div className="ellipsis" onClick={toggleMenu}>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+        </div>
+        {isOpen && (
+          <div className="dropdown">
+            <ul>
+              <li onClick={handleEditClick}>Edit recipe</li>
+              <li onClick={handleDeleteClick} style={{color:'red'}}>Delete recipe</li>
+            </ul>
+          </div>
+        )}
+      </div>
+    );
+};
+
+export  {Recipe, RecipeHead, RecipeIngredients, RecipeSteps, EllipsisMenu };
