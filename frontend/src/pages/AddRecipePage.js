@@ -5,7 +5,7 @@ import '../Styles/Recipe.css';
 import { useToken } from '../customHooks/useToken';
 import { useNavigate } from 'react-router-dom';
 
-//myös muokkaus
+//Muokkaus: jos tullaan reseptisivulta => tuo & näytä tiedot
 const AddRecipe = (props) =>{
     const { addRecipeRoute } = props;
     const [token,] = useToken();

@@ -1,9 +1,11 @@
 .ellipsis-menu {
     position: absolute;
-    top: 30px;
+    top: 20px;
     right: 20px;
     display: flex;
     align-items: center;
+    /*Kuvaa sijoiteltaessa muokkaa alla:*/
+    margin-right: 30%;
   }
   
   .ellipsis {

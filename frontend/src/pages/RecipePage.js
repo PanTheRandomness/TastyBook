@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useToken } from '../customHooks/useToken';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 import '../Styles/Ellipsis.css';
@@ -7,14 +8,13 @@ import '../Styles/Ellipsis.css';
 
 const Recipe = (props) =>{
     const { route } = props;
-
+    const [token,] = useToken();
     //esimerkkiresepti kehitystä varten, poista tiedot kun reseptejä voidaan tarkkailla
     const [recipe, setRecipe] = useState({
         "header" : "Reseptin nimi",
         "description" : "Nami nami ruokaa",
         "visibleToAll" : true,
         "creator" : "Joku Heppu",
-        "created" : '1-1-2024',
         "rating" : 5,
         "durationHours" : 2,
         "durationMinutes" : 15,
@@ -45,10 +45,42 @@ const Recipe = (props) =>{
         getRecipe();
     },[]);
 
+    //Ei toimi vielä, mikä puuttuu?
+    const deleteRecipe = async () =>{
+        //Onko headersit ok?
+        const requestOptions = {
+            method:'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization' : "Bearer " + token
+            },
+            body : {
+                hash : route,
+                userId : recipe.User_id
+            }
+        };
+
+        try {
+            console.log("Starting deletion...");
+            const response = await fetch("http://localhost:3004/api/recipe", requestOptions);
+            if(response.ok){
+                console.log("Recipe deleted successfully.");
+                //palaa etusivulle
+            }
+        } catch (error) {
+            window.alert("Unable to post recipe: ", error);
+        }
+    }
+
+    const editRecipe = async () =>{
+        console.log("Starting edit...");
+        //tästä takaisin lisäyssivulle, vie nyk. reseptin tiedot
+    }
+
     return(
         <div>
             <div className='recipe-container'>
-                <RecipeHead recipe={recipe}/>
+                <RecipeHead recipe={recipe} onDelete={deleteRecipe} onEdit={editRecipe}/>
                 <div className='recipe-foot'>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={recipe.ingredients}/>
@@ -63,12 +95,16 @@ const Recipe = (props) =>{
 
 const RecipeHead = (props) =>{
     const recipe = props.recipe;
+    const [creator, setCreator] = useState({});
+    const createdFormatted = new Date(props.recipe.created).toLocaleDateString('fi-FI');
 
-    const getCreator = (id) =>{
-        let creator = {};
-        //hae tässä tekijä
-        return creator.username;
-    }
+    /*useEffect(()=>{
+        const getCreator = async () =>{
+            let id = recipe.User_id;
+            const response = await fetch();
+        }
+        if(recipe != {}) getCreator();
+    },[]);*/
 
     const calculateAvgRating = () =>{
 
@@ -78,12 +114,13 @@ const RecipeHead = (props) =>{
         <div className='recipe-head'>
             <div>
                 <h1>{recipe.header} {/*<img src='rating_star.png' alt="Star Rating"/>{recipe.rating}*/}</h1>
-                <EllipsisMenu />
+                <EllipsisMenu onDelete={props.onDelete} onEdit={props.onEdit}/>
             </div>
             <p>{recipe.description}</p>
-            <div>kuva sivummalle</div>
-            <p>Created By:{getCreator(recipe.User_id)} Creation date: <i>{recipe.created}</i></p>
-            <div><i>Duration: </i>{recipe.durationHours}h {recipe.durationMinutes}min</div>
+            <p> Created By:{creator.username} <br/> 
+                Creation date: {createdFormatted} <br/>
+                <i>Duration: {recipe.durationHours}h {recipe.durationMinutes}min</i>
+            </p>
             <RecipeKeywords keywords={recipe.keywords}/> <br/>
         </div>
     );
@@ -115,8 +152,8 @@ const RecipeIngredients = (props)=>{
 
 const RecipeSteps = (props) =>{
     let page = props.page;
-    const steps = props.steps.map((step) =>{
-        return <li key={step.id}>{step.step} </li>
+    const steps = props.steps.map((step, i) =>{
+        return <li key={i}>{step.step} </li>
     });
 
     return(
@@ -147,7 +184,7 @@ const RecipeReviews = (props) =>{
     );
 }
 */
-const EllipsisMenu = () => {
+const EllipsisMenu = (props) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
   
@@ -171,12 +208,15 @@ const EllipsisMenu = () => {
 
     const handleEditClick = () => {
         console.log('Edit recipe selected...');
-        //tästä takaisin lisäyssivulle, vie nyk. reseptin tiedot
+        setIsOpen(false);
+        props.onEdit();
     };
-    
+
     const handleDeleteClick = () => {
+        setIsOpen(false);
         if(window.confirm("Are you sure you want to delete this recipe? Deletion cannot be undone.")){
-            console.log("Starting deletion...");
+            //JOS on reseptin omistaja:
+            props.onDelete();
         }
     };
   
