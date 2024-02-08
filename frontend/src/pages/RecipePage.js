@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 import '../Styles/Ellipsis.css';
@@ -7,7 +7,7 @@ import '../Styles/Ellipsis.css';
 
 const Recipe = (props) =>{
     const { route } = props;
-    
+
     //esimerkkiresepti kehitystä varten, poista tiedot kun reseptejä voidaan tarkkailla
     const [recipe, setRecipe] = useState({
         "header" : "Reseptin nimi",
@@ -63,6 +63,17 @@ const Recipe = (props) =>{
 
 const RecipeHead = (props) =>{
     const recipe = props.recipe;
+
+    const getCreator = (id) =>{
+        let creator = {};
+        //hae tässä tekijä
+        return creator.username;
+    }
+
+    const calculateAvgRating = () =>{
+
+    }
+
     return(
         <div className='recipe-head'>
             <div>
@@ -71,7 +82,7 @@ const RecipeHead = (props) =>{
             </div>
             <p>{recipe.description}</p>
             <div>kuva sivummalle</div>
-            <p>Created By:{/*Tähän tekijä*/} Creation date: <i>{recipe.created}</i></p>
+            <p>Created By:{getCreator(recipe.User_id)} Creation date: <i>{recipe.created}</i></p>
             <div><i>Duration: </i>{recipe.durationHours}h {recipe.durationMinutes}min</div>
             <RecipeKeywords keywords={recipe.keywords}/> <br/>
         </div>
@@ -91,9 +102,6 @@ const RecipeKeywords = (props) =>{
 }
 
 const RecipeIngredients = (props)=>{
-
-    //Muotoilu ja asettelu!
-
     const ingredientList = props.ingredients.map((ing,i) =>{
         return <tr key={i}><th>{ing.quantity} {ing.unit}</th><td>{ing.ingredient}</td></tr>
     });
@@ -141,10 +149,25 @@ const RecipeReviews = (props) =>{
 */
 const EllipsisMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
   
     const toggleMenu = () => {
       setIsOpen(!isOpen);
     };
+
+    //Alla olevat kaksi (ja useRef) mahdollistavat menun sulkemisen klikkaamalla sen ulkopuolelta!
+    const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+          setIsOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const handleEditClick = () => {
         console.log('Edit recipe selected...');
@@ -153,7 +176,7 @@ const EllipsisMenu = () => {
     
     const handleDeleteClick = () => {
         if(window.confirm("Are you sure you want to delete this recipe? Deletion cannot be undone.")){
-            console.log("Starting deletion...")
+            console.log("Starting deletion...");
         }
     };
   
@@ -165,7 +188,7 @@ const EllipsisMenu = () => {
           <div className="dot"></div>
         </div>
         {isOpen && (
-          <div className="dropdown">
+          <div className="dropdown" ref={dropdownRef}>
             <ul>
               <li onClick={handleEditClick}>Edit recipe</li>
               <li onClick={handleDeleteClick} style={{color:'red'}}>Delete recipe</li>
