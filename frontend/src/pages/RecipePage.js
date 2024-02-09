@@ -45,24 +45,18 @@ const Recipe = (props) =>{
         getRecipe();
     },[]);
 
-    //Ei toimi vielä, mikä puuttuu?
     const deleteRecipe = async () =>{
-        //Onko headersit ok?
         const requestOptions = {
             method:'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization' : "Bearer " + token
-            },
-            body : {
-                hash : route,
-                userId : recipe.User_id
             }
         };
 
         try {
             console.log("Starting deletion...");
-            const response = await fetch("http://localhost:3004/api/recipe", requestOptions);
+            const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
             if(response.ok){
                 console.log("Recipe deleted successfully.");
                 //palaa etusivulle
@@ -214,8 +208,7 @@ const EllipsisMenu = (props) => {
 
     const handleDeleteClick = () => {
         setIsOpen(false);
-        if(window.confirm("Are you sure you want to delete this recipe? Deletion cannot be undone.")){
-            //JOS on reseptin omistaja:
+        if(window.confirm("Are you certain you want to delete this recipe? Deletion cannot be undone.")){
             props.onDelete();
         }
     };
