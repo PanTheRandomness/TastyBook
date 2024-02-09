@@ -1,28 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { useToken } from '../customHooks/useToken';
+import { getAllUsers } from "../api/adminApi";
 import '../Styles/Admin.css';
+
 const BASE_URL = "http://localhost:3004";
+
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
   const [userIdToDelete, setUserIdToDelete] = useState('');
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [error, setError] = useState(null);
+  const [token] = useToken(); 
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('token'); 
-        const response = await fetch(`${BASE_URL}/api/admin/users`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}` 
-          }
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch users');
-        }
-        const data = await response.json();
-        setUsers(data);
+        const response = await getAllUsers(token);
+        setUsers(response); 
       } catch (error) {
         console.error('Error fetching user data', error);
         setError('Error fetching user data');
@@ -30,7 +25,7 @@ const Admin = () => {
     };
   
     fetchUsers();
-  }, []);
+  }, []); 
 
   const handleEditUser = (userId) => {
     console.log(`Edit user with ID: ${userId}`);
