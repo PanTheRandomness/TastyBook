@@ -11,7 +11,13 @@ const Admin = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/local/api/users`,);
+        const token = localStorage.getItem('token'); 
+        const response = await fetch(`${BASE_URL}/api/admin/users`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch users');
         }
@@ -22,12 +28,11 @@ const Admin = () => {
         setError('Error fetching user data');
       }
     };
-
+  
     fetchUsers();
   }, []);
 
   const handleEditUser = (userId) => {
-    // Lisää toiminnallisuus käyttäjän muokkaamiseen
     console.log(`Edit user with ID: ${userId}`);
   };
 
@@ -44,8 +49,12 @@ const Admin = () => {
     }
 
     try {
-      await fetch(`/api/users/${userIdToDelete}`, {
+      const token = localStorage.getItem('token'); 
+      await fetch(`${BASE_URL}/api/admin/users/${userIdToDelete}`, { 
         method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
       setUsers(users.filter((user) => user.id !== userIdToDelete));
       setUserIdToDelete('');
