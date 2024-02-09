@@ -13,15 +13,19 @@
 }
 
   .adminContainer {
-  background-color: #506350;
-  padding: 60px; 
-  border-radius: 8px;
+    gap: 0.9rem; 
+    max-width: 900px; 
+    margin: auto;
+    background-color: #AA5656;
+    padding: 60px; 
+    border-radius: 15px;
+    border: 15px solid #B99B6B;
 }
   .adminHead{
     background-color: #AA5656;
     border-radius: 20px;
     margin: 10px;
-    max-width: 700px; 
+    max-width: 900px; 
 }
 
   /*
