@@ -43,7 +43,7 @@ const Admin = () => {
     }
 
     try { 
-      await fetch(`${BASE_URL}/api/admin/users/${userIdToDelete}`, { 
+      await fetch(`${BASE_URL}/api/users/${userIdToDelete}`, { 
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`
