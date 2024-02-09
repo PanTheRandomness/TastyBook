@@ -77,7 +77,7 @@ const Recipe = (props) =>{
                 <RecipeHead recipe={recipe} onDelete={deleteRecipe} onEdit={editRecipe}/>
                 <div className='recipe-foot'>
                     <div className='recipe'>
-                        <RecipeIngredients ingredients={recipe.ingredients}/>
+                        <RecipeIngredients ingredients={recipe.ingredients} page="recipepage"/>
                         <RecipeSteps steps={recipe.steps}/>
                     </div>
                     {/*<RecipeReviews reviews={recipe.reviews}/>*/}

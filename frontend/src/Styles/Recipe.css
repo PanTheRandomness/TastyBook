@@ -5,7 +5,12 @@
 body{
     background-color: #506350;
 }
-.recipeform-body, .recipeform-step{
+
+button{
+    cursor: pointer;
+}
+
+.recipeform-body{
     display: flex;
     justify-content: center;
     color:#F1DBBF;
@@ -23,6 +28,7 @@ body{
 .recipeform-item{
     margin:10px;
     border-radius: 5px;
+    display: flex;
 }
 
 .recipeinput{
@@ -30,17 +36,24 @@ body{
     border-radius: 3px;
 }
 
-.recipeform-item > td > button{
-    float:right;
+.addbutton{
     border-radius: 5px;
     border-style: hidden;
+    background-color: #AA5656;
+    color:#F1DBBF;
+}
+
+.editremovebutton{
+    background-color: #506350;
+    color:#96be96;
+    border-style: hidden;
+    border-radius: 5px;
 }
 
 .postbutton{
     position: relative;
     border-radius: 5px;
     border-style: hidden;
-    /*Miksei mene oikealle?*/
 }
 
 .recipe-container{
@@ -109,5 +122,9 @@ body{
     border-style: none;
     border-radius: 10px;
     background-color:#506350;
+    color:#F1DBBF;
+}
+
+.recipeform-step{
     color:#F1DBBF;
 }

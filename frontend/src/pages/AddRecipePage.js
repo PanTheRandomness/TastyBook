@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { RecipeIngredients } from './RecipePage';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 import { useToken } from '../customHooks/useToken';
@@ -26,9 +25,18 @@ const AddRecipe = (props) =>{
     const openModalI = () => setModalIOpen(true);
     const closeModalI = () => setModalIOpen(false);
     const openModalS = () => setModalSOpen(true);
-    const closeModalS = () => setModalSOpen(false);
+    const closeModalS = () => {setModalSOpen(false); setText('');}
     const openModalK = () => setModalKOpen(true);
-    const closeModalK = () => setModalKOpen(false);
+    const closeModalK = () => {setModalKOpen(false); setW('');}
+    
+    const [text, setText] = useState('');
+    const [w, setW] = useState('');
+    const [editingIngredient, setEditingIngredient] = useState(false);
+    const [editingStep, setEditingStep] = useState(false);
+    const [editingKeyword, setEditingKeyword] = useState(false);
+    const [eStepIndex, setEStepIndex] = useState(-1);
+    const [eIngIndex, setEIngIndex] = useState(-1);
+    const [eKeywordIndex, setEKeywordIndex] = useState(-1);
     
     const navigate = useNavigate();
 
@@ -63,24 +71,132 @@ const AddRecipe = (props) =>{
         }
     }
 
+    const addIngredient = (quantity, unit, ingredient) =>{
+        let q = quantity + " " + unit;
+        setIngredients([...ingredients, {
+            quantity : q,
+            name : ingredient
+        }]);
+        closeModalI();
+    }
+
+    const editIngredient = () =>{
+        setEditingIngredient(true);
+    }
+
+    const saveEditedIngredient = () =>{
+        /**const quantity = ingredient.quantity; // "200 g"
+           const [amount, unit] = quantity.split(' ');
+         * const editedIngredient = {
+        quantity: newQuantity,
+        unit: newUnit,
+        name: newName
+        };
+
+        const index = ingredients.findIndex((ingredient) => ingredient.name === newName);
+        if (index !== -1) {
+        const updatedIngredients = [...ingredients];
+        updatedIngredients[index] = editedIngredient;
+        setIngredients(updatedIngredients);
+        }
+        closeModalI(); */
+        setEditingIngredient(false);
+    }
+
+    const removeIngredient = (ingredient) =>{
+        const index = ingredients.indexOf(ingredient);
+        if (index !== -1) {
+            const newIngredients = [...ingredients];
+            newIngredients.splice(index, 1);
+            setIngredients(newIngredients);
+            console.log("Removed ingredient: ", ingredient);
+        } else {
+            console.error("Ingredient not found: ", ingredient);
+        }
+    }
+
     const addStep = (step) =>{
         setSteps([...steps, step]);
         closeModalS();
     }
 
-    const addIngredient = (quantity, unit, ingredient) =>{
-        let q = quantity + " " + unit;
-        setIngredients([...ingredients, {
-            quantity : q,
-            ingredient : ingredient
-        }]);
-        closeModalI();
+    const editStep = (step) =>{
+        const index = steps.indexOf(step);
+        if (index !== -1) {
+            setEStepIndex(index);
+            setEditingStep(true);
+            setText(step);
+            openModalS();
+        } else {
+            console.error("Step not found: " + step);
+        }
+    }
+
+    const saveEditedStep = (step) =>{
+        const updatedSteps = [...steps];
+        updatedSteps[eStepIndex] = step;
+        setSteps(updatedSteps);
+        console.log("Edited step: " + step);
+        closeModalS();
+        setEditingStep(false);
+        setText('');
+        setEStepIndex(-1);
+    }
+
+    const removeStep= (step) =>{
+        const index = steps.indexOf(step);
+        if (index !== -1) {
+            const newSteps = [...steps];
+            newSteps.splice(index, 1);
+            setSteps(newSteps);
+    
+            console.log("Removed step: " + step);
+        } else {
+            console.error("Step not found: " + step);
+        }
     }
 
     const addKeyword = (keyword) =>{
         setKeywords([...keywords, keyword]);
         closeModalK();
     }
+
+    const editKeyword = (keyword) =>{
+        const index = keywords.indexOf(keyword);
+        if (index !== -1) {
+            setEKeywordIndex(index);
+            setEditingKeyword(true);
+            setW(keyword);
+            openModalK();
+        } else {
+            console.error("Keyword not found: " + keyword);
+        }
+    }
+
+    const saveEditedKeyword = (keyword) =>{
+        const updatedKeywords = [...keywords];
+        updatedKeywords[eKeywordIndex] = keyword;
+        setKeywords(updatedKeywords);
+        console.log("Edited keyword: " + keyword);
+        closeModalK();
+        setEditingKeyword(false);
+        setW('');
+        setEKeywordIndex(-1);
+    }
+
+    const removeKeyword = (word) =>{
+        const index = keywords.indexOf(word);
+        if (index !== -1) {
+            const newKeywords = [...keywords];
+            newKeywords.splice(index, 1);
+            setKeywords(newKeywords);
+    
+            console.log("Removed keyword: " + word);
+        } else {
+            console.error("Keyword not found: " + word);
+        }
+    }
+
 
     const postBtnClicked = () =>{
         if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
@@ -98,7 +214,7 @@ const AddRecipe = (props) =>{
                     </tr>
                     <tr className='recipeform-item'>
                         <th>Recipe description:</th>
-                        <td><textarea className="recipeinput" rows="10" cols="40" value={description} onChange={(e) => setDescription(e.target.value)} /></td>
+                        <td><textarea className="recipeinput" rows="10" cols="50" value={description} onChange={(e) => setDescription(e.target.value)} /></td>
                     </tr>
                     <tr className='recipeform-item'>
                         <th>Visibility:</th>
@@ -130,23 +246,23 @@ const AddRecipe = (props) =>{
                     <tr className='recipeform-item'>
                         <th>Ingredients:</th>
                         <td>
-                            {ingredients.length < 1 ? null : <RecipeIngredients ingredients={ingredients} />}
+                            {ingredients.length < 1 ? null : <RecipeIngredients ingredients={ingredients} page="recipeform" onEdit={editIngredient} onRemove={removeIngredient}/>}
                         </td>
-                        <td><button onClick={openModalI}>Add</button></td>
+                        <td><button className='addbutton' onClick={openModalI}>Add ingredient</button></td>
                     </tr>
                     <tr className='recipeform-item'>
                         <th>Steps:</th>
                         <td>
-                            {steps.length < 1 ? null : <RecipeSteps steps={steps}/>}
+                            {steps.length < 1 ? null : <RecipeSteps steps={steps} onEdit={editStep} onRemove={removeStep}/>}
                         </td>
-                        <td><button onClick={openModalS}>Add</button></td>
+                        <td><button className='addbutton' onClick={openModalS}>Add step</button></td>
                     </tr>
                     <tr className='recipeform-item'>
                         <th>Keywords:</th>
                         <td>
-                            {keywords.length < 1 ? null : <RecipeKeywords keywords={keywords} />}
+                            {keywords.length < 1 ? null : <RecipeKeywords keywords={keywords} onEdit={editKeyword} onRemove={removeKeyword}/>}
                         </td>
-                        <td><button onClick={openModalK}>Add</button></td>
+                        <td><button className='addbutton' onClick={openModalK}>Add keyword</button></td>
                     </tr>
                     <tr>
                         <td>
@@ -155,42 +271,51 @@ const AddRecipe = (props) =>{
                     </tr>
                 </tbody>
             </table>
-            {isModalIOpen ? <IngredientDialog isOpen={isModalIOpen} onClose={closeModalI} onAdd={addIngredient}/> : null}
-            {isModalSOpen ? <StepDialog isOpen={isModalSOpen} onClose={closeModalS} onAdd={addStep} /> : null}
-            {isModalKOpen ? <KeywordDialog isOpen={isModalKOpen} onClose={closeModalK} onAdd={addKeyword}/> : null}
+            {isModalIOpen ? <IngredientDialog isOpen={isModalIOpen} onClose={closeModalI} onAdd={addIngredient}  onSaveEdited={saveEditedIngredient} editingIngredient={editingIngredient} /> : null}
+            {isModalSOpen ? <StepDialog isOpen={isModalSOpen} onClose={closeModalS} onAdd={addStep} onSaveEdited={saveEditedStep} editingStep={editingStep} text={text} onTextChange={setText}/> : null}
+            {isModalKOpen ? <KeywordDialog isOpen={isModalKOpen} onClose={closeModalK} onAdd={addKeyword}  onSaveEdited={saveEditedKeyword} editingKeyword={editingKeyword} w={w} onWChange={setW}/> : null}
         </div>
     );
 }
 
 const RecipeKeywords = (props) =>{
     const words = props.keywords.map((word, i) =>{
-        return <li key={i}>{word}</li>
+        return <li className='recipeform-keyword' key={i}>{word} <button className='editremovebutton' onClick={() => props.onEdit(word)}>Edit keyword</button><button className='editremovebutton' onClick={() => props.onRemove(word)}>Remove keyword</button></li>
     });
 
     return(
         <div>
-            <ul>{words}</ul>
+            <ul className='recipeform-keywords'>{words}</ul>
         </div>
     );
 }
 
 const RecipeSteps = (props) =>{
     const steps = props.steps.map((step, i) =>{
-        return <li key={i}>{step} </li>
+        return <li key={i} className="recipeform-step">{step} <button className='editremovebutton' onClick={() => props.onEdit(step)}>Edit step</button><button className='editremovebutton' onClick={() => props.onRemove(step)}>Remove step</button> </li>
     });
 
     return(
-        <div className='recipe-steps'>
-            <ol className="recipeform-step">{steps}</ol>
+        <div className='recipeform-steps'>
+            <ol >{steps}</ol>
         </div>
     );
 }
 
-const IngredientDialog = ({ isOpen, onClose, onAdd}) =>{
+const RecipeIngredients = (props)=>{
+    const ingredientList = props.ingredients.map((ing,i) =>{
+        return <tr key={i} className='recipeform-ingredient'><th>{ing.quantity} {ing.unit}</th><td>{ing.name}</td><td> <button className='editremovebutton' onClick={() => props.onEdit()}>Edit ingredient</button></td><td><button className='editremovebutton' onClick={() => props.onRemove(ing)}>Remove ingredient</button></td></tr>
+    });
+
+    return(
+        <table className='recipeform-ingredients'>
+            <tbody>{ingredientList}</tbody>
+        </table>
+    );
+}
+
+const IngredientDialog = ({ isOpen, onClose, onAdd, onSaveEdited, editingIngredient}) =>{
     const [unitlist, setUnitlist] = useState(["whole", "half", "quarter", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups", "lbs", "pinch"]);
-    const [qt, setQt] = useState(0);
-    const [ing, setIng] = useState('');
-    const [unit, setUnit] = useState('');
 
     const units = unitlist.map((u,i)=>{
         return <option key={i}>{u}</option>
@@ -215,14 +340,17 @@ const IngredientDialog = ({ isOpen, onClose, onAdd}) =>{
                         </tr>
                     </tbody>
                 </table>
-                <button onClick={() => onAdd(qt, unit, ing)} disabled={qt == 0 || !ing}>Add Ingredient</button>
+                {
+                    editingIngredient ? 
+                    <button onClick={() => onSaveEdited(qt, unit, ing)} disabled={qt == 0 || !ing}>Save Ingredient</button>:
+                    <button onClick={() => onAdd(qt, unit, ing)} disabled={qt == 0 || !ing}>Add Ingredient</button>
+                }
             </div>
         </div>
     );
 }
 
-const StepDialog = ({ isOpen, onClose, onAdd }) =>{
-    const [text, setText] = useState('');
+const StepDialog = ({ isOpen, onClose, onAdd, onSaveEdited, editingStep, text, onTextChange }) =>{
     
     return (
         <div className={`modal ${isOpen ? 'open' : ''}`}>
@@ -230,16 +358,19 @@ const StepDialog = ({ isOpen, onClose, onAdd }) =>{
                 <span className="close" onClick={onClose}>&times;</span>
                 <label>
                     <b className="modal-text">Type instructions:</b><br/>
-                    <textarea rows="10" cols="55" className="modalInput" value={text} onChange={(e) => setText(e.target.value)}/><br/>
+                    <textarea rows="10" cols="55" className="modalInput" value={text} onChange={(e) => onTextChange(e.target.value)}/><br/>
                 </label>
-                <button onClick={() => onAdd(text)} disabled={!text}>Add Step</button>
+                {
+                    editingStep ? 
+                    <button onClick={() => onSaveEdited(text)} disabled={!text}>Save Step</button>:
+                    <button onClick={() => onAdd(text)} disabled={!text}>Add Step</button>
+                }
             </div>
         </div>
     );
 }
 
-const KeywordDialog =({ isOpen, onClose, onAdd }) =>{
-    const [w, setW] = useState('');
+const KeywordDialog =({ isOpen, onClose, onAdd, onSaveEdited, editingKeyword, w, onWChange }) =>{
 
     return(
         <div className={`modal ${isOpen ? 'open' : ''}`}>
@@ -247,12 +378,16 @@ const KeywordDialog =({ isOpen, onClose, onAdd }) =>{
                 <span className="close" onClick={onClose}>&times;</span>
                 <label>
                     <b className="modal-text">Type keyword:</b>
-                    <input type='text' className="modalInput" value={w} onChange={(e) => setW(e.target.value)}/><br/>
+                    <input type='text' className="modalInput" value={w} onChange={(e) => onWChange(e.target.value)}/><br/>
                 </label>
-                <button onClick={() => onAdd(w)} disabled={!w}>Add Keyword</button>
+                {
+                    editingKeyword?
+                    <button onClick={() => onSaveEdited(w)} disabled={!w}>Save Keyword</button>:
+                    <button onClick={() => onAdd(w)} disabled={!w}>Add Keyword</button>
+                }
             </div>
         </div>
     );
 }
 
-export {AddRecipe, RecipeKeywords, IngredientDialog, StepDialog, KeywordDialog};
+export {AddRecipe, RecipeKeywords, RecipeSteps, RecipeIngredients, IngredientDialog, StepDialog, KeywordDialog};
