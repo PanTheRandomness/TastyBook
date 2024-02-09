@@ -78,7 +78,7 @@ const Recipe = (props) =>{
                 <div className='recipe-foot'>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={recipe.ingredients}/>
-                        <RecipeSteps steps={recipe.steps} page="recipepage"/>
+                        <RecipeSteps steps={recipe.steps}/>
                     </div>
                     {/*<RecipeReviews reviews={recipe.reviews}/>*/}
                 </div>
@@ -125,7 +125,7 @@ const RecipeKeywords = (props) =>{
 
 const RecipeIngredients = (props)=>{
     const ingredientList = props.ingredients.map((ing,i) =>{
-        return <tr key={i}><th>{ing.quantity} {ing.unit}</th><td>{ing.ingredient}</td></tr>
+        return <tr key={i}><th>{ing.quantity} {ing.unit}</th><td>{ing.name}</td></tr>
     });
 
     return(
@@ -136,14 +136,13 @@ const RecipeIngredients = (props)=>{
 }
 
 const RecipeSteps = (props) =>{
-    let page = props.page;
     const steps = props.steps.map((step, i) =>{
         return <li key={i}>{step.step} </li>
     });
 
     return(
         <div className='recipe-steps'>
-            <ol className={page == "recipeform" ? "recipeform-step": "recipepage-step"}>{steps}</ol>
+            <ol className="recipepage-step">{steps}</ol>
         </div>
     );
 }

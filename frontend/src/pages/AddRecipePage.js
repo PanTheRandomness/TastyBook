@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { RecipeIngredients, RecipeSteps } from './RecipePage';
+import { RecipeIngredients } from './RecipePage';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 import { useToken } from '../customHooks/useToken';
@@ -63,8 +63,8 @@ const AddRecipe = (props) =>{
         }
     }
 
-    const addStep = (instuctiontext) =>{
-        setSteps([...steps, instuctiontext]);
+    const addStep = (step) =>{
+        setSteps([...steps, step]);
         closeModalS();
     }
 
@@ -83,7 +83,7 @@ const AddRecipe = (props) =>{
     }
 
     const postBtnClicked = () =>{
-        if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any copyright-violations contained-in or concerning this recipe. You will be able to modify the recipe later.")){
+        if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
             postRecipe();
         }
     }
@@ -137,7 +137,7 @@ const AddRecipe = (props) =>{
                     <tr className='recipeform-item'>
                         <th>Steps:</th>
                         <td>
-                            {steps.length < 1 ? null : <RecipeSteps steps={steps} page="recipeform"/>}
+                            {steps.length < 1 ? null : <RecipeSteps steps={steps}/>}
                         </td>
                         <td><button onClick={openModalS}>Add</button></td>
                     </tr>
@@ -174,8 +174,20 @@ const RecipeKeywords = (props) =>{
     );
 }
 
+const RecipeSteps = (props) =>{
+    const steps = props.steps.map((step, i) =>{
+        return <li key={i}>{step} </li>
+    });
+
+    return(
+        <div className='recipe-steps'>
+            <ol className="recipeform-step">{steps}</ol>
+        </div>
+    );
+}
+
 const IngredientDialog = ({ isOpen, onClose, onAdd}) =>{
-    const [unitlist, setUnitlist] = useState(["whole", "half", "quarter", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups", "lbs"]);
+    const [unitlist, setUnitlist] = useState(["whole", "half", "quarter", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups", "lbs", "pinch"]);
     const [qt, setQt] = useState(0);
     const [ing, setIng] = useState('');
     const [unit, setUnit] = useState('');
