@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import '../Styles/Admin.css';
 import { useToken } from '../customHooks/useToken';
-import { getAllUsers, deleteUser } from "../api/adminApi";
+import { getAllUsers } from "../api/adminApi";
+import '../Styles/Admin.css';
 const BASE_URL = "http://localhost:3004";
+
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
@@ -23,7 +24,7 @@ const Admin = () => {
     };
   
     fetchUsers();
-  }, []);
+  }, []); 
 
   const handleEditUser = (userId) => {
     console.log(`Edit user with ID: ${userId}`);
@@ -41,8 +42,7 @@ const Admin = () => {
       return;
     }
 
-    try {
-      const token = localStorage.getItem('token'); 
+    try { 
       await fetch(`${BASE_URL}/api/admin/users/${userIdToDelete}`, { 
         method: 'DELETE',
         headers: {
