@@ -1,0 +1,59 @@
+import { render, fireEvent, waitFor } from '@testing-library/react';
+import { Login } from '..LoginPage';
+import { login } from '../../api/userApi';
+
+// Mock the login function
+jest.mock('../../api/userApi', () => ({
+    login: jest.fn(),
+}));
+
+describe('Login component', () => {
+    test('should call onLogin with token when login succeeds', async () => {
+        // Arrange
+        const token = 'mockedToken';
+        const onLoginMock = jest.fn();
+        const username = 'testuser';
+        const password = 'testpassword';
+        login.mockResolvedValueOnce({ token });
+
+        // Act
+        const { getByPlaceholderText, getByTestId } = render(
+            <Login onLogin={onLoginMock} />
+        );
+        fireEvent.change(getByPlaceholderText('username'), {
+            target: { value: username },
+        });
+        fireEvent.change(getByPlaceholderText('password'), {
+            target: { value: password },
+        });
+        fireEvent.click(getByTestId("login-button"));
+
+        // Assert
+        await waitFor(() => expect(onLoginMock).toHaveBeenCalledWith(token));
+    });
+
+    test('should log error when login fails', async () => {
+        // Arrange
+        console.error = jest.fn(); // Mock console.error
+        const onLoginMock = jest.fn();
+        const username = 'testuser';
+        const password = 'testpassword';
+        const errorMessage = 'Invalid credentials';
+        login.mockRejectedValueOnce(new Error(errorMessage));
+
+        // Act
+        const { getByPlaceholderText, getByTestId } = render(
+            <Login onLogin={onLoginMock} />
+        );
+        fireEvent.change(getByPlaceholderText('username'), {
+            target: { value: username },
+        });
+        fireEvent.change(getByPlaceholderText('password'), {
+            target: { value: password },
+        });
+        fireEvent.click(getByTestId("login-button"))
+
+        // Assert
+        await waitFor(() => expect(console.error).toHaveBeenCalledWith("Logging in failed."));
+    });
+});

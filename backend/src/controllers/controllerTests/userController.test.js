@@ -221,7 +221,7 @@ describe("getAllUsers", () => {
 
         expect(sql.getAllUsers).toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ users: mockUsers });
+        expect(res.json).toHaveBeenCalledWith(mockUsers);
         expect(res.send).not.toHaveBeenCalled();
     });
 

@@ -23,7 +23,7 @@ const Login = ({onLogin}) => {
             <h1>Login</h1>
             <input className="loginForminput"  placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
             <input className="loginForminput" placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-            <button className="loginFormbutton" disabled={!username || !password}>Login</button>
+            <button className="loginFormbutton" disabled={!username || !password} data-testid="login-button">Login</button>
         </form>
     </div>
 );}
