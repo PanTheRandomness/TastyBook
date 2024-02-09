@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import '../Styles/Admin.css';
+import { useToken } from '../customHooks/useToken';
+import { getAllUsers, deleteUser } from "../api/adminApi";
 const BASE_URL = "http://localhost:3004";
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
+  const [token,] = useToken();
   const [userIdToDelete, setUserIdToDelete] = useState('');
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [error, setError] = useState(null);
@@ -11,18 +14,8 @@ const Admin = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('token'); 
-        const response = await fetch(`${BASE_URL}/api/admin/users`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}` 
-          }
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch users');
-        }
-        const data = await response.json();
-        setUsers(data);
+        const response = await getAllUsers(token);
+        setUsers(response);
       } catch (error) {
         console.error('Error fetching user data', error);
         setError('Error fetching user data');

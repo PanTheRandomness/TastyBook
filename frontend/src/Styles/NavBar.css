@@ -1,0 +1,17 @@
+nav {
+    display: flex;
+    justify-content: space-between;
+    background-color: #AA5656;
+    padding: 1%;
+    margin-bottom: 2%;
+}
+
+.navLink {
+    background: none;
+    color: inherit;
+    border: none;
+    font: inherit;
+    cursor: pointer;
+    font-size: 20px;
+    text-decoration: none;
+}

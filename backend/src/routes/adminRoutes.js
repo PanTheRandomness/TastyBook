@@ -15,7 +15,8 @@ let adminMiddleware = require("../middleware/verifyAdmin");
     Jos ei onnistu muusta syystä, palauttaa statuskoodin 500
 */
 
-router.route("/api/users").get(jwtMiddleware.verifyJWT, adminMiddleware.verifyAdmin, ctrl.getAllUsers);
+// verify admin väliaikaisesti pois
+router.route("/api/users").get(jwtMiddleware.verifyJWT, ctrl.getAllUsers);
 
 /*  /api/users/:userId DELETE
 

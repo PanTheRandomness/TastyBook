@@ -10,8 +10,11 @@ import { AddRecipe } from './pages/AddRecipePage';
 import { useToken } from "./customHooks/useToken";
 import { useEffect, useState } from "react";
 import { getRecipeRoutes } from "./api/recipeApi";
+import NavigationBar from "./components/navBar";
+import { useUser } from "./customHooks/useUser";
 
 const App = () => {
+  const user = useUser();
   const [token, setToken] = useToken();
   const [recipeRoutes, setRecipeRoutes] = useState([]);
 
@@ -43,11 +46,7 @@ const App = () => {
 */
   return (
     <Router>
-      { /* Tähän joku navigointi bar? */}
-      <nav>
-        <NavLink to={"/register"}>Register</NavLink>
-        <NavLink to={"/login"}>Login</NavLink>
-      </nav>
+      <NavigationBar user={user} />
       <Routes>
       { /* Tähän lisätään eri reittejä */}
         <Route path='/' element={<FrontPage />}></Route>
