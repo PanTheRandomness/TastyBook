@@ -316,6 +316,9 @@ const RecipeIngredients = (props)=>{
 
 const IngredientDialog = ({ isOpen, onClose, onAdd, onSaveEdited, editingIngredient}) =>{
     const [unitlist, setUnitlist] = useState(["whole", "half", "quarter", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups", "lbs", "pinch"]);
+    const [qt, setQt] = useState(0);
+    const [ing, setIng] = useState('');
+    const [unit, setUnit] = useState("whole");
 
     const units = unitlist.map((u,i)=>{
         return <option key={i}>{u}</option>
