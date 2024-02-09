@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { register } from "../api/userApi";
 import '../Styles/Register.css';
+import { useNavigate } from "react-router-dom";
 
 
 const Register = ({ onLogin }) => {
@@ -8,6 +9,7 @@ const Register = ({ onLogin }) => {
     const [email, setEmail] = useState();
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
+    const navigate = useNavigate();
 
     const onRegisterClicked = async (event) => {
         event.preventDefault();
@@ -17,6 +19,7 @@ const Register = ({ onLogin }) => {
             const response = await register(username, name, email, password);
             const { token } = response;
             onLogin(token);
+            navigate("/");
         } catch (error) {
             console.error("Registering failed");
           
@@ -36,7 +39,7 @@ const Register = ({ onLogin }) => {
                 </form>
                 <div className="registerFormLoginContainer">
                     <h3>Have you already registered?</h3>
-                    <button className="registerFormbutton" onSubmit={onRegisterClicked}>Login</button>
+                    <button className="registerFormbutton" onClick={() => navigate("/login")} >Login</button>
                 </div>
             </div>
         </div>
