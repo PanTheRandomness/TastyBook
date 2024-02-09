@@ -89,17 +89,8 @@ const Recipe = (props) =>{
 
 const RecipeHead = (props) =>{
     const recipe = props.recipe;
-    const [creator, setCreator] = useState({});
     const createdFormatted = new Date(props.recipe.created).toLocaleDateString('fi-FI');
-
-    /*useEffect(()=>{
-        const getCreator = async () =>{
-            let id = recipe.User_id;
-            const response = await fetch();
-        }
-        if(recipe != {}) getCreator();
-    },[]);*/
-
+    
     const calculateAvgRating = () =>{
 
     }
@@ -111,7 +102,7 @@ const RecipeHead = (props) =>{
                 <EllipsisMenu onDelete={props.onDelete} onEdit={props.onEdit}/>
             </div>
             <p>{recipe.description}</p>
-            <p> Created By:{creator.username} <br/> 
+            <p> Created By: {recipe.username} <br/> 
                 Creation date: {createdFormatted} <br/>
                 <i>Duration: {recipe.durationHours}h {recipe.durationMinutes}min</i>
             </p>
