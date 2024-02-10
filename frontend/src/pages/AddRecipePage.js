@@ -23,7 +23,7 @@ const AddRecipe = (props) =>{
     const [isModalKOpen, setModalKOpen] = useState(false);
 
     const openModalI = () => setModalIOpen(true);
-    const closeModalI = () => setModalIOpen(false);
+    const closeModalI = () => {setModalIOpen(false); setQt(0); setUnit("whole"); setIng('');}
     const openModalS = () => setModalSOpen(true);
     const closeModalS = () => {setModalSOpen(false); setText('');}
     const openModalK = () => setModalKOpen(true);
@@ -31,6 +31,9 @@ const AddRecipe = (props) =>{
     
     const [text, setText] = useState('');
     const [w, setW] = useState('');
+    const [qt, setQt] = useState(0);
+    const [ing, setIng] = useState('');
+    const [unit, setUnit] = useState("whole");
     const [editingIngredient, setEditingIngredient] = useState(false);
     const [editingStep, setEditingStep] = useState(false);
     const [editingKeyword, setEditingKeyword] = useState(false);
@@ -80,27 +83,34 @@ const AddRecipe = (props) =>{
         closeModalI();
     }
 
-    const editIngredient = () =>{
-        setEditingIngredient(true);
+    const editIngredient = (ingredient) =>{
+        const index = ingredients.indexOf(ingredient);
+        if (index !== -1) {
+            setEIngIndex(index);
+            const [quantity, unit] = ingredient.quantity.split(' ');
+            setQt(parseFloat(quantity));
+            setUnit(unit);
+            setIng(ingredient.name);
+            setEditingIngredient(true);
+            openModalI();
+        } else {
+            console.error("Ingredient not found: " + ingredient);
+        }
     }
 
     const saveEditedIngredient = () =>{
-        /**const quantity = ingredient.quantity; // "200 g"
-           const [amount, unit] = quantity.split(' ');
-         * const editedIngredient = {
-        quantity: newQuantity,
-        unit: newUnit,
-        name: newName
+        const newQuantity = qt + " " + unit;
+        const editedIngredient = {
+            quantity: newQuantity,
+            name: ing
         };
-
-        const index = ingredients.findIndex((ingredient) => ingredient.name === newName);
-        if (index !== -1) {
         const updatedIngredients = [...ingredients];
-        updatedIngredients[index] = editedIngredient;
+        updatedIngredients[eIngIndex] = editedIngredient;
         setIngredients(updatedIngredients);
-        }
-        closeModalI(); */
+        console.log("Edited ingredient: " + editedIngredient.name);
+        closeModalI();
         setEditingIngredient(false);
+        setEIngIndex(-1);
     }
 
     const removeIngredient = (ingredient) =>{
@@ -139,7 +149,6 @@ const AddRecipe = (props) =>{
         console.log("Edited step: " + step);
         closeModalS();
         setEditingStep(false);
-        setText('');
         setEStepIndex(-1);
     }
 
@@ -271,7 +280,7 @@ const AddRecipe = (props) =>{
                     </tr>
                 </tbody>
             </table>
-            {isModalIOpen ? <IngredientDialog isOpen={isModalIOpen} onClose={closeModalI} onAdd={addIngredient}  onSaveEdited={saveEditedIngredient} editingIngredient={editingIngredient} /> : null}
+            {isModalIOpen ? <IngredientDialog isOpen={isModalIOpen} onClose={closeModalI} onAdd={addIngredient} onSaveEdited={saveEditedIngredient} editingIngredient={editingIngredient} qt={qt} onQtChange={setQt} unit={unit} onUnitChange={setUnit} ing={ing} onIngChange={setIng}/> : null}
             {isModalSOpen ? <StepDialog isOpen={isModalSOpen} onClose={closeModalS} onAdd={addStep} onSaveEdited={saveEditedStep} editingStep={editingStep} text={text} onTextChange={setText}/> : null}
             {isModalKOpen ? <KeywordDialog isOpen={isModalKOpen} onClose={closeModalK} onAdd={addKeyword}  onSaveEdited={saveEditedKeyword} editingKeyword={editingKeyword} w={w} onWChange={setW}/> : null}
         </div>
@@ -304,7 +313,7 @@ const RecipeSteps = (props) =>{
 
 const RecipeIngredients = (props)=>{
     const ingredientList = props.ingredients.map((ing,i) =>{
-        return <tr key={i} className='recipeform-ingredient'><th>{ing.quantity} {ing.unit}</th><td>{ing.name}</td><td> <button className='editremovebutton' onClick={() => props.onEdit()}>Edit ingredient</button></td><td><button className='editremovebutton' onClick={() => props.onRemove(ing)}>Remove ingredient</button></td></tr>
+        return <tr key={i} className='recipeform-ingredient'><th>{ing.quantity} {ing.unit}</th><td>{ing.name}</td><td> <button className='editremovebutton' onClick={() => props.onEdit(ing)}>Edit ingredient</button></td><td><button className='editremovebutton' onClick={() => props.onRemove(ing)}>Remove ingredient</button></td></tr>
     });
 
     return(
@@ -314,11 +323,8 @@ const RecipeIngredients = (props)=>{
     );
 }
 
-const IngredientDialog = ({ isOpen, onClose, onAdd, onSaveEdited, editingIngredient}) =>{
+const IngredientDialog = ({ isOpen, onClose, onAdd, onSaveEdited, editingIngredient, qt, onQtChange, unit, onUnitChange, ing, onIngChange }) =>{
     const [unitlist, setUnitlist] = useState(["whole", "half", "quarter", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups", "lbs", "pinch"]);
-    const [qt, setQt] = useState(0);
-    const [ing, setIng] = useState('');
-    const [unit, setUnit] = useState("whole");
 
     const units = unitlist.map((u,i)=>{
         return <option key={i}>{u}</option>
@@ -333,19 +339,19 @@ const IngredientDialog = ({ isOpen, onClose, onAdd, onSaveEdited, editingIngredi
                         <tr>
                             <td className="modal-text">Quantity:</td>
                             <td>
-                                <input type='number' className="modalInput" value={qt} min="0" onChange={(e) =>setQt(e.target.value)}/>
-                                <select value={unit} className="modalInput" onChange={(e)=>setUnit(e.target.value)}>{units}</select>
+                                <input type='number' className="modalInput" value={qt} min="0" onChange={(e) =>onQtChange(e.target.value)}/>
+                                <select value={unit} className="modalInput" onChange={(e)=>onUnitChange(e.target.value)}>{units}</select>
                             </td>
                         </tr>
                         <tr>
                             <td>Ingredient:</td>
-                            <td><input type='text' className="modalInput" value={ing} onChange={(e)=>setIng(e.target.value)}/></td>
+                            <td><input type='text' className="modalInput" value={ing} onChange={(e)=>onIngChange(e.target.value)}/></td>
                         </tr>
                     </tbody>
                 </table>
                 {
                     editingIngredient ? 
-                    <button onClick={() => onSaveEdited(qt, unit, ing)} disabled={qt == 0 || !ing}>Save Ingredient</button>:
+                    <button onClick={() => onSaveEdited()} disabled={qt == 0 || !ing}>Save Ingredient</button>:
                     <button onClick={() => onAdd(qt, unit, ing)} disabled={qt == 0 || !ing}>Add Ingredient</button>
                 }
             </div>
