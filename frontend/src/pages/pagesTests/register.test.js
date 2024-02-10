@@ -1,49 +1,85 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { Register } from '../Register';
-import {register} from '../../api/userApi'
+import { register } from '../../api/userApi';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-// Mockataan userApi
+// Mock the register function
 jest.mock('../../api/userApi', () => ({
   register: jest.fn(),
 }));
 
-
 describe('Register component', () => {
-  test('should call onLogin when registration is successful', async () => {
+  test('should call onLogin with token and navigate to "/" when registering succeeds', async () => {
+    // Arrange
+    const token = 'mockedToken';
     const onLoginMock = jest.fn();
-    Register.mockResolvedValueOnce({ token: 'mockToken' });
+    const name = 'testname';
+    const email = 'testemail';
+    const username = 'testuser';
+    const password = 'testpassword';
+    register.mockResolvedValueOnce({ token });
 
-    render(<Register onLogin={onLoginMock} />);
+    // Act
+    const { getByPlaceholderText, getByTestId } = render(
+      <Router>
+        <Register onLogin={onLoginMock} />
+      </Router>
+    );
+    fireEvent.change(getByPlaceholderText('name'), {
+      target: { value: name },
+    });
+    fireEvent.change(getByPlaceholderText('email'), {
+      target: { value: email },
+    });
+    fireEvent.change(getByPlaceholderText('username'), {
+      target: { value: username },
+    });
+    fireEvent.change(getByPlaceholderText('password'), {
+      target: { value: password },
+    });
+    fireEvent.submit(getByTestId('register-button'));
 
-    // Täytä kaikki syötekentät
-    fireEvent.change(screen.getByPlaceholderText('name'), { target: { value: 'John Doe' } });
-    fireEvent.change(screen.getByPlaceholderText('email'), { target: { value: 'john.doe@example.com' } });
-    fireEvent.change(screen.getByPlaceholderText('username'), { target: { value: 'john_doe' } });
-    fireEvent.change(screen.getByPlaceholderText('password'), { target: { value: 'password123' } });
-
-    // Klikkaa rekisteröintipainiketta
-    fireEvent.click(screen.getByText('Register'));
-
-    // Odota, että rekisteröintipyyntö suoritetaan ja onnistuu
+    // Assert
     await waitFor(() => {
-      // Tarkista, että onLogin on kutsuttu oikeilla tiedoilla
-      expect(onLoginMock).toHaveBeenCalledWith('mockToken');
+      expect(onLoginMock).toHaveBeenCalledWith(token);
+      expect(window.location.pathname).toBe('/');
     });
   });
 
-  test('should handle registration failure', async () => {
-    register.mockRejectedValueOnce(new Error('Registration failed'));
+  test('should log error when register fails', async () => {
+    // Arrange
+    console.error = jest.fn(); // Mock console.error
+    const onLoginMock = jest.fn();
+    const name = 'testname';
+    const email = 'testemail';
+    const username = 'testuser';
+    const password = 'testpassword';
+    const errorMessage = 'Invalid credentials';
+    register.mockRejectedValueOnce(new Error(errorMessage));
 
-    render(<Register onLogin={() => {}} />);
-
-    // Klikkaa rekisteröintipainiketta
-    fireEvent.click(screen.getByText('Register'));
-
-    // Odota, että rekisteröintipyyntö suoritetaan ja epäonnistuu
-    await waitFor(() => {
-      // Tarkista, että "Registering failed" on tulostettu konsoliin
-      expect(console.error).toHaveBeenCalledWith('Registering failed');
+    // Act
+    const { getByPlaceholderText, getByTestId } = render(
+      <Router>
+        <Register onLogin={onLoginMock} />
+      </Router>
+    );
+    fireEvent.change(getByPlaceholderText('name'), {
+      target: { value: name },
     });
+    fireEvent.change(getByPlaceholderText('email'), {
+      target: { value: email },
+    });
+    fireEvent.change(getByPlaceholderText('username'), {
+      target: { value: username },
+    });
+    fireEvent.change(getByPlaceholderText('password'), {
+      target: { value: password },
+    });
+
+    fireEvent.submit(getByTestId('register-button'));
+
+    // Assert
+    await waitFor(() => expect(console.error).toHaveBeenCalledWith('Registering failed.'));
   });
 });

@@ -21,7 +21,7 @@ const Register = ({ onLogin }) => {
             onLogin(token);
             navigate("/");
         } catch (error) {
-            console.error("Registering failed");
+            console.error("Registering failed.");
           
         }
     };
@@ -35,11 +35,11 @@ const Register = ({ onLogin }) => {
                     <input className="registerForminput" placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
                     <input  className="registerForminput" placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
                     <input className="registerForminput" placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-                    <button className="registerFormbutton" disabled={!name || !email || !username || !password} onSubmit={onRegisterClicked}>Register</button>
+                    <button className="registerFormbutton" disabled={!name || !email || !username || !password} onSubmit={onRegisterClicked} data-testid="register-button">Register</button>
                 </form>
                 <div className="registerFormLoginContainer">
                     <h3>Have you already registered?</h3>
-                    <button className="registerFormbutton" onClick={() => navigate("/login")} >Login</button>
+                    <button className="registerFormbutton" onClick={() => navigate("/login")} data-testid="login-button">Login</button>
                 </div>
             </div>
         </div>
