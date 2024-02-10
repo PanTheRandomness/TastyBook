@@ -51,7 +51,7 @@ export const adminregister = async (username, name, email, password, api_key) =>
         });
 
         if (!response.ok) {
-            throw new Error(`Registering failed: ${response.statusText}`);
+            throw new Error(`Admin registering failed: ${response.statusText}`);
         }
 
         return response.json();
