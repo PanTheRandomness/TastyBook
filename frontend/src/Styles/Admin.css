@@ -1,31 +1,52 @@
 .adminForm {
     display: flex;
     flex-direction: column;
-    align-items:center;
+
 }
 
   .adminForm body {
     display: flex;
-    align-items: center;
-    justify-content: center;
     height: 100vh;
-    margin: 0;
+    margin: 10px;
 }
 
   .adminContainer {
     gap: 0.9rem; 
-    max-width: 900px; 
-    margin: auto;
+    max-width: 1200px; 
+    margin: 30px auto 0;
     background-color: #AA5656;
     padding: 60px; 
     border-radius: 15px;
-    border: 15px solid #B99B6B;
+    border: 20px solid #B99B6B;
+    text-align: left;
 }
   .adminHead{
     background-color: #AA5656;
     border-radius: 20px;
     margin: 10px;
-    max-width: 900px; 
+    max-width: 1200px; 
+}
+
+td.cell-one {
+  width: 150px;
+  text-align: left;
+}
+td.cell-two {
+  width: 350px;
+  text-align: left;
+}
+td.cell-three {
+  width: 500px; 
+  text-align: left;
+}
+td.cell-four {
+  width: 150px; 
+  text-align: left;
+}
+
+.adminButton {
+  width: 150px;
+  padding: 0.8rem;
 }
 
   /*
