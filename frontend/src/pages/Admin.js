@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useToken } from '../customHooks/useToken';
-import { getAllUsers } from "../api/adminApi";
+import { getAllUsers, deleteUser } from "../api/adminApi";
 import '../Styles/Admin.css';
 const BASE_URL = "http://localhost:3004";
 
@@ -35,25 +35,14 @@ const Admin = () => {
     setUserIdToDelete(userId);
   };
 
-  const confirmDeletion = async (confirmed) => {
-    setShowConfirmationModal(false);
 
-    if (!confirmed) {
-      return;
-    }
-
-    try { 
-      await fetch(`${BASE_URL}/api/users/${userIdToDelete}`, { 
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setUsers(users.filter((user) => user.id !== userIdToDelete));
-      setUserIdToDelete('');
+  const confirmDeletion = async () => {
+    try {
+      const response = await deleteUser(token);
+      setUsers(response);
     } catch (error) {
-      console.error('Error deleting user', error);
-      setError('Error deleting user');
+      console.error('Error fetching user data', error);
+      setError('Error fetching user data');
     }
   };
 
@@ -74,10 +63,10 @@ const Admin = () => {
           <tbody>
             {users.map((user) => (
               <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.username}</td>
-                <td>{user.email}</td>
-                <td>
+                <td class="cell-one">{user.id}</td>
+                <td class="cell-two">{user.username}</td>
+                <td class="cell-three">{user.email}</td>
+                <td class="cell-four">
                   <button onClick={() => handleEditUser(user.id)}>
                     Edit
                   </button>
@@ -94,8 +83,8 @@ const Admin = () => {
       {showConfirmationModal && (
         <div className="confirmation-modal">
           <p>Are you sure you want to delete this user?</p>
-          <button onClick={() => confirmDeletion(true)}>Yes</button>
-          <button onClick={() => confirmDeletion(false)}>No</button>
+          <button className='adminButton' onClick={() => confirmDeletion(true)}>Yes</button>
+          <button className='adminButton' onClick={() => confirmDeletion(false)}>No</button>
         </div>
       )}
     </div>
