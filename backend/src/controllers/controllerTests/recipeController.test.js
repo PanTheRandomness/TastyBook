@@ -1,4 +1,4 @@
-const { addRecipe, getAllRecipeHashes, getRecipe, deleteRecipe, editRecipe } = require("../recipeController");
+const { addRecipe, getAllRecipeHashes, getRecipe, deleteRecipe, editRecipe, getAllRecipes } = require("../recipeController");
 const sql = require("../../db/recipeSQL");
 const { addRecipesKeyword, getRecipesKeywords, deleteRecipesKeywords } = require("../keywordController");
 const { addRecipesIngredient, getRecipesIngredients, deleteRecipesIngredients } = require("../ingredientController");
@@ -8,6 +8,50 @@ jest.mock("../../db/recipeSQL");
 jest.mock("../keywordController");
 jest.mock("../ingredientController");
 jest.mock("crypto");
+
+describe("getAllRecipes", () => {
+    let req, res;
+
+    beforeEach(() => {
+        req = {};
+        res = {
+            status: jest.fn(() => res),
+            json: jest.fn(),
+            send: jest.fn(),
+        };
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should handle fetching recipes from the database", async () => {
+        sql.getRecipes.mockResolvedValue([{ id: 123 }, { id: 234 }]);
+        await getAllRecipes(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ recipes: [{ id: 123 }, { id: 234 }]});
+    });
+
+    it("should handle fetching recipes from the database and sending loggedIn", async () => {
+        sql.getRecipes.mockResolvedValue([{ id: 123 }, { id: 234 }]);
+        req.loggedIn = true;
+        await getAllRecipes(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ loggedIn: true, recipes: [{ id: 123 }, { id: 234 }]});
+    });
+
+    it("should handle internal server error", async () => {
+        sql.getRecipes.mockRejectedValue(new Error("Database error"));
+
+        await getAllRecipes(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalled();
+        expect(res.json).not.toHaveBeenCalled();
+    });
+});
 
 describe("getAllRecipeHashes", () => {
     let req, res;
@@ -30,7 +74,16 @@ describe("getAllRecipeHashes", () => {
         await getAllRecipeHashes(req, res);
 
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith([{ hash: "123"}, { hash: "234" }]);
+        expect(res.json).toHaveBeenCalledWith({ hashes: [{ hash: "123"}, { hash: "234" }]});
+    });
+
+    it("should handle fetching hashes from the database and sending loggedIn", async () => {
+        sql.getAllRecipeHashes.mockResolvedValue([{ hash: "123"}, { hash: "234" }]);
+        req.loggedIn = true;
+        await getAllRecipeHashes(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ loggedIn: true, hashes: [{ hash: "123"}, { hash: "234" }]});
     });
 
     it("should handle internal server error", async () => {
@@ -62,7 +115,7 @@ describe("getRecipe", () => {
         jest.clearAllMocks();
     });
 
-    it("should return 404 if there is no recipe for the hash", async () => {
+    it("should return 404 if there is no recipe for the hash or there is but it's not marked visibleToAll and user is not logged in", async () => {
         sql.getRecipes.mockResolvedValue([]);
 
         await getRecipe(req, res);
@@ -92,17 +145,6 @@ describe("getRecipe", () => {
             }
         );
     });
-
-    /* 404 vai 401 ????
-    it("should return 401 if recipe is not marked visible to all and user is not logged in", async () => {
-        sql.getRecipes.mockResolvedValue([{ id: 1, visibleToAll: 0 }]);
-
-        await getRecipe(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(401);
-        expect(res.send).toHaveBeenCalled();
-    });
-    */
 
     it("should handle fetching recipe from the database if recipe is not marked visible to all but user is logged in", async () => {
         // sql.getRecipe(hash) palauttaa todellisuudessa kaikki reseptin tiedot
@@ -149,7 +191,7 @@ describe("addRecipe", () => {
                 durationMinutes: 30,
                 steps: ["eka", "toka"],
                 keywords: ["avain", "sana"],
-                ingredients: [{ quantity: "100 g", ingredient: "potato" }, { quantity: "5 kg", ingredient: "tomato" }]
+                ingredients: [{ quantity: "100 g", name: "potato" }, { quantity: "5 kg", name: "tomato" }]
             },
             user: { id: 123 }
         };
@@ -187,7 +229,7 @@ describe("addRecipe", () => {
 
         expect(addRecipesKeyword).toHaveBeenCalledWith("avain", resultSQL.insertedId);
         expect(sql.addStep).toHaveBeenCalledWith("toka", 2, resultSQL.insertedId);
-        expect(addRecipesIngredient).toHaveBeenCalledWith({ quantity: "5 kg", ingredient: "tomato" }, resultSQL.insertedId);
+        expect(addRecipesIngredient).toHaveBeenCalledWith({ quantity: "5 kg", name: "tomato" }, resultSQL.insertedId);
 
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalled();
@@ -262,7 +304,7 @@ describe("editRecipe", () => {
                 durationMinutes: 30,
                 steps: ["eka", "toka"],
                 keywords: ["avain", "sana"],
-                ingredients: [{ quantity: "100 g", ingredient: "potato" }, { quantity: "5 kg", ingredient: "tomato" }]
+                ingredients: [{ quantity: "100 g", name: "potato" }, { quantity: "5 kg", name: "tomato" }]
             },
             user: { id: 123 },
             params: {
@@ -300,7 +342,7 @@ describe("editRecipe", () => {
         expect(sql.deleteSteps).toHaveBeenCalledWith(req.body.id);
         expect(sql.addStep).toHaveBeenCalledWith("toka", 2, req.body.id);
         expect(deleteRecipesIngredients).toHaveBeenCalledWith(req.body.id);
-        expect(addRecipesIngredient).toHaveBeenCalledWith({ quantity: "5 kg", ingredient: "tomato" }, req.body.id);
+        expect(addRecipesIngredient).toHaveBeenCalledWith({ quantity: "5 kg", name: "tomato" }, req.body.id);
 
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.send).toHaveBeenCalled();

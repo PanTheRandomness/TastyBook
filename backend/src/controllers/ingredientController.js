@@ -2,8 +2,8 @@ const sql = require("../db/ingredientSQL");
 
 const addRecipesIngredient = async (ingredient, recipeId) => {
     try {
-        await sql.addIngredient(ingredient.ingredient);
-        const ingredientIdArray = await sql.getIngredientId(ingredient.ingredient);
+        await sql.addIngredient(ingredient.name);
+        const ingredientIdArray = await sql.getIngredientId(ingredient.name);
         const id = ingredientIdArray[0]["id"];
         await sql.addRecipesIngredient(id, ingredient.quantity, recipeId);
     } catch (error) {

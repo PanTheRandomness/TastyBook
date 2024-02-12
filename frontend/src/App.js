@@ -22,13 +22,16 @@ const App = () => {
     const fetchRoutes = async () => {
       try {
         const response = await getRecipeRoutes(token);
-        setRecipeRoutes(response);
+        setRecipeRoutes(response.hashes);
+        if (!response.loggedIn) onLogout();
       } catch (error) {
         // TODO: show error
       }
     }
 
     fetchRoutes();
+    // onLogout won't change over time, the following comment disables the linting
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const addRecipeRoute = (route) => {
@@ -55,9 +58,14 @@ const App = () => {
             </div>
             {
                 (user && token) ?
+                <>
+                <div>
+                    <NavLink className={"navLink"} to={"/newrecipe"}>Add Recipe</NavLink>
+                </div>
                 <div>
                     <NavLink className={"navLink"} to={"/"} onClick={onLogout}>Logout</NavLink>
-                </div> :
+                </div>
+                </> :
                 <div>
                     <NavLink className={"navLink"} to={"/register"}>Register</NavLink>
                     <NavLink className={"navLink"} to={"/login"}>Login</NavLink>

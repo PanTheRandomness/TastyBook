@@ -1,0 +1,11 @@
+.recipeView {
+    background: none;
+    color: inherit;
+    border: none;
+    font: inherit;
+    cursor: pointer;
+    font-size: 2rem;
+    text-decoration: none;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}

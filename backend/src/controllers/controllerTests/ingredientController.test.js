@@ -9,7 +9,7 @@ describe("addRecipesIngredient", () => {
     });
 
     it("should handle inserting ingredients and recipe's ingredients to the database", async () => {
-        const ingredient = { ingredient: "Potato", quantity: "2 cups" };
+        const ingredient = { name: "Potato", quantity: "2 cups" };
         const recipeId = 1;
 
         sql.addIngredient.mockResolvedValueOnce();
@@ -24,7 +24,7 @@ describe("addRecipesIngredient", () => {
     });
 
     it("throws an error if any SQL query fails", async () => {
-        const ingredient = { ingredient: "Potato", quantity: "2 cups" };
+        const ingredient = { name: "Potato", quantity: "2 cups" };
         const recipeId = 1;
     
         sql.addIngredient.mockRejectedValueOnce(new Error("Failed to add ingredient"));

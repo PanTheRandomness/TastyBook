@@ -5,8 +5,9 @@ const crypto = require("crypto");
 
 const getAllRecipes = async (req, res) => {
     try {
-        const recipes = await sql.getRecipes(req.loggedIn);
-        res.status(200).json(recipes);
+        const recipes = await sql.getRecipes(null, req.loggedIn);
+        if (req.loggedIn) return res.status(200).json({ loggedIn: true, recipes });
+        res.status(200).json({ recipes });
     } catch (error) {
         res.status(500).send();
     }
@@ -14,9 +15,9 @@ const getAllRecipes = async (req, res) => {
 
 const getAllRecipeHashes = async (req, res) => {
     try {
-        // Jos käyttäjä ei ole kirjautunut, voiko käyttäjä tietää, että reitti/resepti on olemassa?
         const hashes = await sql.getAllRecipeHashes(req.loggedIn);
-        res.status(200).json(hashes);
+        if (req.loggedIn) return res.status(200).json({ loggedIn: true, hashes });
+        res.status(200).json({ hashes });
     } catch (error) {
         res.status(500).send();
     }
@@ -27,13 +28,11 @@ const getRecipe = async (req, res) => {
         const { hash } = req.params;
         if (!hash) return res.status(400).send();
 
-        // Jos käyttäjä ei ole kirjautunut, 404 vai 401 ???
         const result = await sql.getRecipes(hash, req.loggedIn);
-        if (result.length !== 1) return res.status(404).send();
+        if (result.length === 0) return res.status(404).send();
 
         let recipe = result[0];
         
-        // if (recipe.visibleToAll === 0 && !req.loggedIn) return res.status(401).send();
         const ingredients = await getRecipesIngredients(recipe.id);
         recipe.ingredients = ingredients;
         const steps = await sql.getSteps(recipe.id);
@@ -144,7 +143,7 @@ const checkRecipeBody = (header, description, visibleToAll, durationHours, durat
 
     if (!Array.isArray(ingredients) || !ingredients.every(ingredient =>
         typeof ingredient === "object" &&
-        typeof ingredient.ingredient === "string" &&
+        typeof ingredient.name === "string" &&
         typeof ingredient.quantity === "string"))
         throw new Error();
 }

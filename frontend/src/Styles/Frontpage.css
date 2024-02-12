@@ -1,0 +1,12 @@
+.recipeViewContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.recipeViewContainer > * {
+    flex: 1 1 25%;
+    max-width: 25%;
+    margin: 10px;
+    background-color: #AA5656;
+}

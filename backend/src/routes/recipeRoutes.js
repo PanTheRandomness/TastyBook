@@ -74,7 +74,7 @@ router.route("/api/recipe/:hash").get(userMiddleware.isUserLoggedIn, ctrl.getRec
         "durationMinutes": 30,
         "steps": ["eka", "toka"],
         "keywords": ["avain", "sana"],
-        "ingredients": [{ "quantity": "100 g", "ingredient": "potato" }, { "quantity": "5 kg", "ingredient": "tomato" }]
+        "ingredients": [{ "quantity": "100 g", "name": "potato" }, { "quantity": "5 kg", "name": "tomato" }]
     }
 
     visibleToAll pitää olla joka 1 tai 0
@@ -111,7 +111,7 @@ router.route("/api/recipe/:hash").delete(userMiddleware.verifyJWT, ctrl.deleteRe
         "durationMinutes": 30,
         "steps": ["eka", "toka"],
         "keywords": ["avain", "sana"],
-        "ingredients": [{ "quantity": "100 g", "ingredient": "potato" }, { "quantity": "5 kg", "ingredient": "tomato" }]
+        "ingredients": [{ "quantity": "100 g", "name": "potato" }, { "quantity": "5 kg", "name": "tomato" }]
     }
 
     Jos token puuttuu req.headers.authorization:nista, se on väärin tai vanhentunut, palauttaa statuskoodin 401

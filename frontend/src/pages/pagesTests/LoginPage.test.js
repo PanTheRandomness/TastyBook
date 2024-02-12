@@ -8,13 +8,15 @@ jest.mock('../../api/userApi', () => ({
     login: jest.fn(),
 }));
 
-const navigate = jest.fn()
 
-beforeEach(() => {
-  jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate)
-})
 
 describe('Login component', () => {
+    const navigate = jest.fn()
+
+    beforeEach(() => {
+        jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate)
+    })
+
     test('should call onLogin with token when login succeeds', async () => {
         // Arrange
         const token = 'mockedToken';
@@ -42,7 +44,6 @@ describe('Login component', () => {
 
     test('should log error when login fails', async () => {
         // Arrange
-        console.error = jest.fn(); // Mock console.error
         const onLoginMock = jest.fn();
         const username = 'testuser';
         const password = 'testpassword';
