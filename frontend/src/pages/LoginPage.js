@@ -1,19 +1,23 @@
 import { useState } from "react";
 import { login } from "../api/userApi";
 import '../Styles/Login.css';
+import { useNavigate } from "react-router-dom";
 
 const Login = ({onLogin}) => {
-    const [username, setUsername] = useState();
-    const [password, setPassword] = useState();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const onLoginClicked = async (event) => {
         event.preventDefault();
         try {
             const response = await login(username, password);
             const { token } = response;
-            onLogin(token)
+            onLogin(token);
+            navigate('/');
         } catch (error) {
-            console.error("Logging in failed.");
+            // TODO: Näytä käyttäjälle, että kirjautuminen ei onnistunut, ei console erroreita
+            // console.error("Logging in failed.");
         }
     }
 

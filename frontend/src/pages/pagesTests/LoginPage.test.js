@@ -1,11 +1,18 @@
+import * as router from 'react-router';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { Login } from '..LoginPage';
+import { Login } from '../LoginPage';
 import { login } from '../../api/userApi';
 
 // Mock the login function
 jest.mock('../../api/userApi', () => ({
     login: jest.fn(),
 }));
+
+const navigate = jest.fn()
+
+beforeEach(() => {
+  jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate)
+})
 
 describe('Login component', () => {
     test('should call onLogin with token when login succeeds', async () => {
@@ -30,6 +37,7 @@ describe('Login component', () => {
 
         // Assert
         await waitFor(() => expect(onLoginMock).toHaveBeenCalledWith(token));
+        expect(navigate).toHaveBeenCalledWith('/');
     });
 
     test('should log error when login fails', async () => {
@@ -54,6 +62,6 @@ describe('Login component', () => {
         fireEvent.click(getByTestId("login-button"))
 
         // Assert
-        await waitFor(() => expect(console.error).toHaveBeenCalledWith("Logging in failed."));
+        await waitFor(() => expect(onLoginMock).not.toHaveBeenCalled());
     });
 });

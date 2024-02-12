@@ -4,11 +4,11 @@ import '../Styles/Register.css';
 
 
 const AdminRegister = ({ onLogin }) => {
-    const [name, setName] = useState();
-    const [email, setEmail] = useState();
-    const [username, setUsername] = useState();
-    const [password, setPassword] = useState();
-    const [api_key, setApi_key] = useState();
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [api_key, setApi_key] = useState('');
 
     const onRegisterClicked = async (event) => {
         event.preventDefault();

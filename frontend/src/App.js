@@ -10,7 +10,7 @@ import { AddRecipe } from './pages/AddRecipePage';
 import { useToken } from "./customHooks/useToken";
 import { useEffect, useState } from "react";
 import { getRecipeRoutes } from "./api/recipeApi";
-import NavigationBar from "./components/navBar";
+import "./Styles/NavBar.css";
 import { useUser } from "./customHooks/useUser";
 
 const App = () => {
@@ -29,7 +29,7 @@ const App = () => {
     }
 
     fetchRoutes();
-  }, []);
+  }, [token]);
 
   const addRecipeRoute = (route) => {
     setRecipeRoutes([...recipeRoutes, { hash: route }]);
@@ -38,23 +38,40 @@ const App = () => {
   const onLogin = (token) => {
     setToken(token);
   }
-/*Tämän kutsu sitten sieltä mistä kirjaudutaan ulos
+
   const onLogout = () => {
     localStorage.removeItem(token);
     setToken("");
   }
-*/
+
   return (
     <Router>
-      <NavigationBar user={user} />
+      <nav>
+            <div>
+                <NavLink className={"navLink"} to={"/"}>Tasty Book</NavLink>
+            </div>
+            <div>
+                <NavLink className={"navLink"} to={"/"}>Recipes</NavLink>
+            </div>
+            {
+                (user && token) ?
+                <div>
+                    <NavLink className={"navLink"} to={"/"} onClick={onLogout}>Logout</NavLink>
+                </div> :
+                <div>
+                    <NavLink className={"navLink"} to={"/register"}>Register</NavLink>
+                    <NavLink className={"navLink"} to={"/login"}>Login</NavLink>
+                </div>
+            }
+        </nav>
+
       <Routes>
-      { /* Tähän lisätään eri reittejä */}
         <Route path='/' element={<FrontPage />}></Route>
         <Route path='/register' element={<Register onLogin={onLogin} />}></Route>
         <Route path='/login' element={<Login onLogin={onLogin} />}></Route>
         <Route path='/logout' element={<Logout />}></Route>
         <Route path='/admin' element={<Admin />}></Route>
-        <Route path='/adminregister' element={<AdminRegister />}></Route>
+        <Route path='/adminregister' element={<AdminRegister onLogin={onLogin} />}></Route>
         <Route path='/recipe' element={<Recipe />}></Route>
         <Route path='/newrecipe' element={<AddRecipe addRecipeRoute={addRecipeRoute} />}></Route>
 
