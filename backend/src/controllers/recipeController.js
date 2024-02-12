@@ -1,6 +1,6 @@
 const sql = require("../db/recipeSQL");
-const { addRecipesKeyword, getRecipesKeywords } = require("./keywordController");
-const { addRecipesIngredient, getRecipesIngredients } = require("./ingredientController");
+const { addRecipesKeyword, getRecipesKeywords, deleteRecipesKeywords } = require("./keywordController");
+const { addRecipesIngredient, getRecipesIngredients, deleteRecipesIngredients } = require("./ingredientController");
 const crypto = require("crypto");
 
 const getAllRecipes = async (req, res) => {
@@ -50,22 +50,11 @@ const getRecipe = async (req, res) => {
 const addRecipe = async (req, res) => {
     try {
         const { header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients } = req.body;
-        if (typeof header !== "string" ||
-            typeof description !== "string" ||
-            !(visibleToAll === 0 || visibleToAll === 1) ||
-            typeof durationHours !== "number" || durationHours < 0 ||
-            typeof durationMinutes !== "number" || durationMinutes < 0 || durationMinutes > 59)
+        try {
+            checkRecipeBody(header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients);
+        } catch (error) {
             return res.status(400).send();
-
-        if (!Array.isArray(steps) || !steps.every(step => typeof step === "string")) return res.status(400).send();
-
-        if (!Array.isArray(keywords) || !keywords.every(word=> typeof word === "string")) return res.status(400).send();
-
-        if (!Array.isArray(ingredients) || !ingredients.every(ingredient =>
-            typeof ingredient === "object" &&
-            typeof ingredient.ingredient === "string" &&
-            typeof ingredient.quantity === "string"))
-            return res.status(400).send();
+        }
 
         const userId = req.user.id;
 
@@ -105,4 +94,59 @@ const deleteRecipe = async (req, res) => {
     }
 }
 
-module.exports = { getAllRecipes, getAllRecipeHashes, getRecipe, addRecipe, deleteRecipe };
+const editRecipe = async (req, res) => {
+    try {
+        const hash = req.params.hash;
+        const userId = req.user.id;
+        const { header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients, id } = req.body;
+        if (!id) return res.status(400).send();
+        try {
+            checkRecipeBody(header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients);
+        } catch (error) {
+            return res.status(400).send();
+        }
+
+        const result = await sql.editRecipe(header, description, visibleToAll, durationHours, durationMinutes, hash, userId);
+        if (result.changedRows === 0) return res.status(404).send();
+
+        await sql.deleteSteps(id);
+        steps.map(async (step, index) => (
+            await sql.addStep(step, index + 1, id)
+        ));
+
+        await deleteRecipesIngredients(id);
+        ingredients.map(async (ingredient) => (
+            await addRecipesIngredient(ingredient, id)
+        ));
+
+        await deleteRecipesKeywords(id);
+        keywords.map(async (word) => (
+            await addRecipesKeyword(word, id)
+        ));
+
+        res.status(200).send();
+    } catch (error) {
+        res.status(500).send();
+    }
+}
+
+const checkRecipeBody = (header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients) => {
+    if (typeof header !== "string" ||
+        typeof description !== "string" ||
+        !(visibleToAll === 0 || visibleToAll === 1) ||
+        typeof durationHours !== "number" || durationHours < 0 ||
+        typeof durationMinutes !== "number" || durationMinutes < 0 || durationMinutes > 59)
+        throw new Error();
+
+    if (!Array.isArray(steps) || !steps.every(step => typeof step === "string")) throw new Error();
+
+    if (!Array.isArray(keywords) || !keywords.every(word => typeof word === "string")) throw new Error();
+
+    if (!Array.isArray(ingredients) || !ingredients.every(ingredient =>
+        typeof ingredient === "object" &&
+        typeof ingredient.ingredient === "string" &&
+        typeof ingredient.quantity === "string"))
+        throw new Error();
+}
+
+module.exports = { getAllRecipes, getAllRecipeHashes, getRecipe, addRecipe, deleteRecipe, editRecipe };

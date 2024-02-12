@@ -37,4 +37,14 @@ const deleteRecipe = (hash, userId) => {
     return executeSQL(query, [hash, userId]);
 }
 
-module.exports = { getAllRecipeHashes, getRecipes, addRecipe, addStep, getSteps, deleteRecipe };
+const editRecipe = (header, description, visibleToAll, durationHours, durationMinutes, hash, userId) => {
+    const query = "UPDATE recipe SET header=?, description=?, visibleToAll=?, durationHours=?, durationMinutes=?, modified=NOW() WHERE hash=? AND User_id=?";
+    return executeSQL(query, [header, description, visibleToAll, durationHours, durationMinutes, hash, userId]);
+}
+
+const deleteSteps = (id) => {
+    const query = "DELETE FROM recipesteps WHERE Recipe_id=?";
+    return executeSQL(query, [id]);
+}
+
+module.exports = { getAllRecipeHashes, getRecipes, addRecipe, addStep, getSteps, deleteRecipe, editRecipe, deleteSteps };

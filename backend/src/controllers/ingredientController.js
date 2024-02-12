@@ -20,4 +20,12 @@ const getRecipesIngredients = async (recipeId) => {
     }
 }
 
-module.exports = { addRecipesIngredient, getRecipesIngredients };
+const deleteRecipesIngredients = async (recipeId) => {
+    try {
+        await sql.deleteRecipesIngredients(recipeId);
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = { addRecipesIngredient, getRecipesIngredients, deleteRecipesIngredients };

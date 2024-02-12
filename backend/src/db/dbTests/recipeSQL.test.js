@@ -1,4 +1,4 @@
-const { addRecipe, addStep, getAllRecipeHashes, getSteps, getRecipes, deleteRecipe } = require("../recipeSQL");
+const { addRecipe, addStep, getAllRecipeHashes, getSteps, getRecipes, deleteRecipe, deleteSteps, editRecipe } = require("../recipeSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
@@ -115,5 +115,33 @@ describe("deleteRecipe", () => {
         await deleteRecipe(hash, userId);
 
         expect(executeSQL).toHaveBeenCalledWith("DELETE FROM recipe WHERE hash=? AND User_id=?", [hash, userId]);
+    });
+});
+
+describe("editRecipe", () => {
+    it("should update recipe in the database", async () => {
+        const userId = 1;
+        const header = "Header";
+        const hash = "123456";
+        const description = "Tasty food";
+        const visibleToAll = 1;
+        const durationHours = 1;
+        const durationMinutes = 0;
+
+        await editRecipe(header, description, visibleToAll, durationHours, durationMinutes, hash, userId)
+
+        expect(executeSQL).toHaveBeenCalledWith(
+            "UPDATE recipe SET header=?, description=?, visibleToAll=?, durationHours=?, durationMinutes=?, modified=NOW() WHERE hash=? AND User_id=?",
+            [header, description, visibleToAll, durationHours, durationMinutes, hash, userId]);
+    });
+});
+
+describe("deleteSteps", () => {
+    it("should delete recipes steps from the database", async () => {
+        const recipeId = 1;
+
+        await deleteSteps(recipeId);
+
+        expect(executeSQL).toHaveBeenCalledWith("DELETE FROM recipesteps WHERE Recipe_id=?", [recipeId]);
     });
 });

@@ -1,4 +1,4 @@
-const { addKeyword, getKeywordId, addRecipesKeyword, getRecipesKeywords } = require("../keywordSQL");
+const { addKeyword, getKeywordId, addRecipesKeyword, getRecipesKeywords, deleteRecipesKeywords } = require("../keywordSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
@@ -44,5 +44,15 @@ describe("getRecipesKeywords", () => {
 
         expect(executeSQL).toHaveBeenCalledWith("SELECT k.id, k.word FROM recipeskeyword rk LEFT JOIN keyword k ON rk.Keyword_id=k.id WHERE rk.Recipe_id=?", [recipeId]);
         expect(result).toEqual([{ id: 1, word: "Soup" }, { id: 2, word: "Meat" }]);
+    });
+});
+
+describe("deleteRecipesKeywords", () => {
+    it("should delete recipes keywords from the database", async () => {
+        const recipeId = 1;
+
+        await deleteRecipesKeywords(recipeId);
+
+        expect(executeSQL).toHaveBeenCalledWith("DELETE FROM recipeskeyword WHERE Recipe_id=?", [recipeId]);
     });
 });

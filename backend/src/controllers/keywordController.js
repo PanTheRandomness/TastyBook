@@ -20,4 +20,12 @@ const getRecipesKeywords = async (recipeId) => {
     }
 }
 
-module.exports = { addRecipesKeyword, getRecipesKeywords };
+const deleteRecipesKeywords = async (recipeId) => {
+    try {
+        await sql.deleteRecipesKeywords(recipeId);
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = { addRecipesKeyword, getRecipesKeywords, deleteRecipesKeywords };

@@ -20,4 +20,9 @@ const getRecipesIngredients = (recipeId) => {
     return executeSQL(query, [recipeId]);
 }
 
-module.exports = { addIngredient, getIngredientId, addRecipesIngredient, getRecipesIngredients };
+const deleteRecipesIngredients = (id) => {
+    const query = "DELETE FROM recipesingredient WHERE Recipe_id=?";
+    return executeSQL(query, [id]);
+}
+
+module.exports = { addIngredient, getIngredientId, addRecipesIngredient, getRecipesIngredients, deleteRecipesIngredients };

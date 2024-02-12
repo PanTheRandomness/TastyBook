@@ -99,4 +99,28 @@ router.route("/api/recipe").post(userMiddleware.verifyJWT, ctrl.addRecipe);
 
 router.route("/api/recipe/:hash").delete(userMiddleware.verifyJWT, ctrl.deleteRecipe);
 
+/*  /api/recipe/:hash PUT
+    Esimerkki body:
+
+    {
+        "id": 1,
+        "header": "makaronilaatikko",
+        "description": "hyvää",
+        "visibleToAll": 1,
+        "durationHours": 1,
+        "durationMinutes": 30,
+        "steps": ["eka", "toka"],
+        "keywords": ["avain", "sana"],
+        "ingredients": [{ "quantity": "100 g", "ingredient": "potato" }, { "quantity": "5 kg", "ingredient": "tomato" }]
+    }
+
+    Jos token puuttuu req.headers.authorization:nista, se on väärin tai vanhentunut, palauttaa statuskoodin 401
+
+    Jos resepti ei kuulu käyttäjälle tai sellaista reseptiä ei löydy, palauttaa statuskoodin 404
+
+    Jos ei muusta syystä onnistu, palauttaa stauskoodin 500
+*/
+
+router.route("/api/recipe/:hash").put(userMiddleware.verifyJWT, ctrl.editRecipe);
+
 module.exports = router;

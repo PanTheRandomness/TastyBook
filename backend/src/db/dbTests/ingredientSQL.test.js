@@ -1,4 +1,4 @@
-const { addIngredient, getIngredientId, addRecipesIngredient, getRecipesIngredients } = require("../ingredientSQL");
+const { addIngredient, getIngredientId, addRecipesIngredient, getRecipesIngredients, deleteRecipesIngredients } = require("../ingredientSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
@@ -46,5 +46,15 @@ describe("getRecipesIngredients", () => {
 
         expect(executeSQL).toHaveBeenCalledWith("SELECT i.id, i.name, ri.quantity FROM recipesingredient ri LEFT JOIN ingredient i ON ri.Ingredient_id=i.id WHERE ri.Recipe_id=?", [recipeId]);
         expect(result).toEqual([{ id: 1, name: "potato", quantity: "5kg"}, { id: 2, name: "tomato", quantity: "2"}]);
+    });
+});
+
+describe("deleteRecipesIngredients", () => {
+    it("should delete recipes ingredients from the database", async () => {
+        const recipeId = 1;
+
+        await deleteRecipesIngredients(recipeId);
+
+        expect(executeSQL).toHaveBeenCalledWith("DELETE FROM recipesingredient WHERE Recipe_id=?", [recipeId]);
     });
 });

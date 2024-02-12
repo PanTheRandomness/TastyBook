@@ -1,7 +1,7 @@
-const { addRecipe, getAllRecipeHashes, getRecipe, deleteRecipe } = require("../recipeController");
+const { addRecipe, getAllRecipeHashes, getRecipe, deleteRecipe, editRecipe } = require("../recipeController");
 const sql = require("../../db/recipeSQL");
-const { addRecipesKeyword, getRecipesKeywords } = require("../keywordController");
-const { addRecipesIngredient, getRecipesIngredients } = require("../ingredientController");
+const { addRecipesKeyword, getRecipesKeywords, deleteRecipesKeywords } = require("../keywordController");
+const { addRecipesIngredient, getRecipesIngredients, deleteRecipesIngredients } = require("../ingredientController");
 const crypto = require("crypto");
 
 jest.mock("../../db/recipeSQL");
@@ -242,6 +242,83 @@ describe("deleteRecipe", () => {
         sql.deleteRecipe.mockRejectedValue(new Error("Database error"));
 
         await deleteRecipe(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalled();
+    });
+});
+
+describe("editRecipe", () => {
+    let req, res;
+
+    beforeEach(() => {
+        req = {
+            body: {
+                id: 1,
+                header: "makaronilaatikko",
+                description: "hyvää",
+                visibleToAll: 1,
+                durationHours: 1,
+                durationMinutes: 30,
+                steps: ["eka", "toka"],
+                keywords: ["avain", "sana"],
+                ingredients: [{ quantity: "100 g", ingredient: "potato" }, { quantity: "5 kg", ingredient: "tomato" }]
+            },
+            user: { id: 123 },
+            params: {
+                hash: "123"
+            }
+        };
+        res = {
+            status: jest.fn(() => res),
+            json: jest.fn(),
+            send: jest.fn(),
+        };
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should handle invalid request body with 400 status code", async () => {
+        req.body.header = null;
+
+        await editRecipe(req, res);
+    
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should handle editing recipe in the database", async () => {
+        sql.editRecipe.mockReturnValue({ changedRows: 1 });
+
+        await editRecipe(req, res);
+
+        expect(sql.editRecipe).toHaveBeenCalledWith(req.body.header, req.body.description, req.body.visibleToAll, req.body.durationHours, req.body.durationMinutes, req.params.hash, req.user.id);
+        expect(deleteRecipesKeywords).toHaveBeenCalledWith(req.body.id);
+        expect(addRecipesKeyword).toHaveBeenCalledWith("avain", req.body.id);
+        expect(sql.deleteSteps).toHaveBeenCalledWith(req.body.id);
+        expect(sql.addStep).toHaveBeenCalledWith("toka", 2, req.body.id);
+        expect(deleteRecipesIngredients).toHaveBeenCalledWith(req.body.id);
+        expect(addRecipesIngredient).toHaveBeenCalledWith({ quantity: "5 kg", ingredient: "tomato" }, req.body.id);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should return 404 if no recipe was edited", async () => {
+        sql.editRecipe.mockReturnValue({ changedRows: 0 });
+
+        await editRecipe(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should handle internal server error", async () => {
+        sql.editRecipe.mockRejectedValue(new Error("Database error"));
+
+        await editRecipe(req, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.send).toHaveBeenCalled();
