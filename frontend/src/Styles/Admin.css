@@ -40,12 +40,12 @@ td.cell-three {
   text-align: left;
 }
 td.cell-four {
-  width: 150px; 
+  width: 250px; 
   text-align: left;
 }
 
 .adminButton {
-  width: 150px;
+  width: 100px;
   padding: 0.8rem;
 }
 
