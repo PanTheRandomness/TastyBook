@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useToken } from '../customHooks/useToken';
 import { getAllUsers, deleteUser } from "../api/adminApi";
 import '../Styles/Admin.css';
-const BASE_URL = "http://localhost:3004";
-
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
@@ -24,7 +22,7 @@ const Admin = () => {
     };
   
     fetchUsers();
-  }, []); 
+  }, [token]); 
 
   const handleEditUser = (userId) => {
     console.log(`Edit user with ID: ${userId}`);
@@ -35,14 +33,18 @@ const Admin = () => {
     setUserIdToDelete(userId);
   };
 
-
-  const confirmDeletion = async () => {
-    try {
-      const response = await deleteUser(token);
-      setUsers(response);
-    } catch (error) {
-      console.error('Error fetching user data', error);
-      setError('Error fetching user data');
+  const confirmDeletion = async (confirmed) => {
+    if (confirmed) {
+      try {
+        await deleteUser(userIdToDelete, token);
+        setUsers(users.filter(user => user.id !== userIdToDelete));
+        setShowConfirmationModal(false);
+      } catch (error) {
+        console.error('Error deleting user', error);
+        setError('Error deleting user');
+      }
+    } else {
+      setShowConfirmationModal(false);
     }
   };
 
@@ -63,10 +65,10 @@ const Admin = () => {
           <tbody>
             {users.map((user) => (
               <tr key={user.id}>
-                <td class="cell-one">{user.id}</td>
-                <td class="cell-two">{user.username}</td>
-                <td class="cell-three">{user.email}</td>
-                <td class="cell-four">
+                <td className="cell-one">{user.id}</td>
+                <td className="cell-two">{user.username}</td>
+                <td className="cell-three">{user.email}</td>
+                <td className="cell-four">
                   <button onClick={() => handleEditUser(user.id)}>
                     Edit
                   </button>
