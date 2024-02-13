@@ -3,12 +3,12 @@ import { useToken } from '../customHooks/useToken';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 import '../Styles/Ellipsis.css';
-//Uniikit URL:it
-//poistopainike + varmistus(window.confirm())
+import { useNavigate } from 'react-router-dom';
 
 const Recipe = (props) =>{
     const { route } = props;
     const [token,] = useToken();
+    const navigate = useNavigate();
     //esimerkkiresepti kehitystä varten, poista tiedot kun reseptejä voidaan tarkkailla
     const [recipe, setRecipe] = useState({
         "header" : "Reseptin nimi",
@@ -55,11 +55,11 @@ const Recipe = (props) =>{
         };
 
         try {
-            console.log("Starting deletion...");
+            console.log("Starting deletion...");//aiemmin toimi, mutta nyt ei enää löydä
             const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
             if(response.ok){
                 console.log("Recipe deleted successfully.");
-                //palaa etusivulle
+                navigate("/"); //Huom miten tämä?
             }
         } catch (error) {
             window.alert("Unable to post recipe: ", error);
@@ -222,4 +222,4 @@ const EllipsisMenu = (props) => {
     );
 };
 
-export  {Recipe, RecipeHead, RecipeIngredients, RecipeSteps, EllipsisMenu };
+export { Recipe, RecipeHead, RecipeIngredients, RecipeSteps, EllipsisMenu };
