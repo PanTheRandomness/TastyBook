@@ -32,3 +32,24 @@ export const deleteUser = async (userId, token) => {
         throw error;
     }
 }
+
+export const updateUser = async (userId, userData, token) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(userData)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update user');
+      }
+  
+      return await response.json();
+    } catch (error) {
+      throw error;
+    }
+  }
