@@ -28,7 +28,7 @@
 }
 
 td.cell-one {
-  width: 150px;
+  width: 100px;
   text-align: left;
 }
 td.cell-two {
@@ -40,13 +40,21 @@ td.cell-three {
   text-align: left;
 }
 td.cell-four {
-  width: 250px; 
+  width: 400px; 
   text-align: left;
 }
-
+td.cell-five {
+  width: 200px; 
+  text-align: left;
+}
+td.cell-six {
+  width: 50px; 
+  text-align: left;
+}
 .adminButton {
-  width: 140px;
+  width: 150px;
   padding: 0.8rem;
+
 }
 
   /*
