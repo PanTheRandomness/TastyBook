@@ -1,2 +1,2 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { AddRecipe, RecipeKeywords, RecipeSteps, RecipeIngredients, IngredientDialog, StepDialog, KeywordDialog } from '..AddRecipePage';
+import { AddRecipe, RecipeKeywords, RecipeSteps, RecipeIngredients, IngredientDialog, StepDialog, KeywordDialog } from '../AddRecipePage';
