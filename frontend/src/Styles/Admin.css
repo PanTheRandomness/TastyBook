@@ -32,11 +32,11 @@ td.cell-one {
   text-align: left;
 }
 td.cell-two {
-  width: 350px;
+  width: 300px;
   text-align: left;
 }
 td.cell-three {
-  width: 500px; 
+  width: 300px; 
   text-align: left;
 }
 td.cell-four {
@@ -45,7 +45,7 @@ td.cell-four {
 }
 
 .adminButton {
-  width: 100px;
+  width: 140px;
   padding: 0.8rem;
 }
 

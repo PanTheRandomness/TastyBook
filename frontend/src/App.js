@@ -22,6 +22,7 @@ const App = () => {
     const fetchRoutes = async () => {
       try {
         const response = await getRecipeRoutes(token);
+        if (!Array.isArray(response.hashes)) throw new Error();
         setRecipeRoutes(response.hashes);
         if (!response.loggedIn) onLogout();
       } catch (error) {
@@ -50,28 +51,28 @@ const App = () => {
   return (
     <Router>
       <nav>
+        <div>
+          <NavLink className={"navLink"} to={"/"}>Tasty Book</NavLink>
+        </div>
+        {
+          (user && token) ?
+            <>
+              <div>
+                <NavLink className={"navLink"} to={"/newrecipe"}>Add Recipe</NavLink>
+              </div>
+              <div>
+                {
+                  user.role == "admin" && <NavLink className={"navLink"} to={"/admin"}>Admin</NavLink>
+                }
+                <NavLink className={"navLink"} to={"/"} onClick={onLogout}>Logout</NavLink>
+              </div>
+            </> :
             <div>
-                <NavLink className={"navLink"} to={"/"}>Tasty Book</NavLink>
+              <NavLink className={"navLink"} to={"/register"}>Register</NavLink>
+              <NavLink className={"navLink"} to={"/login"}>Login</NavLink>
             </div>
-            <div>
-                <NavLink className={"navLink"} to={"/"}>Recipes</NavLink>
-            </div>
-            {
-                (user && token) ?
-                <>
-                <div>
-                    <NavLink className={"navLink"} to={"/newrecipe"}>Add Recipe</NavLink>
-                </div>
-                <div>
-                    <NavLink className={"navLink"} to={"/"} onClick={onLogout}>Logout</NavLink>
-                </div>
-                </> :
-                <div>
-                    <NavLink className={"navLink"} to={"/register"}>Register</NavLink>
-                    <NavLink className={"navLink"} to={"/login"}>Login</NavLink>
-                </div>
-            }
-        </nav>
+        }
+      </nav>
 
       <Routes>
         <Route path='/' element={<FrontPage />}></Route>

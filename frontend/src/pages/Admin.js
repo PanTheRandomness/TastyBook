@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useToken } from '../customHooks/useToken';
-import { getAllUsers, deleteUser } from "../api/adminApi";
+import { getAllUsers, deleteUser,updateUser } from "../api/adminApi";
 import '../Styles/Admin.css';
-const BASE_URL = "http://localhost:3004";
 
 
 const Admin = () => {
@@ -10,6 +9,10 @@ const Admin = () => {
   const [token,] = useToken();
   const [userIdToDelete, setUserIdToDelete] = useState('');
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [editedName, setEditedName] = useState('');
+  const [editedEmail, setEditedEmail] = useState('');
+  const [editedUsername, setEditedUsername] = useState('');
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -24,10 +27,13 @@ const Admin = () => {
     };
   
     fetchUsers();
-  }, []); 
+  }, [token]); 
 
-  const handleEditUser = (userId) => {
-    console.log(`Edit user with ID: ${userId}`);
+  const handleEditUser = (user) => {
+    setEditingUser(user);
+    setEditedName(user.name);
+    setEditedUsername(user.username);
+    setEditedEmail(user.email);
   };
 
   const handleDeleteUser = (userId) => {
@@ -35,14 +41,29 @@ const Admin = () => {
     setUserIdToDelete(userId);
   };
 
+  const confirmDeletion = async (confirmed) => {
+    if (confirmed) {
+      try {
+        await deleteUser(userIdToDelete, token);
+        setUsers(users.filter(user => user.id !== userIdToDelete));
+        setShowConfirmationModal(false);
+      } catch (error) {
+        console.error('Error deleting user', error);
+        setError('Error deleting user');
+      }
+    } else {
+      setShowConfirmationModal(false);
+    }
+  };
 
-  const confirmDeletion = async () => {
+  const handleSaveEdit = async () => {
     try {
-      const response = await deleteUser(token);
-      setUsers(response);
+      await updateUser(editingUser.id, { username: editedUsername, name: editedName, email: editedEmail }, token);
+      setUsers(users.map(user => user.id === editingUser.id ? { ...user, username: editedUsername, name: editedName, email: editedEmail } : user));
+      setEditingUser(null);
     } catch (error) {
-      console.error('Error fetching user data', error);
-      setError('Error fetching user data');
+      console.error('Error updating user', error);
+      setError('Error updating user');
     }
   };
 
@@ -55,6 +76,7 @@ const Admin = () => {
           <thead>
             <tr>
               <th>ID</th>
+              <th>Name</th>
               <th>Username</th>
               <th>Email</th>
               <th>Actions</th>
@@ -63,16 +85,22 @@ const Admin = () => {
           <tbody>
             {users.map((user) => (
               <tr key={user.id}>
-                <td class="cell-one">{user.id}</td>
-                <td class="cell-two">{user.username}</td>
-                <td class="cell-three">{user.email}</td>
-                <td class="cell-four">
-                  <button onClick={() => handleEditUser(user.id)}>
-                    Edit
-                  </button>
-                  <button onClick={() => handleDeleteUser(user.id)}>
-                    Delete
-                  </button>
+                <td className="cell-one">{user.id}</td>
+                <td className="cell-two">{editingUser && editingUser.id === user.id ? <input type="text" value={editedName} onChange={(e) => setEditedName(e.target.value)} /> : user.name}</td>
+                <td className="cell-three">{editingUser && editingUser.id === user.id ? <input type="text" value={editedUsername} onChange={(e) => setEditedUsername(e.target.value)} /> : user.username}</td>
+                <td className="cell-four">{editingUser && editingUser.id === user.id ? <input type="email" value={editedEmail} onChange={(e) => setEditedEmail(e.target.value)} /> : user.email}</td>
+                <td className="cell-five">
+                  {editingUser && editingUser.id === user.id ? (
+                    <>
+                      <button onClick={() => handleSaveEdit()}>Save</button>
+                      <button onClick={() => setEditingUser(null)}>Cancel</button>
+                    </>
+                  ) : (
+                    <>
+                      <button onClick={() => handleEditUser(user)}>Edit</button>
+                      <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}
