@@ -9,4 +9,10 @@
     max-width: 25%;
     margin: 10px;
     background-color: #AA5656;
+    border-radius: 15px;
+    border: 15px solid #B99B6B;
+}
+
+h1 {
+    text-align: center;
 }

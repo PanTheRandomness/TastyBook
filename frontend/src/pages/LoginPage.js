@@ -16,8 +16,7 @@ const Login = ({onLogin}) => {
             onLogin(token);
             navigate('/');
         } catch (error) {
-            // TODO: Näytä käyttäjälle, että kirjautuminen ei onnistunut, ei console erroreita
-            // console.error("Logging in failed.");
+            window.alert("Logging in failed.");
         }
     }
 

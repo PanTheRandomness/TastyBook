@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { Register } from '../Register';
-import { register } from '../../api/userApi';
+import { AdminRegister } from '../AdminRegister';
+import { adminregister } from '../../api/userApi';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 // Mock the register function
 jest.mock('../../api/userApi', () => ({
-  register: jest.fn(),
+  adminregister: jest.fn(),
 }));
 
 describe('Register component', () => {
@@ -18,12 +18,13 @@ describe('Register component', () => {
     const email = 'testemail';
     const username = 'testuser';
     const password = 'testpassword';
-    register.mockResolvedValueOnce({ token });
+    const api_key = 'api_key';
+    adminregister.mockResolvedValueOnce({ token });
 
     // Act
     const { getByPlaceholderText, getByTestId } = render(
       <Router>
-        <Register onLogin={onLoginMock} />
+        <AdminRegister onLogin={onLoginMock} />
       </Router>
     );
     fireEvent.change(getByPlaceholderText('name'), {
@@ -38,6 +39,9 @@ describe('Register component', () => {
     fireEvent.change(getByPlaceholderText('password'), {
       target: { value: password },
     });
+    fireEvent.change(getByPlaceholderText('api key'), {
+        target: { value: api_key },
+      });
     fireEvent.submit(getByTestId('register-button'));
 
     // Assert
@@ -47,7 +51,7 @@ describe('Register component', () => {
     });
   });
 
-  test('should log error when register fails', async () => {
+  test('should log error when adminregister fails', async () => {
     // Arrange
     const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
     const onLoginMock = jest.fn();
@@ -55,13 +59,14 @@ describe('Register component', () => {
     const email = 'testemail';
     const username = 'testuser';
     const password = 'testpassword';
+    const api_key = 'testapi key';
     const errorMessage = 'Invalid credentials';
-    register.mockRejectedValueOnce(new Error(errorMessage));
+    adminregister.mockRejectedValueOnce(new Error(errorMessage));
 
     // Act
     const { getByPlaceholderText, getByTestId } = render(
       <Router>
-        <Register onLogin={onLoginMock} />
+        <AdminRegister onLogin={onLoginMock} />
       </Router>
     );
     fireEvent.change(getByPlaceholderText('name'), {
@@ -76,7 +81,9 @@ describe('Register component', () => {
     fireEvent.change(getByPlaceholderText('password'), {
       target: { value: password },
     });
-
+    fireEvent.change(getByPlaceholderText('api key'), {
+        target: { value: api_key },
+      });
     fireEvent.submit(getByTestId('register-button'));
 
     // Assert
