@@ -20,7 +20,7 @@ const AdminRegister = ({ onLogin }) => {
             onLogin(token);
             navigate("/");
         } catch (error) {
-            console.error("Registering failed.");
+            window.alert("Registering failed.");
           
         }
     };

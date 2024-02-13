@@ -49,7 +49,7 @@ describe('Register component', () => {
 
   test('should log error when register fails', async () => {
     // Arrange
-    console.error = jest.fn(); // Mock console.error
+    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
     const onLoginMock = jest.fn();
     const name = 'testname';
     const email = 'testemail';
@@ -80,6 +80,6 @@ describe('Register component', () => {
     fireEvent.submit(getByTestId('register-button'));
 
     // Assert
-    await waitFor(() => expect(console.error).toHaveBeenCalledWith('Registering failed.'));
+    await waitFor(() => expect(alertMock).toHaveBeenCalledWith('Registering failed.'));
   });
 });
