@@ -206,7 +206,6 @@ const AddRecipe = (props) =>{
         }
     }
 
-
     const postBtnClicked = () =>{
         if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
             postRecipe();
@@ -399,4 +398,4 @@ const KeywordDialog =({ isOpen, onClose, onAdd, onSaveEdited, editingKeyword, w,
     );
 }
 
-export {AddRecipe, RecipeKeywords, RecipeSteps, RecipeIngredients, IngredientDialog, StepDialog, KeywordDialog};
+export { AddRecipe, RecipeKeywords, RecipeSteps, RecipeIngredients, IngredientDialog, StepDialog, KeywordDialog };
