@@ -5,6 +5,8 @@ import '../Styles/Recipe.css';
 import '../Styles/Ellipsis.css';
 import { useNavigate } from 'react-router-dom';
 
+// TODO: varmista oikeellinen näyttö tokenilla + visibleToAll-arvolla
+
 const Recipe = (props) =>{
     const { route } = props;
     const [token,] = useToken();
@@ -39,7 +41,7 @@ const Recipe = (props) =>{
                 let r = await response.json();
                 setRecipe(r);
             } catch (error) {
-                // TODO: handle error
+                window.alert("An error occured while loading recipe: ", error);
             }
         }
         getRecipe();
@@ -59,7 +61,7 @@ const Recipe = (props) =>{
             const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
             if(response.ok){
                 console.log("Recipe deleted successfully.");
-                navigate("/"); //Huom miten tämä?
+                navigate("/"); //Huom toimiiko?
             }
         } catch (error) {
             window.alert("Unable to post recipe: ", error);
