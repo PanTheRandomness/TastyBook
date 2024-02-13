@@ -9,6 +9,10 @@
     background-color: rgba(0, 0, 0, 0.644);
     color: #683131;
 }
+
+.modal-header{
+    color: #683131;
+}
   
 .modal-content{
     background-color: #F1DBBF;

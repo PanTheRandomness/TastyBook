@@ -23,11 +23,11 @@ const AddRecipe = (props) =>{
     const [isModalKOpen, setModalKOpen] = useState(false);
 
     const openModalI = () => setModalIOpen(true);
-    const closeModalI = () => {setModalIOpen(false); setQt(0); setUnit(''); setIng('');}
+    const closeModalI = () => {setModalIOpen(false); setQt(0); setUnit(''); setIng(''); setEditingIngredient(false);}
     const openModalS = () => setModalSOpen(true);
-    const closeModalS = () => {setModalSOpen(false); setText('');}
+    const closeModalS = () => {setModalSOpen(false); setText(''); setEditingStep(false);}
     const openModalK = () => setModalKOpen(true);
-    const closeModalK = () => {setModalKOpen(false); setW('');}
+    const closeModalK = () => {setModalKOpen(false); setW(''); setEditingKeyword(false);}
     
     const [text, setText] = useState('');
     const [w, setW] = useState('');
@@ -206,6 +206,22 @@ const AddRecipe = (props) =>{
         }
     }
 
+    const handleHoursChange = (e) =>{
+        let value = parseInt(e.target.value);
+        if (value > 200) {
+          value = 200;
+        }
+        setDurationH(value);
+    }
+
+    const handleMinutesChange = (e) =>{
+        let value = parseInt(e.target.value);
+        if (value > 59) {
+          value = 59;
+        }
+        setDurationMin(value);
+    }
+
     const postBtnClicked = () =>{
         if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
             postRecipe();
@@ -238,10 +254,10 @@ const AddRecipe = (props) =>{
                         <th>Recipe duration:</th>
                         <td>
                             <label>
-                                <input className="recipeinput" type='number' value={durationH} min="0" max="200" onChange={(e) => setDurationH(parseInt(e.target.value))} /> hours 
+                                <input className="recipeinput" type='number' value={durationH} min="0" max="200" onChange={(e) => handleHoursChange(e)} /> hours 
                             </label> <br/>
                             <label>
-                                <input className="recipeinput" type='number' value={durationMin} min="0" max="59" onChange={(e) => setDurationMin(parseInt(e.target.value))} /> minutes
+                                <input className="recipeinput" type='number' value={durationMin} min="0" max="59" onChange={(e) => handleMinutesChange(e)} /> minutes
                             </label>
                         </td>
                     </tr>
@@ -288,7 +304,7 @@ const AddRecipe = (props) =>{
 
 const RecipeKeywords = (props) =>{
     const words = props.keywords.map((word, i) =>{
-        return <li className='recipeform-keyword' key={i}>{word} <button className='editremovebutton' onClick={() => props.onEdit(word)}>Edit keyword</button><button className='editremovebutton' onClick={() => props.onRemove(word)}>Remove keyword</button></li>
+        return <li className='recipeform-keyword' data-testid={`keyword-${i}`} key={i}>{word} <button className='editremovebutton' onClick={() => props.onEdit(word)}>Edit keyword</button><button className='editremovebutton' onClick={() => props.onRemove(word)}>Remove keyword</button></li>
     });
 
     return(
@@ -300,7 +316,7 @@ const RecipeKeywords = (props) =>{
 
 const RecipeSteps = (props) =>{
     const steps = props.steps.map((step, i) =>{
-        return <li key={i} className="recipeform-step">{step} <button className='editremovebutton' onClick={() => props.onEdit(step)}>Edit step</button><button className='editremovebutton' onClick={() => props.onRemove(step)}>Remove step</button> </li>
+        return <li key={i} className="recipeform-step" data-testid={`step-${i}`}>{step} <button className='editremovebutton' onClick={() => props.onEdit(step)}>Edit step</button><button className='editremovebutton' onClick={() => props.onRemove(step)}>Remove step</button> </li>
     });
 
     return(
@@ -312,7 +328,7 @@ const RecipeSteps = (props) =>{
 
 const RecipeIngredients = (props)=>{
     const ingredientList = props.ingredients.map((ing,i) =>{
-        return <tr key={i} className='recipeform-ingredient'><th>{ing.quantity} {ing.unit}</th><td>{ing.name}</td><td> <button className='editremovebutton' onClick={() => props.onEdit(ing)}>Edit ingredient</button></td><td><button className='editremovebutton' onClick={() => props.onRemove(ing)}>Remove ingredient</button></td></tr>
+        return <tr key={i} className='recipeform-ingredient' data-testid={`ingredient-${i}`}><th>{ing.quantity} {ing.unit}</th><td>{ing.name}</td><td> <button className='editremovebutton' onClick={() => props.onEdit(ing)}>Edit ingredient</button></td><td><button className='editremovebutton' onClick={() => props.onRemove(ing)}>Remove ingredient</button></td></tr>
     });
 
     return(
@@ -327,18 +343,22 @@ const IngredientDialog = ({ isOpen, onClose, onAdd, onSaveEdited, editingIngredi
         <div className={`modal ${isOpen ? 'open' : ''}`}>
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
+                {
+                    editingIngredient ? 
+                    <h3 className='modal-header' data-testid='ingredient-dialog-title'> Modify ingredient</h3>:
+                    <h3 className='modal-header' data-testid='ingredient-dialog-title'> Add ingredient</h3>
+                }
                 <table>
                     <tbody>
                         <tr>
                             <td className="modal-text">Quantity:</td>
-                            <td>
-                                <input type='number' className="modalInput" value={qt} min="0" onChange={(e) =>onQtChange(e.target.value)}/>
-                                <input type='text' value={unit} className="modalInput" onChange={(e)=>onUnitChange(e.target.value)}/>
-                            </td>
+                            <td><input type='number' className="modalInput" value={qt} min="0" data-testid="quantityInput" onChange={(e) =>onQtChange(e.target.value)}/></td>
+                            <td className='modal-text'>Unit:</td>
+                            <td><input type='text' value={unit} className="modalInput" data-testid="unitInput" onChange={(e)=>onUnitChange(e.target.value)}/></td>
                         </tr>
                         <tr>
-                            <td>Ingredient:</td>
-                            <td><input type='text' className="modalInput" value={ing} onChange={(e)=>onIngChange(e.target.value)}/></td>
+                            <td className='modal-text'>Ingredient:</td>
+                            <td><input type='text' className="modalInput" value={ing} data-testid="ingredientInput" onChange={(e)=>onIngChange(e.target.value)}/></td>
                         </tr>
                     </tbody>
                 </table>
