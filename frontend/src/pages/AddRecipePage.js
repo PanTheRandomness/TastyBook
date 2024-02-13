@@ -23,7 +23,7 @@ const AddRecipe = (props) =>{
     const [isModalKOpen, setModalKOpen] = useState(false);
 
     const openModalI = () => setModalIOpen(true);
-    const closeModalI = () => {setModalIOpen(false); setQt(0); setUnit("whole"); setIng('');}
+    const closeModalI = () => {setModalIOpen(false); setQt(0); setUnit(''); setIng('');}
     const openModalS = () => setModalSOpen(true);
     const closeModalS = () => {setModalSOpen(false); setText('');}
     const openModalK = () => setModalKOpen(true);
@@ -33,7 +33,7 @@ const AddRecipe = (props) =>{
     const [w, setW] = useState('');
     const [qt, setQt] = useState(0);
     const [ing, setIng] = useState('');
-    const [unit, setUnit] = useState("whole");
+    const [unit, setUnit] = useState('');
     const [editingIngredient, setEditingIngredient] = useState(false);
     const [editingStep, setEditingStep] = useState(false);
     const [editingKeyword, setEditingKeyword] = useState(false);
@@ -94,7 +94,7 @@ const AddRecipe = (props) =>{
             setEditingIngredient(true);
             openModalI();
         } else {
-            console.error("Ingredient not found: " + ingredient);
+            window.alert("Ingredient not found: " + ingredient);
         }
     }
 
@@ -121,7 +121,7 @@ const AddRecipe = (props) =>{
             setIngredients(newIngredients);
             console.log("Removed ingredient: ", ingredient);
         } else {
-            console.error("Ingredient not found: ", ingredient);
+            window.alert("Ingredient not found: ", ingredient);
         }
     }
 
@@ -138,7 +138,7 @@ const AddRecipe = (props) =>{
             setText(step);
             openModalS();
         } else {
-            console.error("Step not found: " + step);
+            window.alert("Step not found: " + step);
         }
     }
 
@@ -161,7 +161,7 @@ const AddRecipe = (props) =>{
     
             console.log("Removed step: " + step);
         } else {
-            console.error("Step not found: " + step);
+            window.alert("Step not found: " + step);
         }
     }
 
@@ -178,7 +178,7 @@ const AddRecipe = (props) =>{
             setW(keyword);
             openModalK();
         } else {
-            console.error("Keyword not found: " + keyword);
+            window.alert("Keyword not found: " + keyword);
         }
     }
 
@@ -202,7 +202,7 @@ const AddRecipe = (props) =>{
     
             console.log("Removed keyword: " + word);
         } else {
-            console.error("Keyword not found: " + word);
+            window.alert("Keyword not found: " + word);
         }
     }
 
@@ -323,12 +323,6 @@ const RecipeIngredients = (props)=>{
 }
 
 const IngredientDialog = ({ isOpen, onClose, onAdd, onSaveEdited, editingIngredient, qt, onQtChange, unit, onUnitChange, ing, onIngChange }) =>{
-    const [unitlist, setUnitlist] = useState(["whole", "half", "quarter", "cloves","kg", "g", "l", "dl", "cl", "ml", "tsp", "tbsp", "cups", "lbs", "pinch"]);
-
-    const units = unitlist.map((u,i)=>{
-        return <option key={i}>{u}</option>
-    });
-
     return (
         <div className={`modal ${isOpen ? 'open' : ''}`}>
             <div className="modal-content">
@@ -339,7 +333,7 @@ const IngredientDialog = ({ isOpen, onClose, onAdd, onSaveEdited, editingIngredi
                             <td className="modal-text">Quantity:</td>
                             <td>
                                 <input type='number' className="modalInput" value={qt} min="0" onChange={(e) =>onQtChange(e.target.value)}/>
-                                <select value={unit} className="modalInput" onChange={(e)=>onUnitChange(e.target.value)}>{units}</select>
+                                <input type='text' value={unit} className="modalInput" onChange={(e)=>onUnitChange(e.target.value)}/>
                             </td>
                         </tr>
                         <tr>
