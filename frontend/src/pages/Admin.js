@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useToken } from '../customHooks/useToken';
-import { getAllUsers, deleteUser, updateUser } from "../api/adminApi";
+import { getAllUsers, deleteUser } from "../api/adminApi";
 import '../Styles/Admin.css';
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
-  const [token,] = useToken();
+  const [token] = useToken();
   const [userIdToDelete, setUserIdToDelete] = useState('');
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [error, setError] = useState(null);
@@ -61,13 +61,13 @@ const Admin = () => {
             </tr>
           </thead>
           <tbody>
-            {users && users.map((user) => (
+            {users.map((user) => (
               <tr key={user.id} data-testid={`user-${user.id}`}>
                 <td className="cell-one">{user.id}</td>
                 <td className="cell-two">{user.name}</td>
                 <td className="cell-three">{user.username}</td>
                 <td className="cell-four">{user.email}</td>
-                <td className="cell-five">{user.admin ? 1 : null}</td> 
+                <td className="cell-five">{user.admin ? 1 : null }</td> 
                 <td className="cell-six">
                   <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
                 </td>
