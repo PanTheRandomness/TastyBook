@@ -6,12 +6,13 @@ import '../Styles/Ellipsis.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
 
-// TODO: varmista oikeellinen näyttö tokenilla + visibleToAll-arvolla
+// TODO: varmista oikeellinen näyttö tokenilla + visibleToAll-arvolla Pan jatkaa tästä!
 
 const Recipe = (props) =>{
     const { route } = props;
     const [token,] = useToken();
     const navigate = useNavigate();
+    
     //esimerkkiresepti kehitystä varten, poista tiedot kun reseptejä voidaan tarkkailla
     const [recipe, setRecipe] = useState({
         "header" : "Reseptin nimi",
@@ -39,14 +40,18 @@ const Recipe = (props) =>{
         const getRecipe = async () =>{
             try {
                 const response = await fetch("http://localhost:3004/api/recipe/" + route);
-                let r = await response.json();
-                setRecipe(r);
+                if (response.ok) {
+                    const r = await response.json();
+                    setRecipe(r);
+                } else {
+                    throw new Error('Recipe not found');
+                }
             } catch (error) {
-                window.alert("An error occured while loading recipe: ", error);
+                window.alert("An error occurred while loading recipe: " + error);
             }
         }
         getRecipe();
-    },[]);
+    },[route]);
 
     const deleteRecipe = async () =>{
         const requestOptions = {
@@ -58,11 +63,11 @@ const Recipe = (props) =>{
         };
 
         try {
-            console.log("Starting deletion...");//aiemmin toimi, mutta nyt ei enää löydä
+            console.log("Starting deletion...");
             const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
             if(response.ok){
                 console.log("Recipe deleted successfully.");
-                navigate("/"); //Huom toimiiko?
+                navigate("/");
             }
         } catch (error) {
             window.alert("Unable to post recipe: ", error);
