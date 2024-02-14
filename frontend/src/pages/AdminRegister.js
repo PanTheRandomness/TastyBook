@@ -27,7 +27,8 @@ const AdminRegister = ({ onLogin }) => {
       
     return (
         <div className="registerFormbody">
-            <form className="registerForm" onSubmit={onRegisterClicked}>
+            <div className="registerForm">
+            <form onSubmit={onRegisterClicked}>
                 <h1>Admin register</h1>
                 <input className="registerForminput" placeholder="name" value={name} onChange={e => setName(e.target.value)} />
                 <input className="registerForminput" placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
@@ -36,6 +37,7 @@ const AdminRegister = ({ onLogin }) => {
                 <input className="registerForminput" placeholder="api key" value={api_key} onChange={e => setApi_key(e.target.value)} />
                 <button className="registerFormbutton" disabled={!username || !password} data-testid="register-button">Register</button>
             </form>
+            </div>
         </div>
     );
 }

@@ -5,6 +5,7 @@
   height: 100vh;
   margin: 0;
   background-color: #506350;
+  margin-top:25px;
 }
 
 .registerForm {
@@ -33,7 +34,7 @@
   }
 
   .registerForm input {
-    width: 90%; /* Muutettu 120% -> 100% */
+    width: 80%; /* Muutettu 120% -> 100% */
     padding: 1rem; 
     margin-bottom: 1rem;
   }

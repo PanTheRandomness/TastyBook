@@ -3,6 +3,9 @@ import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 import { useToken } from '../customHooks/useToken';
 import { useNavigate } from 'react-router-dom';
+import { RecipeKeywords, KeywordDialog } from '../components/addRecipeComponents/RecipeKeywords';
+import { RecipeSteps, StepDialog } from '../components/addRecipeComponents/RecipeSteps';
+import { RecipeIngredients, IngredientDialog } from '../components/addRecipeComponents/RecipeIngredients';
 
 //Muokkaus: jos tullaan reseptisivulta => tuo & näytä tiedot
 const AddRecipe = (props) =>{
@@ -302,114 +305,4 @@ const AddRecipe = (props) =>{
     );
 }
 
-const RecipeKeywords = (props) =>{
-    const words = props.keywords.map((word, i) =>{
-        return <li className='recipeform-keyword' data-testid={`keyword-${i}`} key={i}>{word} <button className='editremovebutton' onClick={() => props.onEdit(word)}>Edit keyword</button><button className='editremovebutton' onClick={() => props.onRemove(word)}>Remove keyword</button></li>
-    });
-
-    return(
-        <div>
-            <ul className='recipeform-keywords'>{words}</ul>
-        </div>
-    );
-}
-
-const RecipeSteps = (props) =>{
-    const steps = props.steps.map((step, i) =>{
-        return <li key={i} className="recipeform-step" data-testid={`step-${i}`}>{step} <button className='editremovebutton' onClick={() => props.onEdit(step)}>Edit step</button><button className='editremovebutton' onClick={() => props.onRemove(step)}>Remove step</button> </li>
-    });
-
-    return(
-        <div className='recipeform-steps'>
-            <ol >{steps}</ol>
-        </div>
-    );
-}
-
-const RecipeIngredients = (props)=>{
-    const ingredientList = props.ingredients.map((ing,i) =>{
-        return <tr key={i} className='recipeform-ingredient' data-testid={`ingredient-${i}`}><th>{ing.quantity} {ing.unit}</th><td>{ing.name}</td><td> <button className='editremovebutton' onClick={() => props.onEdit(ing)}>Edit ingredient</button></td><td><button className='editremovebutton' onClick={() => props.onRemove(ing)}>Remove ingredient</button></td></tr>
-    });
-
-    return(
-        <table className='recipeform-ingredients'>
-            <tbody>{ingredientList}</tbody>
-        </table>
-    );
-}
-
-const IngredientDialog = ({ isOpen, onClose, onAdd, onSaveEdited, editingIngredient, qt, onQtChange, unit, onUnitChange, ing, onIngChange }) =>{
-    return (
-        <div className={`modal ${isOpen ? 'open' : ''}`}>
-            <div className="modal-content">
-                <span className="close" onClick={onClose}>&times;</span>
-                {
-                    editingIngredient ? 
-                    <h3 className='modal-header' data-testid='ingredient-dialog-title'> Modify ingredient</h3>:
-                    <h3 className='modal-header' data-testid='ingredient-dialog-title'> Add ingredient</h3>
-                }
-                <table>
-                    <tbody>
-                        <tr>
-                            <td className="modal-text">Quantity:</td>
-                            <td><input type='number' className="modalInput" value={qt} min="0" data-testid="quantityInput" onChange={(e) =>onQtChange(e.target.value)}/></td>
-                            <td className='modal-text'>Unit:</td>
-                            <td><input type='text' value={unit} className="modalInput" data-testid="unitInput" onChange={(e)=>onUnitChange(e.target.value)}/></td>
-                        </tr>
-                        <tr>
-                            <td className='modal-text'>Ingredient:</td>
-                            <td><input type='text' className="modalInput" value={ing} data-testid="ingredientInput" onChange={(e)=>onIngChange(e.target.value)}/></td>
-                        </tr>
-                    </tbody>
-                </table>
-                {
-                    editingIngredient ? 
-                    <button onClick={() => onSaveEdited()} disabled={qt == 0 || !ing}>Save Ingredient</button>:
-                    <button onClick={() => onAdd(qt, unit, ing)} disabled={qt == 0 || !ing}>Add Ingredient</button>
-                }
-            </div>
-        </div>
-    );
-}
-
-const StepDialog = ({ isOpen, onClose, onAdd, onSaveEdited, editingStep, text, onTextChange }) =>{
-    
-    return (
-        <div className={`modal ${isOpen ? 'open' : ''}`}>
-            <div className="modal-content">
-                <span className="close" onClick={onClose}>&times;</span>
-                <label>
-                    <b className="modal-text">Type instructions:</b><br/>
-                    <textarea rows="10" cols="55" className="modalInput" value={text} onChange={(e) => onTextChange(e.target.value)}/><br/>
-                </label>
-                {
-                    editingStep ? 
-                    <button onClick={() => onSaveEdited(text)} disabled={!text}>Save Step</button>:
-                    <button onClick={() => onAdd(text)} disabled={!text}>Add Step</button>
-                }
-            </div>
-        </div>
-    );
-}
-
-const KeywordDialog =({ isOpen, onClose, onAdd, onSaveEdited, editingKeyword, w, onWChange }) =>{
-
-    return(
-        <div className={`modal ${isOpen ? 'open' : ''}`}>
-            <div className="modal-content">
-                <span className="close" onClick={onClose}>&times;</span>
-                <label>
-                    <b className="modal-text">Type keyword:</b>
-                    <input type='text' className="modalInput" value={w} onChange={(e) => onWChange(e.target.value)}/><br/>
-                </label>
-                {
-                    editingKeyword?
-                    <button onClick={() => onSaveEdited(w)} disabled={!w}>Save Keyword</button>:
-                    <button onClick={() => onAdd(w)} disabled={!w}>Add Keyword</button>
-                }
-            </div>
-        </div>
-    );
-}
-
-export { AddRecipe, RecipeKeywords, RecipeSteps, RecipeIngredients, IngredientDialog, StepDialog, KeywordDialog };
+export { AddRecipe };
