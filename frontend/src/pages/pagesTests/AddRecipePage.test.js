@@ -1,6 +1,9 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { AddRecipe, RecipeKeywords, RecipeSteps, RecipeIngredients, IngredientDialog, StepDialog, KeywordDialog } from '../AddRecipePage';
+import AddRecipe from '../AddRecipePage';
+import { RecipeIngredients, IngredientDialog } from '../RecipePage';
+import { RecipeKeywords, KeywordDialog } from '../../components/addRecipeComponents/RecipeKeywords';
+import { RecipeSteps, StepDialog } from '../RecipePage';
 
 describe('AddRecipe component', () => {
     test('input fields can be filled with name, duration, and description', async () => {
