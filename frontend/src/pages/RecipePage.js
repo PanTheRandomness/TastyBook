@@ -6,7 +6,7 @@ import '../Styles/Ellipsis.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
 
-// TODO: varmista oikeellinen näyttö tokenilla + visibleToAll-arvolla
+// TODO: varmista oikeellinen näyttö tokenilla + visibleToAll-arvolla Pan jatkaa tästä!
 
 const Recipe = (props) =>{
     const { route } = props;
