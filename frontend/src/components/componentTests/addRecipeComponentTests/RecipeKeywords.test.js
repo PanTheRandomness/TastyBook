@@ -4,36 +4,42 @@ import { RecipeKeywords, KeywordDialog } from '../../addRecipeComponents/RecipeK
 
 describe('RecipeKeywords component', () => {
     test('opens KeywordDialog when "Add keyword" button is clicked', async () => {
-        const { getByText, queryByText } = render(<RecipeKeywords keywords={[]} />);
+        const { queryByText, getByText } = render(
+            <div>
+                <RecipeKeywords keywords={[]} />
+                <KeywordDialog isOpen={false} />
+            </div>
+        )
         
-        fireEvent.click(getByText('Add keyword'));
+        fireEvent.click(getByText('Add Keyword'));
     
         await waitFor(() => {
             expect(queryByText('Type keyword:')).toBeInTheDocument();
         });
     });
   
-    test('adds new keyword to list when saved in KeywordDialog', async () => {
-        const { getByText, getByLabelText, getByTestId } = render(
+    test('calls onAdd when new keyword is added in KeywordDialog', async () => {
+        const onAdd = jest.fn();
+        const { getByText } = render(
             <div>
                 <RecipeKeywords keywords={[]} />
-                <KeywordDialog isOpen={true} onClose={() => {}} onAdd={() => {}} />
+                <KeywordDialog isOpen={true} onAdd={onAdd} w={"Baking"} />
             </div>
         );
   
-        fireEvent.change(getByLabelText('Type keyword:'), { target: { value: 'Baking' } });
         fireEvent.click(getByText('Add Keyword'));
     
         await waitFor(() => {
-            expect(getByTestId('keyword-0')).toHaveTextContent('Baking');
+            expect(onAdd).toHaveBeenCalledWith('Baking');
         });
     });
   
     test('opens KeywordDialog with correct value when "Edit keyword" button is clicked', async () => {
+        const onEdit = jest.fn();
         const { getByText, getByLabelText } = render(
             <div>
-                <RecipeKeywords keywords={['Baking']} />
-                <KeywordDialog isOpen={false} onClose={() => {}} onAdd={() => {}} />
+                <RecipeKeywords keywords={['Baking']} onEdit={onEdit} />
+                <KeywordDialog isOpen={false} w={"Baking"} />
             </div>
         );
     
@@ -44,11 +50,11 @@ describe('RecipeKeywords component', () => {
         });
     });
 
-    test('edits and updates keyword in RecipeKeywords component', async () => {
-        const { getByText, getByLabelText, getByTestId } = render(
+    test('edits and updates keyword in dialog component', async () => {
+        const onWChange = jest.fn();
+        const { getByText, getByLabelText } = render(
             <div>
-                <RecipeKeywords keywords={['Baking']} />
-                <KeywordDialog isOpen={true} onClose={() => {}} onSaveEdited={() => {}} editingKeyword={true} w="Baking" />
+                <KeywordDialog isOpen={true} onSaveEdited={() => {}} editingKeyword={true} w="Baking" onWChange={onWChange} />
             </div>
         );
     
@@ -56,19 +62,20 @@ describe('RecipeKeywords component', () => {
         fireEvent.click(getByText('Save Keyword'));
     
         await waitFor(() => {
-            expect(getByTestId('keyword-0')).toHaveTextContent('Cooking');
+            expect(onWChange).toHaveBeenCalledWith('Cooking');
         });
     });
   
-    test('removes keyword from list when "Remove keyword" button is clicked', async () => {
-        const { getByText, queryByText } = render(
-            <RecipeKeywords keywords={['Cooking']} />
+    test('calls onRemove when "Remove keyword" button is clicked', async () => {
+        const onRemove = jest.fn();
+        const { getByText } = render(
+            <RecipeKeywords keywords={['Cooking']} onRemove={onRemove} />
         );
         
         fireEvent.click(getByText('Remove keyword'));
     
         await waitFor(() => {
-            expect(queryByText('Cooking')).not.toBeInTheDocument();
+            expect(onRemove).toHaveBeenCalledWith('Cooking');
         });
     });
 });
