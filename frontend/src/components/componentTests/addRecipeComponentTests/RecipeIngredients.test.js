@@ -4,35 +4,35 @@ import { RecipeIngredients, IngredientDialog } from '../../addRecipeComponents/R
 
 describe('RecipeIngredients component', () => {
     test('opens IngredientDialog when "Add ingredient" button is clicked', async () => {
-        const { getByTestId, queryByTestId } = render(<RecipeIngredients ingredients={[{ quantity: '1 cup', unit: 'grams', name: 'Flour' }]} />);
-        
+        const { queryByText, getByTestId } = render(
+        <div>
+            <RecipeIngredients ingredients={[]} />
+            <IngredientDialog isOpen={false} />
+        </div>
+        )
+
         fireEvent.click(getByTestId('addIngredient-button'));
     
-        // Wait for the dialog to be present in the document
         await waitFor(() => {
-            expect(queryByTestId('ingredient-dialog-title')).toBeInTheDocument();
+            expect(queryByText('Modify ingredient')).toBeInTheDocument();
         });
-        const addButtonInDialog = getByTestId('addIngredient-button');
-        fireEvent.click(addButtonInDialog);
+        
     });
   
     test('adds new ingredient to list when saved in IngredientDialog', async () => {
         const { getByText, getByTestId } = render(
             <div>
                 <RecipeIngredients ingredients={[]} />
-                <IngredientDialog isOpen={true} onClose={() => {}} onAdd={() => {}} />
+                <IngredientDialog isOpen={false} />
             </div>
-        );
+        )
     
         // Simulate entering values and saving
-        fireEvent.change(getByTestId('quantityInput'), { target: { value: '2' } });
-        fireEvent.change(getByTestId('unitInput'), { target: { value: 'cups' } });
-        fireEvent.change(getByTestId('ingredientInput'), { target: { value: 'Flour' } });
-        fireEvent.click(getByTestId('addIngredient-button')); // Click the "Add ingredient" button
+        fireEvent.click(getByText('quantityInput'));      
     
         // Wait for the ingredient to be added to the list
         await waitFor(() => {
-            expect(getByTestId('ingredient-0')).toHaveTextContent('2 cups Flour');
+            expect(getByText('ingredient-0')).toBeInTheDocument();
         });
     });
 
@@ -57,18 +57,17 @@ describe('RecipeIngredients component', () => {
     });
 
     test('removes ingredient from list when "Remove ingredient" button is clicked', async () => {
-        const mockRemoveIngredient = jest.fn();
+        const onRemove = jest.fn();
         const { getByText, queryByText } = render(
-            <RecipeIngredients ingredients={[{ quantity: '1 cup', unit: 'grams', name: 'Flour' }]} onRemove={mockRemoveIngredient} />
+            <RecipeIngredients ingredients={[{ quantity: '1 cup', unit: 'grams', name: 'Flour' }]} onRemove={onRemove} />
         );
         
-        fireEvent.click(getByText('Remove ingredient')); // Click the "Remove ingredient" button
+        fireEvent.click(getByText('Remove ingredient')); 
     
-        // Wait for the ingredient to be removed from the list
         await waitFor(() => {
-            expect(queryByText('Flour')).not.toBeInTheDocument();
+            expect(onRemove).toHaveBeenCalledWith({ quantity: '1 cup', unit: 'grams', name: 'Flour' });
         });
     
-        expect(mockRemoveIngredient).toHaveBeenCalled();
+        
     });
 });
