@@ -3,40 +3,59 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Admin from '../Admin';
 import { getAllUsers, deleteUser } from '../../api/adminApi';
 
-// Lisää tarvittava tuonti
-import { waitFor } from '@testing-library/react';
-
 jest.mock('../../api/adminApi', () => ({
-  getAllUsers: jest.fn().mockResolvedValue([
-    { id: 1, name: 'User One', username: 'user1', email: 'user1@example.com', admin: true },
-    { id: 2, name: 'User Two', username: 'user2', email: 'user2@example.com', admin: false }
-  ]),
-  deleteUser: jest.fn().mockResolvedValue()
+  getAllUsers: jest.fn(),
+  deleteUser: jest.fn()
 }));
 
 describe('Admin component', () => {
-  test('deletes user correctly', async () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('renders admin page with user data', async () => {
     const users = [
       { id: 1, name: 'User One', username: 'user1', email: 'user1@example.com', admin: true },
       { id: 2, name: 'User Two', username: 'user2', email: 'user2@example.com', admin: false }
     ];
 
-    // Korvaa `waitFor`-kutsu `await`-lauseella
-    await getAllUsers();
+    getAllUsers.mockResolvedValue(users);
 
-    render(<Admin users={users} />);
-    
-    // Odota, että käyttäjä on lisätty
-    await waitFor(() => expect(screen.getByTestId('user-2')).toBeInTheDocument());
-
-    fireEvent.click(screen.getByText('Delete'));
+    render(<Admin />);
 
     await waitFor(() => {
-      expect(deleteUser).toHaveBeenCalledWith(2, expect.any(String));
-    });
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('user-2')).not.toBeInTheDocument();
+      users.forEach(user => {
+        expect(screen.getByTestId(`user-${user.id}`)).toBeInTheDocument();
+        expect(screen.getByText(user.name)).toBeInTheDocument();
+        expect(screen.getByText(user.username)).toBeInTheDocument();
+        expect(screen.getByText(user.email)).toBeInTheDocument();
+      });
     });
   });
+
+  test('deletes user when delete button is clicked', async () => {
+    const users = [
+      { id: 1, name: 'User One', username: 'user1', email: 'user1@example.com', admin: true },
+      { id: 2, name: 'User Two', username: 'user2', email: 'user2@example.com', admin: false }
+    ];
+    
+    getAllUsers.mockResolvedValue(users);
+    deleteUser.mockResolvedValue();
+    
+    render(<Admin />);
+    
+    await waitFor(() => {
+      users.forEach(user => {
+        const deleteButton = screen.getByTestId(`user-${user.id}`).querySelector('button'); 
+        fireEvent.click(deleteButton); 
+      });
+    });
+    
+    await waitFor(() => {
+      expect(deleteUser).toHaveBeenCalledTimes(users.length); // Odottaa deleteUser-funktion kutsuttavan kerran jokaista poistettavaa käyttäjää kohti
+      users.forEach(user => {
+        expect(deleteUser).toHaveBeenCalledWith(user.id, expect.any(String)); 
+      });
+    });
+  });  
 });

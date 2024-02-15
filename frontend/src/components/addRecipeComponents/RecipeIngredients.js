@@ -49,7 +49,7 @@ const IngredientDialog = ({ isOpen, onClose, onAdd, onSaveEdited, editingIngredi
                 {
                     editingIngredient ? 
                     <button onClick={() => onSaveEdited()} disabled={qt == 0 || !ing}>Save Ingredient</button>:
-                    <button onClick={() => onAdd(qt, unit, ing)} disabled={qt == 0 || !ing}>Add Ingredient</button>
+                    <button onClick={() => onAdd(qt, unit, ing)} disabled={qt == 0 || !ing} data-testid='addIngredient-button'>Add ingredient</button>
                 }
             </div>
         </div>
