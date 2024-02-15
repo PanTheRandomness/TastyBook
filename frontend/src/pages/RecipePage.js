@@ -70,13 +70,13 @@ const Recipe = (props) =>{
                 navigate("/");
             }
         } catch (error) {
-            window.alert("Unable to post recipe: ", error);
+            window.alert("Unable to delete recipe: ", error);
         }
     }
 
-    const editRecipe = async () =>{
+    const editRecipe = () =>{
         console.log("Starting edit...");
-        //tästä takaisin lisäyssivulle, vie nyk. reseptin tiedot
+        navigate("/newrecipe");
     }
 
     return(

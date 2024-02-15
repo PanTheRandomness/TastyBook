@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 import { useToken } from '../customHooks/useToken';
@@ -7,7 +7,6 @@ import { RecipeKeywords, KeywordDialog } from '../components/addRecipeComponents
 import { RecipeSteps, StepDialog } from '../components/addRecipeComponents/RecipeSteps';
 import { RecipeIngredients, IngredientDialog } from '../components/addRecipeComponents/RecipeIngredients';
 
-//Muokkaus: jos tullaan reseptisivulta => tuo & näytä tiedot
 const AddRecipe = (props) =>{
     const { addRecipeRoute } = props;
     const [token,] = useToken();
@@ -45,6 +44,14 @@ const AddRecipe = (props) =>{
     const [eKeywordIndex, setEKeywordIndex] = useState(-1);
     
     const navigate = useNavigate();
+    const [recipe, setRecipe] = useState({});
+
+    useEffect(()=>{
+        const loadrecipe = async () =>{
+            //tässä tuodaan muokattava resepti, en vaan keksinyt miten
+        }
+        loadrecipe();
+    },[recipe]);
 
     const postRecipe = async () =>{
         const requestOptions ={
@@ -75,6 +82,10 @@ const AddRecipe = (props) =>{
         } catch (error) {
             window.alert("Unable to post recipe: ", error);
         }
+    }
+
+    const saveRecipe = async () =>{
+        
     }
 
     const addIngredient = (quantity, unit, ingredient) =>{
@@ -226,8 +237,15 @@ const AddRecipe = (props) =>{
     }
 
     const postBtnClicked = () =>{
-        if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
-            postRecipe();
+        if(recipe){
+            if(window.confirm("Are you sure you want to save this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
+                saveRecipe();
+            }
+        }
+        else{
+            if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
+                postRecipe();
+            }
         }
     }
 
@@ -293,7 +311,10 @@ const AddRecipe = (props) =>{
                     </tr>
                     <tr>
                         <td>
-                            <button className='postbutton' onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1  || keywords.length < 1 }>Save & Post Recipe</button>
+                            {!recipe?
+                                <button className='postbutton' onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1  || keywords.length < 1 }>Save & Post Recipe</button>:
+                                <button className='saverecipebutton' onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1  || keywords.length < 1 }>Save Recipe</button>
+                            }
                         </td>
                     </tr>
                 </tbody>
