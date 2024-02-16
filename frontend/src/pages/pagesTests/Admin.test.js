@@ -33,29 +33,47 @@ describe('Admin component', () => {
     });
   });
 
-  test('deletes user when delete button is clicked', async () => {
+  test('should delete user when delete button is clicked', async () => {
+    const token = 'mockToken';
+    const userId = 2; 
     const users = [
-      { id: 1, name: 'User One', username: 'user1', email: 'user1@example.com', admin: true },
-      { id: 2, name: 'User Two', username: 'user2', email: 'user2@example.com', admin: false }
+      { id: 1, name: 'User 1', username: 'user1', email: 'user1@example.com', admin: true },
+      { id: userId, name: 'User 2', username: 'user2', email: 'user2@example.com', admin: false } 
     ];
-    
+  
     getAllUsers.mockResolvedValue(users);
-    deleteUser.mockResolvedValue();
+    deleteUser.mockResolvedValueOnce();
+  
+    const { getByTestId } = render(<Admin />);
     
-    render(<Admin />);
-    
+    await waitFor(() => expect(getAllUsers).toHaveBeenCalledTimes(1));
+  
+    console.log('Users:', users);
+  
+    const userElement = getByTestId(`user-${userId}`);
+    console.log('User element:', userElement);
+  
+    if (userElement) {
+      const deleteButton = userElement.querySelector('button');
+      console.log('Delete button:', deleteButton);
+      
+      if (deleteButton) {
+        fireEvent.click(deleteButton);
+      } else {
+        console.error('Delete button not found.');
+      }
+    } else {
+      console.error('User element not found.');
+    }
+  
     await waitFor(() => {
-      users.forEach(user => {
-        const deleteButton = screen.getByTestId(`user-${user.id}`).querySelector('button'); 
-        fireEvent.click(deleteButton); 
-      });
+      expect(deleteUser).toHaveBeenCalledTimes(1);
+      expect(deleteUser).toHaveBeenCalledWith(userId, token);
     });
-    
+  
     await waitFor(() => {
-      expect(deleteUser).toHaveBeenCalledTimes(users.length); // Odottaa deleteUser-funktion kutsuttavan kerran jokaista poistettavaa käyttäjää kohti
-      users.forEach(user => {
-        expect(deleteUser).toHaveBeenCalledWith(user.id, expect.any(String)); 
-      });
+      expect(queryByTestId(`user-${userId}`)).not.toBeInTheDocument();
     });
-  });  
+  });
+  
 });
