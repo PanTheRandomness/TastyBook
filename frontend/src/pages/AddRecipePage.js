@@ -237,15 +237,8 @@ const AddRecipe = (props) =>{
     }
 
     const postBtnClicked = () =>{
-        if(recipe){
-            if(window.confirm("Are you sure you want to save this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
-                saveRecipe();
-            }
-        }
-        else{
-            if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
-                postRecipe();
-            }
+        if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
+            postRecipe();
         }
     }
 
