@@ -4,21 +4,22 @@ const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [recipes, setRecipes] = useState([]);
 
-  useEffect(() => {
-
-
-    const fetchRecipes = async () => {  // Tee tähän http pyyntö
-      try {
-        const response = await fetch('/api/recipes'); //Polku
-        const data = await response.json();
-        setRecipes(data);
-      } catch (error) {
-        console.error('Error fetching recipes', error);
-      }
-    };
-
-    fetchRecipes();
-  }, []);
+  useEffect(()=>{
+    const getRecipe = async () =>{
+        try {
+            const response = await fetch("http://localhost:3004/api/recipe/" + route);
+            if (response.ok) {
+                const r = await response.json();
+                setRecipe(r);
+            } else {
+                throw new Error('Recipe not found');
+            }
+        } catch (error) {
+            window.alert("An error occurred while loading recipe: " + error);
+        }
+    }
+    getRecipe();
+},[route]);
 
   const handleSearch = () => {
     const filteredRecipes = recipes.filter(
