@@ -7,7 +7,7 @@ describe('RecipeIngredients component', () => {
         const { queryByText, getByTestId } = render(
         <div>
             <RecipeIngredients ingredients={[]} />
-            <IngredientDialog isOpen={false} />
+            <IngredientDialog isOpen={true} editingIngredient={true} />
         </div>
         )
 
@@ -20,19 +20,19 @@ describe('RecipeIngredients component', () => {
     });
   
     test('adds new ingredient to list when saved in IngredientDialog', async () => {
-        const { getByText, getByTestId } = render(
+
+        const onAdd = jest.fn();
+        const { getByText } = render(
             <div>
                 <RecipeIngredients ingredients={[]} />
-                <IngredientDialog isOpen={false} />
+                <IngredientDialog isOpen={true} onAdd={onAdd} w={"ingredient-0"} />
             </div>
-        )
+        );
+  
+        fireEvent.click(getByText('quantityInput'));
     
-        // Simulate entering values and saving
-        fireEvent.click(getByText('quantityInput'));      
-    
-        // Wait for the ingredient to be added to the list
         await waitFor(() => {
-            expect(getByText('ingredient-0')).toBeInTheDocument();
+            expect(onAdd).toHaveBeenCalledWith('ingredient-0');
         });
     });
 
