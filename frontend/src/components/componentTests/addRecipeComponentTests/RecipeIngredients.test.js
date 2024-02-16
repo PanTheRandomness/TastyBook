@@ -29,7 +29,7 @@ describe('RecipeIngredients component', () => {
             </div>
         );
   
-        fireEvent.click(getByText('quantityInput'));
+        fireEvent.click(getByText('Add ingredient'));
     
         await waitFor(() => {
             expect(onAdd).toHaveBeenCalledWith('ingredient-0');
@@ -37,10 +37,11 @@ describe('RecipeIngredients component', () => {
     });
 
     test('edits and updates ingredient in RecipeIngredients component', async () => {
+        const onWChange = jest.fn();
         const { getByText, getByTestId } = render(
             <div>
-                <RecipeIngredients ingredients={[{ quantity: '1 cup', unit: 'grams', name: 'Flour' }]} />
-                <IngredientDialog isOpen={true} onClose={() => {}} onSaveEdited={() => {}} editingIngredient={true} qt={1} unit="cup" ing="Flour" />
+                <RecipeIngredients ingredients={[{ quantity: '1 cup', unit: 'grams', name: 'Flour' }]} onEdit={() => {}} onRemove={() => {}} />
+                <IngredientDialog isOpen={true} onClose={() => {}} onSaveEdited={() => {}} editingIngredient={true} qt={1} unit="cup" ing="Flour" onWChange={onWChange} />
             </div>
         );
     
@@ -52,6 +53,7 @@ describe('RecipeIngredients component', () => {
     
         // Wait for the ingredient to be updated in the list
         await waitFor(() => {
+            expect(onWChange).toHaveBeenCalledWith('Whole Wheat Flour');
             expect(getByTestId('ingredient-0')).toHaveTextContent('2 lbs Whole Wheat Flour');
         });
     });
