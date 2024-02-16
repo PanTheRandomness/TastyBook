@@ -10,6 +10,7 @@ export const register = async (username, name, email, password) => {
             body: JSON.stringify({ username, name, email, password }),
         });
 
+        //kaksi eri erroria, toinen että säpo ja username jo käytössä, toinen että serveri kaatui
         if (!response.ok) {
             throw new Error(`Registering failed: ${response.statusText}`);
         }
