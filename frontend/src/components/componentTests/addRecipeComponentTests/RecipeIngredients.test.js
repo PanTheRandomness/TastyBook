@@ -1,47 +1,59 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, queryByTestId } from '@testing-library/react';
 import { RecipeIngredients, IngredientDialog } from '../../addRecipeComponents/RecipeIngredients';
 
 describe('RecipeIngredients component', () => {
     test('opens IngredientDialog when "Add ingredient" button is clicked', async () => {
-        const { queryByText, getByTestId } = render(
+        const { queryByTestId, getByTestId } = render(
         <div>
             <RecipeIngredients ingredients={[]} />
-            <IngredientDialog isOpen={true} editingIngredient={true} />
+            <IngredientDialog isOpen={false} />
         </div>
         )
 
         fireEvent.click(getByTestId('addIngredient-button'));
     
         await waitFor(() => {
-            expect(queryByText('Modify ingredient')).toBeInTheDocument();
+            expect(queryByTestId('ingredient-dialog-title')).toBeInTheDocument();
         });
         
     });
   
-    test('adds new ingredient to list when saved in IngredientDialog', async () => {
-
+    test('calls onAdd when new ingredient is added in IngredientDialog', async () => {
         const onAdd = jest.fn();
-        const { getByText } = render(
+        const qt = "1";
+        const unit = "lbs";
+        const ing = "Potato";
+        const { getByTestId } = render(
             <div>
                 <RecipeIngredients ingredients={[]} />
-                <IngredientDialog isOpen={true} onAdd={onAdd} w={"ingredient-0"} />
+                <IngredientDialog isOpen={true} onAdd={onAdd} qt={qt} unit={unit} ing={ing} />
             </div>
         );
   
-        fireEvent.click(getByText('Add ingredient'));
+        fireEvent.click(getByTestId('addIngredient-button'));
     
         await waitFor(() => {
-            expect(onAdd).toHaveBeenCalledWith('ingredient-0');
+            expect(onAdd).toHaveBeenCalledWith("1", "lbs", "Potato");
         });
     });
 
-    test('edits and updates ingredient in RecipeIngredients component', async () => {
-        const onWChange = jest.fn();
-        const { getByText, getByTestId } = render(
+    test('edits and updates ingredient in dialog component', async () => {
+        const onQtChange = jest.fn();
+        const onUnitChange = jest.fn();
+        const onIngChange = jest.fn();
+        const { getByTestId } = render(
             <div>
-                <RecipeIngredients ingredients={[{ quantity: '1 cup', unit: 'grams', name: 'Flour' }]} onEdit={() => {}} onRemove={() => {}} />
-                <IngredientDialog isOpen={true} onClose={() => {}} onSaveEdited={() => {}} editingIngredient={true} qt={1} unit="cup" ing="Flour" onWChange={onWChange} />
+                <IngredientDialog
+                isOpen={true}
+                onSaveEdited={() => {}}
+                editingIngredient={true}
+                qt={1}
+                unit="cup"
+                ing="Flour"
+                onQtChange={onQtChange}
+                onUnitChange={onUnitChange}
+                onIngChange={onIngChange} />
             </div>
         );
     
@@ -53,14 +65,15 @@ describe('RecipeIngredients component', () => {
     
         // Wait for the ingredient to be updated in the list
         await waitFor(() => {
-            expect(onWChange).toHaveBeenCalledWith('Whole Wheat Flour');
-            expect(getByTestId('ingredient-0')).toHaveTextContent('2 lbs Whole Wheat Flour');
+            expect(onIngChange).toHaveBeenCalledWith('Whole Wheat Flour');
+            expect(onQtChange).toHaveBeenCalledWith('2');
+            expect(onUnitChange).toHaveBeenCalledWith('lbs')
         });
     });
 
-    test('removes ingredient from list when "Remove ingredient" button is clicked', async () => {
+    test('calls onRecome fwhen "Remove ingredient" button is clicked', async () => {
         const onRemove = jest.fn();
-        const { getByText, queryByText } = render(
+        const { getByText } = render(
             <RecipeIngredients ingredients={[{ quantity: '1 cup', unit: 'grams', name: 'Flour' }]} onRemove={onRemove} />
         );
         
