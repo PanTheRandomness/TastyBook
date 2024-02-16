@@ -42,34 +42,27 @@ describe('Admin component', () => {
     ];
   
     getAllUsers.mockResolvedValue(users);
-    deleteUser.mockResolvedValueOnce();
-  
-    const { getByTestId } = render(<Admin />);
+    
+    const { getByTestId, getByText, queryByTestId } = render(<Admin />);
     
     await waitFor(() => expect(getAllUsers).toHaveBeenCalledTimes(1));
   
-    console.log('Users:', users);
+    let userElement;
+    await waitFor(() => {
+      userElement = getByTestId(`user-${userId}`);
+    })
+
+    deleteUser(userId, token);
   
-    const userElement = getByTestId(`user-${userId}`);
-    console.log('User element:', userElement);
-  
-    if (userElement) {
-      const deleteButton = userElement.querySelector('button');
-      console.log('Delete button:', deleteButton);
-      
-      if (deleteButton) {
-        fireEvent.click(deleteButton);
-      } else {
-        console.error('Delete button not found.');
-      }
-    } else {
-      console.error('User element not found.');
-    }
+    const deleteButton = userElement.querySelector('button');
+    fireEvent.click(deleteButton);
   
     await waitFor(() => {
-      expect(deleteUser).toHaveBeenCalledTimes(1);
+      expect(deleteUser).toHaveBeenCalled();
       expect(deleteUser).toHaveBeenCalledWith(userId, token);
     });
+
+    fireEvent.click(getByText("Yes"));
   
     await waitFor(() => {
       expect(queryByTestId(`user-${userId}`)).not.toBeInTheDocument();
