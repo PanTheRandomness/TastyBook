@@ -21,7 +21,12 @@ const Register = ({ onLogin }) => {
             onLogin(token);
             navigate("/");
         } catch (error) {
-            window.alert("Registering failed.");
+            if (error.response && error.response.status === 409) {
+                window.alert("Email or username is already in use.");
+            } else {
+                
+                window.alert("Registering failed.");
+            }
           
         }
     };
