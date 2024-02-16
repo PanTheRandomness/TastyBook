@@ -3,24 +3,27 @@ import React, { useState, useEffect } from 'react';
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [recipes, setRecipes] = useState([]);
+  const [favoriteRecipes, setFavoriteRecipes] = useState([]);
 
-  useEffect(()=>{
-    const getRecipe = async () =>{
-        try {
-            const response = await fetch("http://localhost:3004/api/recipe/" + route);
-            if (response.ok) {
-                const r = await response.json();
-                setRecipe(r);
-            } else {
-                throw new Error('Recipe not found');
-            }
-        } catch (error) {
-            window.alert("An error occurred while loading recipe: " + error);
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const response = await fetch("http://localhost:3004/api/recipes");
+        if (response.ok) {
+          const data = await response.json();
+          setRecipes(data);
+        } else {
+          throw new Error('Failed to fetch recipes');
         }
-    }
-    getRecipe();
-},[route]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
+    fetchRecipes();
+  }, []);
+
+  // Haku 
   const handleSearch = () => {
     const filteredRecipes = recipes.filter(
       recipe =>
@@ -31,14 +34,18 @@ const Search = () => {
     const sortedRecipes = filteredRecipes.sort((a, b) => {
       if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
       if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
-
-      if (a.author.toLowerCase() < b.author.toLowerCase()) return -1;
-      if (a.author.toLowerCase() > b.author.toLowerCase()) return 1;
-
       return 0;
     });
 
     setRecipes(sortedRecipes);
+  };
+
+  // Suosikki, tehtiinkö se tähän? 
+  const addFavoriteRecipe = (recipeId) => {
+    const favoriteRecipe = recipes.find(recipe => recipe.id === recipeId);
+    if (favoriteRecipe) {
+      setFavoriteRecipes([...favoriteRecipes, favoriteRecipe]);
+    }
   };
 
   return (
@@ -56,6 +63,16 @@ const Search = () => {
 
       <ul>
         {recipes.map(recipe => (
+          <li key={recipe.id}>
+            <strong>{recipe.name}</strong> by {recipe.author}
+            <button onClick={() => addFavoriteRecipe(recipe.id)}>Add to Favorites</button>
+          </li>
+        ))}
+      </ul>
+
+      <h2>Favorite Recipes </h2>
+      <ul>
+        {favoriteRecipes.map(recipe => (
           <li key={recipe.id}>
             <strong>{recipe.name}</strong> by {recipe.author}
           </li>
