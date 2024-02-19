@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect} from 'react';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 import { useToken } from '../customHooks/useToken';
@@ -8,7 +8,7 @@ import { RecipeSteps, StepDialog } from '../components/addRecipeComponents/Recip
 import { RecipeIngredients, IngredientDialog } from '../components/addRecipeComponents/RecipeIngredients';
 
 const AddRecipe = (props) =>{
-    const { addRecipeRoute } = props;
+    const { addRecipeRoute, route } = props;
     const [token,] = useToken();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -44,14 +44,37 @@ const AddRecipe = (props) =>{
     const [eKeywordIndex, setEKeywordIndex] = useState(-1);
     
     const navigate = useNavigate();
-    const [recipe, setRecipe] = useState(null);
+    const [editing, setEditing] = useState(false);
 
     useEffect(()=>{
         const loadrecipe = async () =>{
-            //tässä tuodaan muokattava resepti, en vaan keksinyt miten
+            const requestOptions ={
+                headers: {
+                    'Authorization' : "Bearer " + token
+                }
+            }
+            try {
+                const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
+                if (response.ok) {
+                    const r = await response.json();
+                    setEditing(true);
+                    setName(r.header);
+                    setVisibleToAll(r.visibleToAll);
+                    setDescription(r.description);
+                    setDurationH(r.durationHours);
+                    setDurationMin(r.durationMinutes);
+                    setIngredients(r.ingredients);
+                    setSteps(r.steps.map(item => item.step));
+                    setKeywords(r.keywords.map(item => item.word));
+                } else {
+                    throw new Error('Recipe not found');
+                }
+            } catch (error) {
+                window.alert("An error occurred while loading recipe: " + error);
+            }
         }
-        loadrecipe();
-    },[recipe]);
+        if(route)loadrecipe();
+    },[]);
 
     const postRecipe = async () =>{
         const requestOptions ={
@@ -85,7 +108,35 @@ const AddRecipe = (props) =>{
     }
 
     const saveRecipe = async () =>{
-        
+        /*const requestOptions ={
+            method:'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization' : "Bearer " + token
+            },
+            body: JSON.stringify({
+                header : name,
+                description : description,
+                visibleToAll : visibleToAll,
+                durationHours : durationH,
+                durationMinutes : durationMin,
+                ingredients : ingredients,
+                steps : steps,
+                keywords : keywords
+            })
+        }
+
+        try {
+            const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
+            if(response.ok){
+                const data = await response.json();
+                addRecipeRoute(data.hash);
+                navigate("/recipe/" + data.hash);
+            }
+        } catch (error) {
+            window.alert("Unable to post modified recipe: ", error);
+        } */
+        setEditing(false);
     }
 
     const addIngredient = (quantity, unit, ingredient) =>{
@@ -237,7 +288,7 @@ const AddRecipe = (props) =>{
     }
 
     const postBtnClicked = () =>{
-        if(recipe){
+        if(editing){
             if(window.confirm("Are you sure you want to save this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
                 saveRecipe();
             }
@@ -311,7 +362,7 @@ const AddRecipe = (props) =>{
                     </tr>
                     <tr>
                         <td>
-                            {!recipe?
+                            {!editing?
                                 <button className='postbutton' onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1  || keywords.length < 1 }>Save & Post Recipe</button>:
                                 <button className='saverecipebutton' onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1  || keywords.length < 1 }>Save Recipe</button>
                             }

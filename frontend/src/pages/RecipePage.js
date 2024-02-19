@@ -80,7 +80,7 @@ const Recipe = (props) =>{
 
     const editRecipe = () =>{
         console.log("Starting edit...");
-        navigate("/newrecipe");
+        navigate("/editrecipe/" + route);
     }
 
     return(

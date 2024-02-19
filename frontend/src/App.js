@@ -83,6 +83,12 @@ const App = () => {
         <Route path='/adminregister' element={<AdminRegister onLogin={onLogin} />}></Route>
         <Route path='/recipe' element={<Recipe />}></Route>
         <Route path='/newrecipe' element={<AddRecipe addRecipeRoute={addRecipeRoute} />}></Route>
+
+        {
+          recipeRoutes.map((route) => (
+            <Route key={route.id} path={`/editrecipe/${route.hash}`} element={<AddRecipe route={route.hash} />}></Route>
+          ))
+        }
         
         {
           recipeRoutes.map((route) => (
