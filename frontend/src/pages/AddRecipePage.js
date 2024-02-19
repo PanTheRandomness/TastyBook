@@ -45,7 +45,6 @@ const AddRecipe = (props) =>{
     
     const navigate = useNavigate();
     const [recipe, setRecipe] = useState(null);
-    const [editing, setEditing] = useState(false);
 
     useEffect(()=>{
         const loadrecipe = async () =>{
@@ -238,8 +237,15 @@ const AddRecipe = (props) =>{
     }
 
     const postBtnClicked = () =>{
-        if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
-            postRecipe();
+        if(recipe){
+            if(window.confirm("Are you sure you want to save this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
+                saveRecipe();
+            }
+        }
+        else{
+            if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
+                postRecipe();
+            }
         }
     }
 
