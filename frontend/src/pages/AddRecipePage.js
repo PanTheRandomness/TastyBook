@@ -45,6 +45,7 @@ const AddRecipe = (props) =>{
     
     const navigate = useNavigate();
     const [editing, setEditing] = useState(false);
+    const [id, setId] = useState(null);
 
     useEffect(()=>{
         const loadrecipe = async () =>{
@@ -66,6 +67,7 @@ const AddRecipe = (props) =>{
                     setIngredients(r.ingredients);
                     setSteps(r.steps.map(item => item.step));
                     setKeywords(r.keywords.map(item => item.word));
+                    setId(r.id);
                 } else {
                     throw new Error('Recipe not found');
                 }
@@ -103,40 +105,44 @@ const AddRecipe = (props) =>{
                 navigate("/recipe/" + data.hash);
             }
         } catch (error) {
-            window.alert("Unable to post recipe: ", error);
+            window.alert("Unable to post recipe: " + error);
         }
     }
 
     const saveRecipe = async () =>{
-        /*const requestOptions ={
+        const requestOptions ={
             method:'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization' : "Bearer " + token
             },
             body: JSON.stringify({
+                id: id,
                 header : name,
                 description : description,
                 visibleToAll : visibleToAll,
                 durationHours : durationH,
                 durationMinutes : durationMin,
-                ingredients : ingredients,
                 steps : steps,
-                keywords : keywords
+                keywords : keywords,
+                ingredients : ingredients
             })
         }
 
         try {
+            console.log("Save modified called...");
             const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
             if(response.ok){
-                const data = await response.json();
-                addRecipeRoute(data.hash);
-                navigate("/recipe/" + data.hash);
+                navigate("/recipe/" + route);
+                setEditing(false);
+            } else {
+                console.log("Response status:", response.status);
+                window.alert("Failed to save modified recipe. Status: " + response.status);
             }
         } catch (error) {
-            window.alert("Unable to post modified recipe: ", error);
-        } */
-        setEditing(false);
+            console.error("Error while saving modified recipe:", error);
+            window.alert("Unable to post modified recipe: " + error);
+        }
     }
 
     const addIngredient = (quantity, unit, ingredient) =>{
