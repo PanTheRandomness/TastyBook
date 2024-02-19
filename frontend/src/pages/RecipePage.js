@@ -38,16 +38,21 @@ const Recipe = (props) =>{
 
     useEffect(()=>{
         const getRecipe = async () =>{
+            const requestOptions ={
+                headers: {
+                    'Authorization' : "Bearer " + token
+                }
+            }
             try {
-                const response = await fetch("http://localhost:3004/api/recipe/" + route);
+                const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
                 if (response.ok) {
                     const r = await response.json();
+                    setRecipe(r);
                 } else {
                     throw new Error('Recipe not found');
                 }
             } catch (error) {
                 window.alert("An error occurred while loading recipe: " + error);
-                //Nykyisillään jos visibleToAll on false -> 404 not found (recipeRoutes line 13)
             }
         }
         getRecipe();
