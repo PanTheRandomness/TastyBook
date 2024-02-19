@@ -36,6 +36,10 @@ const Recipe = (props) =>{
         ]
     });
 
+    const showPrivateRecipe = () =>{
+        console.log("Private recipe found");
+    }
+
     useEffect(()=>{
         const getRecipe = async () =>{
             try {
@@ -43,11 +47,13 @@ const Recipe = (props) =>{
                 if (response.ok) {
                     const r = await response.json();
                     setRecipe(r);
+                    if(!recipe.visibleToAll) showPrivateRecipe();
                 } else {
                     throw new Error('Recipe not found');
                 }
             } catch (error) {
                 window.alert("An error occurred while loading recipe: " + error);
+                //Nykyisillään jos visibleToAll on false -> 404 not found (recipeRoutes line 13)
             }
         }
         getRecipe();
