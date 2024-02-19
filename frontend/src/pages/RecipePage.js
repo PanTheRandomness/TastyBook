@@ -36,18 +36,12 @@ const Recipe = (props) =>{
         ]
     });
 
-    const showPrivateRecipe = () =>{
-        console.log("Private recipe found");
-    }
-
     useEffect(()=>{
         const getRecipe = async () =>{
             try {
                 const response = await fetch("http://localhost:3004/api/recipe/" + route);
                 if (response.ok) {
                     const r = await response.json();
-                    setRecipe(r);
-                    if(!recipe.visibleToAll) showPrivateRecipe();
                 } else {
                     throw new Error('Recipe not found');
                 }
