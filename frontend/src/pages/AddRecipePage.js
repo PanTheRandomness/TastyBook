@@ -44,7 +44,8 @@ const AddRecipe = (props) =>{
     const [eKeywordIndex, setEKeywordIndex] = useState(-1);
     
     const navigate = useNavigate();
-    const [recipe, setRecipe] = useState({});
+    const [recipe, setRecipe] = useState(null);
+    const [editing, setEditing] = useState(false);
 
     useEffect(()=>{
         const loadrecipe = async () =>{

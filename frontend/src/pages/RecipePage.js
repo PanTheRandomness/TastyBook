@@ -6,14 +6,13 @@ import '../Styles/Ellipsis.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
 
-// TODO: varmista oikeellinen näyttö tokenilla + visibleToAll-arvolla Pan jatkaa tästä!
-
 const Recipe = (props) =>{
     const { route } = props;
     const [token,] = useToken();
     const navigate = useNavigate();
     
     //esimerkkiresepti kehitystä varten, poista tiedot kun reseptejä voidaan tarkkailla
+    //TODO: Miten tämä poistetaan?
     const [recipe, setRecipe] = useState({
         "header" : "Reseptin nimi",
         "description" : "Nami nami ruokaa",
