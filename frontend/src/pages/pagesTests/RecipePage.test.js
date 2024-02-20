@@ -17,15 +17,16 @@ describe('RecipePage component', () => {
                 { quantity: '1 dl', name: 'Maito' },
                 { quantity: '2 kpl', name: 'Munat' },
             ],
-            steps: ['1. Sekoita ainekset', '2. Paista'],
+            steps: ['Sekoita ainekset', 'Paista'],
             keywords: ['testi', 'ruoka']
         };
       
         // Renderöi reseptisivu
         render(
+            /*Tähän testi jää jumiin, ei osaa renderöidä resepti-komponenttia */
             <MemoryRouter initialEntries={['/recipe/test']}>
                 <Route path="/recipe/:route">
-                <RecipePage />
+                    <Recipe />
                 </Route>
             </MemoryRouter>
         );
@@ -59,5 +60,13 @@ describe('RecipePage component', () => {
                 expect(keywordElement).toBeInTheDocument();
             });
         });
+    });
+
+    test('deletes recipe', async () =>{
+
+    });
+
+    test('starts editing recipe', async () =>{
+
     });
 });
