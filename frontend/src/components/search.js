@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [recipes, setRecipes] = useState([]);
+  const [recipes] = useState([]);
 
   const handleSearch = () => {
     if (recipes.length > 0) {
