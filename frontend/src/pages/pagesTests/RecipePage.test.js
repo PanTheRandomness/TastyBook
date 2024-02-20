@@ -23,6 +23,7 @@ describe('RecipePage component', () => {
       
         // Renderöi reseptisivu
         render(
+            //Ei löydä, miten testaisi?
             <MemoryRouter initialEntries={['/recipe/test']}>
                 <Route path="/recipe/:route">
                 <RecipePage />
