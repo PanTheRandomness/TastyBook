@@ -1,9 +1,14 @@
-import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { Recipe, RecipeHead, RecipeIngredients, RecipeSteps, EllipsisMenu } from '../RecipePage';
+import * as router from 'react-router';
+import { render, fireEvent, waitFor, screen} from '@testing-library/react';
+import { Recipe } from '../RecipePage';
 
 describe('RecipePage component', () => {
+    const navigate = jest.fn()
+
+    beforeEach(() => {
+        jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate)
+    })
+
     test('renders recipe page with correct data', async () => {
         // Määritellään mock-resepti
         const mockRecipe = {
@@ -21,15 +26,6 @@ describe('RecipePage component', () => {
             keywords: ['testi', 'ruoka']
         };
       
-        // Renderöi reseptisivu
-        render(
-            /*Tähän testi jää jumiin, ei osaa renderöidä resepti-komponenttia */
-            <MemoryRouter initialEntries={['/recipe/test']}>
-                <Route path="/recipe/:route">
-                    <Recipe />
-                </Route>
-            </MemoryRouter>
-        );
       
         // Odotetaan, että resepti latautuu ja sen tiedot näkyvät
         await waitFor(() => {
@@ -63,10 +59,29 @@ describe('RecipePage component', () => {
     });
 
     test('deletes recipe', async () =>{
+    
+        
+
+        // Odota, että "Delete" -painike löytyy ja klikkaa sitä
+        const deleteButton = screen.getByText('Delete');
+        fireEvent.click(deleteButton);
+
+        // Odota, että navigointi on kutsuttu oikein
+        await waitFor(() => {
+            expect(navigate).toHaveBeenCalledWith('/');
+        });
 
     });
 
     test('starts editing recipe', async () =>{
+        // Odota, että "Edit" -painike löytyy ja klikkaa sitä
+        const editButton = screen.getByText('Edit');
+        fireEvent.click(editButton);
+
+        // Odota, että navigointi on kutsuttu oikein
+        await waitFor(() => {
+            expect(navigate).toHaveBeenCalledWith('/editrecipe/:id');
+        });
 
     });
 });
