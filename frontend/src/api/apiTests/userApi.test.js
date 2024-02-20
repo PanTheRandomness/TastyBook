@@ -65,7 +65,7 @@ describe('register function', () => {
 
       // Act and Assert
       await expect(userApi.register('testuser', 'Test User', 'test@example.com', 'testpassword')).rejects.toThrowError(
-          'Email or username is already in use.'
+          'Username or email is already in use.'
       );
     });
 
