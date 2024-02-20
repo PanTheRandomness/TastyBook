@@ -13,20 +13,20 @@ describe("getRecipeRoutes", () => {
 
     it("should fetch recipe routes without token", async () => {
         fetch.mockResolvedValueOnce({
-            json: jest.fn().mockResolvedValueOnce({ hashes: [{ id: 1, hash: "123"}, { id: 2, hash: "234" }]}),
+            json: jest.fn().mockResolvedValueOnce({ hashes: [{ hash: "123"}, { hash: "234" }]}),
         });
 
         const response = await getRecipeRoutes();
 
         expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/recipe/urls`);
         expect(response.loggedIn).toBeUndefined();
-        expect(response.hashes).toEqual( [{ id: 1, hash: "123"}, { id: 2, hash: "234" }]);
+        expect(response.hashes).toEqual( [{ hash: "123"}, { hash: "234" }]);
     });
 
     it("should fetch recipe routes with token", async () => {
         const token = "mockToken";
         fetch.mockResolvedValueOnce({
-            json: jest.fn().mockResolvedValueOnce({ loggedIn: true, hashes: [{ id: 1, hash: "123"}, { id: 2, hash: "234" }]}),
+            json: jest.fn().mockResolvedValueOnce({ loggedIn: true, hashes: [{ hash: "123"}, { hash: "234" }]}),
         });
 
         const response = await getRecipeRoutes(token);
@@ -37,7 +37,7 @@ describe("getRecipeRoutes", () => {
             }
         });
         expect(response.loggedIn).toBe(true);
-        expect(response.hashes).toEqual([{ id: 1, hash: "123"}, { id: 2, hash: "234" }]);
+        expect(response.hashes).toEqual([{ hash: "123"}, { hash: "234" }]);
     });
 
     it("should throw an error if fetch fails", async () => {
@@ -60,20 +60,20 @@ describe("getRecipeViews", () => {
 
     it("should fetch recipeviews without token", async () => {
         fetch.mockResolvedValueOnce({
-            json: jest.fn().mockResolvedValueOnce({ hashes: [{ id: 1, hash: "123"}, { id: 2, hash: "234" }]}),
+            json: jest.fn().mockResolvedValueOnce({ recipes: [{ id: 1, header: "123"}, { id: 2, header: "234" }]}),
         });
 
         const response = await getRecipeViews();
 
         expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/recipes`);
         expect(response.loggedIn).toBeUndefined();
-        expect(response.hashes).toEqual( [{ id: 1, hash: "123"}, { id: 2, hash: "234" }]);
+        expect(response.recipes).toEqual( [{ id: 1, header: "123"}, { id: 2, header: "234" }]);
     });
 
     it("should fetch recipeviews with token", async () => {
         const token = "mockToken";
         fetch.mockResolvedValueOnce({
-            json: jest.fn().mockResolvedValueOnce({ loggedIn: true, hashes: [{ id: 1, hash: "123"}, { id: 2, hash: "234" }]}),
+            json: jest.fn().mockResolvedValueOnce({ loggedIn: true, recipes: [{ id: 1, header: "123"}, { id: 2, header: "234" }]}),
         });
 
         const response = await getRecipeViews(token);
@@ -84,7 +84,7 @@ describe("getRecipeViews", () => {
             }
         });
         expect(response.loggedIn).toBe(true);
-        expect(response.hashes).toEqual([{ id: 1, hash: "123"}, { id: 2, hash: "234" }]);
+        expect(response.recipes).toEqual([{ id: 1, header: "123"}, { id: 2, header: "234" }]);
     });
 
     it("should throw an error if fetch fails", async () => {

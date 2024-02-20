@@ -4,7 +4,34 @@ var router = express.Router();
 let ctrl = require("../controllers/recipeController");
 let userMiddleware = require("../middleware/verifyUser");
 
+/*  /api/recipes GET
+
+    Palauttaa reseptien id:n, otskikon, tekijän, hashin, ja muita tietoja?
+
+    {
+        recipes: [
+            { id: 1, header: "Keitto", username: "user1", hash: "123" },
+            { id: 2, header: "Paistos", username: "user2", hash: "234" }
+        ]
+    }
+
+    Palauttaa myös loggedIn:true, jos käyttäjä kirjautunut, ei palauta kaikkia reseptejä (visibleToAll=null) jos käyttäjä ei ole kirjautunut
+*/
+
 router.route("/api/recipes").get(userMiddleware.isUserLoggedIn, ctrl.getAllRecipes);
+
+/*  /api/recipe/urls GET
+
+    Palauttaa reseptien hashit muodossa
+    {
+        hashes: [
+            { hash: "123" },
+            { hash: "234" }
+        ]
+    }
+
+    Palauttaa myös onLogged: true, jos käyttäjä kirjautunut, ei palauta kaikkia hasheja (visibleToAll=null) jos käyttäjä ei ole kirjautunut
+*/
 
 router.route("/api/recipe/urls").get(userMiddleware.isUserLoggedIn, ctrl.getAllRecipeHashes);
 

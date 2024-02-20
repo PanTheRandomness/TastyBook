@@ -1,7 +1,6 @@
 import { NavLink, Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import {Register} from './pages/Register';
 import {Login} from './pages/LoginPage';
-import {Logout} from './pages/LogoutPage';
 import Admin from './pages/Admin';
 import {AdminRegister} from './pages/AdminRegister';
 import FrontPage from "./pages/FrontPage";
@@ -17,6 +16,8 @@ const App = () => {
   const user = useUser();
   const [token, setToken] = useToken();
   const [recipeRoutes, setRecipeRoutes] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -24,9 +25,12 @@ const App = () => {
         const response = await getRecipeRoutes(token);
         if (!Array.isArray(response.hashes)) throw new Error();
         setRecipeRoutes(response.hashes);
+        setErrorMessage("");
         if (!response.loggedIn) onLogout();
       } catch (error) {
-        // TODO: show error
+        setErrorMessage("Error loading recipe routes");
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -44,9 +48,10 @@ const App = () => {
   }
 
   const onLogout = () => {
-    localStorage.removeItem(token);
     setToken("");
   }
+
+  if (!loading && errorMessage) return <p>{errorMessage}</p>
 
   return (
     <Router>
@@ -61,9 +66,7 @@ const App = () => {
                 <NavLink className={"navLink"} to={"/newrecipe"}>Add Recipe</NavLink>
               </div>
               <div>
-                {
-                  user.role == "admin" && <NavLink className={"navLink"} to={"/admin"}>Admin</NavLink>
-                }
+                { user.role === "admin" && <NavLink className={"navLink"} to={"/admin"}>Admin</NavLink> }
                 <NavLink className={"navLink"} to={"/"} onClick={onLogout}>Logout</NavLink>
               </div>
             </> :
@@ -75,24 +78,22 @@ const App = () => {
       </nav>
 
       <Routes>
-        <Route path='/' element={<FrontPage />}></Route>
+        <Route path='/' element={<FrontPage onLogout={onLogout} />}></Route>
         <Route path='/register' element={<Register onLogin={onLogin} />}></Route>
         <Route path='/login' element={<Login onLogin={onLogin} />}></Route>
-        <Route path='/logout' element={<Logout />}></Route>
-        <Route path='/admin' element={<Admin />}></Route>
+        { user && user.role === 'admin' && <Route path='/admin' element={<Admin />}></Route> }
         <Route path='/adminregister' element={<AdminRegister onLogin={onLogin} />}></Route>
-        <Route path='/recipe' element={<Recipe />}></Route>
-        <Route path='/newrecipe' element={<AddRecipe addRecipeRoute={addRecipeRoute} />}></Route>
+        { (user && token) && <Route path='/newrecipe' element={<AddRecipe addRecipeRoute={addRecipeRoute} />}></Route> }
 
         {
           recipeRoutes.map((route) => (
-            <Route key={route.id} path={`/editrecipe/${route.hash}`} element={<AddRecipe route={route.hash} />}></Route>
+            <Route key={route.hash} path={`/editrecipe/${route.hash}`} element={<AddRecipe route={route.hash} />}></Route>
           ))
         }
         
         {
           recipeRoutes.map((route) => (
-            <Route key={route.id} path={`/recipe/${route.hash}`} element={<Recipe route={route.hash} />}></Route>
+            <Route key={route.hash} path={`/recipe/${route.hash}`} element={<Recipe route={route.hash} />}></Route>
           ))
         }
       </Routes>
