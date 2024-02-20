@@ -17,7 +17,7 @@ describe('RecipePage component', () => {
                 { quantity: '1 dl', name: 'Maito' },
                 { quantity: '2 kpl', name: 'Munat' },
             ],
-            steps: ['1. Sekoita ainekset', '2. Paista'],
+            steps: ['Sekoita ainekset', 'Paista'],
             keywords: ['testi', 'ruoka']
         };
       
