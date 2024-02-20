@@ -16,8 +16,7 @@ const Admin = () => {
         const response = await getAllUsers(token);
         setUsers(response);
       } catch (error) {
-        console.error('Error fetching user data', error);
-        setError('Error fetching user data');
+        window.alert("Error fetching user data.");
       }
     };
   
@@ -36,8 +35,7 @@ const Admin = () => {
         setUsers(users.filter(user => user.id !== userIdToDelete));
         setShowConfirmationModal(false);
       } catch (error) {
-        console.error('Error deleting user', error);
-        setError('Error deleting user');
+        window.alert("Error deleting user");        
       }
     } else {
       setShowConfirmationModal(false);

@@ -96,6 +96,7 @@ const App = () => {
             <Route key={route.hash} path={`/recipe/${route.hash}`} element={<Recipe route={route.hash} />}></Route>
           ))
         }
+
       </Routes>
     </Router>
   );
