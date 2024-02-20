@@ -23,10 +23,10 @@ describe('RecipePage component', () => {
       
         // Renderöi reseptisivu
         render(
-            //Ei löydä, miten testaisi?
             <MemoryRouter initialEntries={['/recipe/test']}>
                 <Route path="/recipe/:route">
-                <RecipePage />
+                    {/*Tähän testi jää jumiin, ei osaa renderöidä resepti-komponenttia */}
+                    <RecipePage />
                 </Route>
             </MemoryRouter>
         );
@@ -60,5 +60,13 @@ describe('RecipePage component', () => {
                 expect(keywordElement).toBeInTheDocument();
             });
         });
+    });
+
+    test('deletes recipe', async () =>{
+
+    });
+
+    test('starts editing recipe', async () =>{
+
     });
 });
