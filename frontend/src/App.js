@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { getRecipeRoutes } from "./api/recipeApi";
 import "./Styles/NavBar.css";
 import { useUser } from "./customHooks/useUser";
+import Search from "./components/search";
 
 const App = () => {
   const user = useUser();
@@ -96,6 +97,9 @@ const App = () => {
             <Route key={route.hash} path={`/recipe/${route.hash}`} element={<Recipe route={route.hash} />}></Route>
           ))
         }
+
+<Route path='/search' element={<Search />}></Route>
+
       </Routes>
     </Router>
   );
