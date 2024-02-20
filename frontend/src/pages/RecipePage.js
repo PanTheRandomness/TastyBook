@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useToken } from '../customHooks/useToken';
+import { useUser } from '../customHooks/useUser';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 import '../Styles/Ellipsis.css';
@@ -8,8 +9,9 @@ import EllipsisMenu from '../components/EllipsisMenu';
 
 const Recipe = (props) =>{
     const { route } = props;
-    const [token,] = useToken();
+    const [token] = useToken();
     const navigate = useNavigate();
+    const user = useUser();
     
     //esimerkkiresepti kehitystä varten, poista tiedot kun reseptejä voidaan tarkkailla
     //TODO: Miten tämä poistetaan?
@@ -47,6 +49,7 @@ const Recipe = (props) =>{
                 if (response.ok) {
                     const r = await response.json();
                     setRecipe(r);
+
                 } else {
                     throw new Error('Recipe not found');
                 }
@@ -111,7 +114,7 @@ const RecipeHead = (props) =>{
         <div className='recipe-head'>
             <div>
                 <h1>{recipe.header} {/*<img src='rating_star.png' alt="Star Rating"/>{recipe.rating}*/}</h1>
-                <EllipsisMenu onDelete={props.onDelete} onEdit={props.onEdit}/>
+                <EllipsisMenu onDelete={props.onDelete} onEdit={props.onEdit} creator={recipe.username} />
             </div>
             <p>{recipe.description}</p>
             <p> Created By: {recipe.username} <br/> 
@@ -158,6 +161,7 @@ const RecipeSteps = (props) =>{
         </div>
     );
 }
+
 /*
 const RecipeReviews = (props) =>{
     //HUOM! Mieti asettelu!
@@ -180,7 +184,5 @@ const RecipeReviews = (props) =>{
     );
 }
 */
-
-
 
 export { Recipe, RecipeHead, RecipeIngredients, RecipeSteps };
