@@ -11,9 +11,17 @@ export const register = async (username, name, email, password) => {
         });
 
         //kaksi eri erroria, toinen että säpo ja username jo käytössä, toinen että serveri kaatui
+       
         if (!response.ok) {
-            throw new Error(`Registering failed: ${response.statusText}`);
+            if (response.status === 409) {
+                // Käyttäjätunnus tai sähköposti on jo käytössä
+                throw new Error("Username or email is already in use.");
+            } else {
+                // Muut virhetilanteet
+                throw new Error(`Registering failed: ${response.statusText}`);
+            }
         }
+
 
         return response.json();
     } catch (error) {

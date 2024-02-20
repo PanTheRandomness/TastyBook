@@ -54,6 +54,21 @@ describe('register function', () => {
     });
 });
 
+    test('should throw an error with "Email or username is already in use." message if registration fails due to duplicate email or username', async () => {
+      // Arrange
+      const errorMessage = 'Conflict';
+      fetch.mockResolvedValueOnce({
+          ok: false,
+          status: 409,
+          statusText: 'Conflict',
+      });
+
+      // Act and Assert
+      await expect(userApi.register('testuser', 'Test User', 'test@example.com', 'testpassword')).rejects.toThrowError(
+          'Email or username is already in use.'
+      );
+    });
+
 //LOGIN-FUNKTION TESTAUS
 
 describe('login', () => {
