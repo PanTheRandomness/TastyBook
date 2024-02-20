@@ -312,11 +312,11 @@ const AddRecipe = (props) =>{
                 <tbody className='recipeform-container'>
                     <tr className='recipeform-item'>
                         <th>Recipe name:</th>
-                        <td><input className="recipeinput" type='text' value={name} onChange={(e) => setName(e.target.value)} /></td>
+                        <td><input data-testid="recipeNameInput" className="recipeinput" type='text' value={name} onChange={(e) => setName(e.target.value)} /></td>
                     </tr>
                     <tr className='recipeform-item'>
                         <th>Recipe description:</th>
-                        <td><textarea className="recipeinput" rows="10" cols="50" value={description} onChange={(e) => setDescription(e.target.value)} /></td>
+                        <td><textarea data-testid="recipeDescriptionInput" className="recipeinput" rows="10" cols="50" value={description} onChange={(e) => setDescription(e.target.value)} /></td>
                     </tr>
                     <tr className='recipeform-item'>
                         <th>Visibility:</th>
@@ -332,10 +332,10 @@ const AddRecipe = (props) =>{
                         <th>Recipe duration:</th>
                         <td>
                             <label>
-                                <input className="recipeinput" type='number' value={durationH} min="0" max="200" onChange={(e) => handleHoursChange(e)} /> hours 
+                                <input data-testid="recipeHoursInput" className="recipeinput" type='number' value={durationH} min="0" max="200" onChange={(e) => handleHoursChange(e)} /> hours 
                             </label> <br/>
                             <label>
-                                <input className="recipeinput" type='number' value={durationMin} min="0" max="59" onChange={(e) => handleMinutesChange(e)} /> minutes
+                                <input data-testid="recipeMinutesInput" className="recipeinput" type='number' value={durationMin} min="0" max="59" onChange={(e) => handleMinutesChange(e)} /> minutes
                             </label>
                         </td>
                     </tr>
@@ -350,21 +350,21 @@ const AddRecipe = (props) =>{
                         <td>
                             {ingredients.length < 1 ? null : <RecipeIngredients ingredients={ingredients} page="recipeform" onEdit={editIngredient} onRemove={removeIngredient}/>}
                         </td>
-                        <td><button className='addbutton' onClick={openModalI}>Add ingredient</button></td>
+                        <td><button data-testid="addIngredient" className='addbutton' onClick={openModalI}>Add ingredient</button></td>
                     </tr>
                     <tr className='recipeform-item'>
                         <th>Steps:</th>
                         <td>
                             {steps.length < 1 ? null : <RecipeSteps steps={steps} onEdit={editStep} onRemove={removeStep}/>}
                         </td>
-                        <td><button className='addbutton' onClick={openModalS}>Add step</button></td>
+                        <td><button data-testid="addStep" className='addbutton' onClick={openModalS}>Add step</button></td>
                     </tr>
                     <tr className='recipeform-item'>
                         <th>Keywords:</th>
                         <td>
                             {keywords.length < 1 ? null : <RecipeKeywords keywords={keywords} onEdit={editKeyword} onRemove={removeKeyword}/>}
                         </td>
-                        <td><button className='addbutton' onClick={openModalK}>Add keyword</button></td>
+                        <td><button data-testid="addKeyword" className='addbutton' onClick={openModalK}>Add keyword</button></td>
                     </tr>
                     <tr>
                         <td>
