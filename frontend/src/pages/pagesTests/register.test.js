@@ -55,7 +55,7 @@ describe('Register component', () => {
     const email = 'testemail';
     const username = 'testuser';
     const password = 'testpassword';
-    const errorMessage = 'Invalid credentials';
+    const errorMessage = 'Username or email is already in use.';
     register.mockRejectedValueOnce(new Error(errorMessage));
 
     // Act
