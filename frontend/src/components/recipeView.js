@@ -6,7 +6,8 @@ const RecipeView = (props) => {
     return (
         <NavLink className={"recipeView"} to={`/recipe/${recipe.hash}`}>
             <h3>{recipe.header}</h3>
-            <div>By: {recipe.username}</div>
+            { recipe.username ? <div>By: {recipe.username}</div> :
+            <div>By: Deleted user</div> }
         </NavLink>
     );
 }
