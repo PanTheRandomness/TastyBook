@@ -6,6 +6,7 @@ import '../Styles/Recipe.css';
 import '../Styles/Ellipsis.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
+import { fetchRecipe, removeRecipe } from '../api/recipeApi';
 
 const Recipe = (props) =>{
     const { route } = props;
@@ -39,20 +40,10 @@ const Recipe = (props) =>{
 
     useEffect(()=>{
         const getRecipe = async () =>{
-            const requestOptions ={
-                headers: {
-                    'Authorization' : "Bearer " + token
-                }
-            }
             try {
-                const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
-                if (response.ok) {
-                    const r = await response.json();
-                    setRecipe(r);
+                const response = await fetchRecipe(token, route);
+                setRecipe(response);
 
-                } else {
-                    throw new Error('Recipe not found');
-                }
             } catch (error) {
                 window.alert("An error occurred while loading recipe: " + error);
             }
@@ -61,23 +52,16 @@ const Recipe = (props) =>{
     },[route]);
 
     const deleteRecipe = async () =>{
-        const requestOptions = {
-            method:'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization' : "Bearer " + token
-            }
-        };
-
         try {
             console.log("Starting deletion...");
-            const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
+            const response = await removeRecipe(token, route);
             if(response.ok){
                 console.log("Recipe deleted successfully.");
                 navigate("/");
             }
+
         } catch (error) {
-            window.alert("Unable to delete recipe: ", error);
+            window.alert("Unable to delete recipe: " + error);
         }
     }
 

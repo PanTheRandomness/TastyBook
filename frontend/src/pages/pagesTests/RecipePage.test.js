@@ -1,6 +1,7 @@
 import * as router from 'react-router';
 import { render, fireEvent, waitFor, screen} from '@testing-library/react';
 import { Recipe } from '../RecipePage';
+import { fetchRecipe, removeRecipe } from '../../api/recipeApi';
 
 describe('RecipePage component', () => {
     const navigate = jest.fn()

@@ -40,16 +40,19 @@ const EllipsisMenu = (props) => {
   
   return (
     <div className="ellipsis-menu">
-      <div className="ellipsis" onClick={toggleMenu}>
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-      </div>
+      {
+        user && user.username === creator  ?
+        <div className="ellipsis" onClick={toggleMenu}>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+        </div>: null
+      }
       {isOpen && (
         <div className="dropdown" ref={dropdownRef}>
           <ul>
-            { user.username == creator ? <li onClick={handleEditClick}>Edit recipe</li>:null}
-            { user.username == creator ? <li onClick={handleDeleteClick} style={{color:'red'}}>Delete recipe</li>:null}
+            <li onClick={handleEditClick}>Edit recipe</li>
+            <li onClick={handleDeleteClick} style={{color:'red'}}>Delete recipe</li>
           </ul>
         </div>
       )}
