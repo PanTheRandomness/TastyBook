@@ -1,5 +1,6 @@
 const { getRecipeRoutes } = require("../recipeApi");
 const { getRecipeViews } = require("../recipeApi");
+const { fetchRecipe } = require("../recipeApi");
 const BASE_URL = "http://localhost:3004";
 
 describe("getRecipeRoutes", () => {
@@ -94,3 +95,56 @@ describe("getRecipeViews", () => {
     });
 });
 
+//fetchRecipe-testit
+
+describe("fetchRecipe", () => {
+    const BASE_URL = "http://localhost:3004";
+    const route = "mockRoute";  // Määrittele route tässä
+
+    beforeEach(() => {
+        global.fetch = jest.fn();
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should fetch recipe without token", async () => {
+        const mockRecipe = { id: 1, header: "Test Recipe" };
+    
+        fetch.mockResolvedValueOnce({
+            ok: true,
+            json: jest.fn().mockResolvedValueOnce({ recipe: mockRecipe }),
+        });
+    
+        const response = await fetchRecipe(undefined, route);
+    
+        expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/recipe/${route}`);
+        expect(response.recipe).toEqual(mockRecipe);
+    });
+
+    it("should fetch recipe with token", async () => {
+        const token = "mockToken";
+        const mockRecipe = { id: 1, header: "Test Recipe" };
+    
+        fetch.mockResolvedValueOnce({
+            ok: true,
+            json: jest.fn().mockResolvedValueOnce({ recipe: mockRecipe }),
+        });
+    
+        const response = await fetchRecipe(token, route);
+    
+        expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/recipe/${route}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        expect(response.recipe).toEqual(mockRecipe);
+    });
+
+    it("should throw an error if fetch fails", async () => {
+        global.fetch.mockImplementationOnce(() => Promise.reject(new Error("Fetch failed")));
+
+        await expect(fetchRecipe(undefined, route)).rejects.toThrow("Fetch failed");
+    });
+});
