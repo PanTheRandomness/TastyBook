@@ -8,7 +8,9 @@ const Admin = () => {
   const [token] = useToken();
   const [userIdToDelete, setUserIdToDelete] = useState('');
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
+  const [currentUserId, setCurrentUserId] = useState('');
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -24,10 +26,17 @@ const Admin = () => {
   }, [token]); 
 
   const handleDeleteUser = (userId) => {
-    setShowConfirmationModal(true);
-    setUserIdToDelete(userId);
+    const currentUser = users.find(user => user.id === userId);
+    if (currentUser && currentUser.admin) {
+      window.alert("Admin user cannot delete themselves.");
+    } else {
+      setShowConfirmationModal(true);
+      setUserIdToDelete(userId);
+    }
   };
-
+  
+  
+  
   const confirmDeletion = async (confirmed) => {
     if (confirmed) {
       try {
