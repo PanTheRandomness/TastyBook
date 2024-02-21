@@ -1,6 +1,7 @@
 import { NavLink, Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import {Register} from './pages/Register';
 import {Login} from './pages/LoginPage';
+import {NewPassword} from './pages/NewPassword';
 import Admin from './pages/Admin';
 import {AdminRegister} from './pages/AdminRegister';
 import FrontPage from "./pages/FrontPage";
@@ -81,6 +82,7 @@ const App = () => {
         <Route path='/' element={<FrontPage onLogout={onLogout} />}></Route>
         <Route path='/register' element={<Register onLogin={onLogin} />}></Route>
         <Route path='/login' element={<Login onLogin={onLogin} />}></Route>
+        <Route path='/newpassword' element={<NewPassword />}></Route>
         { user && user.role === 'admin' && <Route path='/admin' element={<Admin />}></Route> }
         <Route path='/adminregister' element={<AdminRegister onLogin={onLogin} />}></Route>
         { (user && token) && <Route path='/newrecipe' element={<AddRecipe addRecipeRoute={addRecipeRoute} />}></Route> }

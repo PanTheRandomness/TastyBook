@@ -13,9 +13,8 @@ describe('asd', () => {
 describe('Search component', () => {
     it('filters and sorts recipes correctly', () => {
         const recipes = [
-            { header: '', ingredients: '' },
-            { header: '', ingredients: '' },
-            { header: '', ingredients: '' }
+            { header: 'peruna', ingredients: 'peruna, vesi' },
+            { header: 'riisi', ingredients: 'riisi, vesi' },
         ];
 
         const { getByLabelText, getByText } = render(<Search />);
@@ -24,8 +23,8 @@ describe('Search component', () => {
 
         fireEvent.click(getByText('Search'));
 
-        expect(getByText('')).toBeInTheDocument();
-        expect(getByText('')).toBeInTheDocument();
+        expect(getByText('peruna')).toBeInTheDocument();
+        expect(getByText('riisi')).toBeInTheDocument();
 
         expect(queryByText('No recipes available to search')).not.toBeInTheDocument();
     });
@@ -37,5 +36,4 @@ describe('Search component', () => {
 
         expect(getByText('No recipes available to search')).toBeInTheDocument();
     });
-});
-*/
+}); */
