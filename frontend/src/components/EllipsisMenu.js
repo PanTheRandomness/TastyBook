@@ -39,14 +39,15 @@ const EllipsisMenu = (props) => {
   };
   
   return (
-    <div className="ellipsis-menu">{
-      user && user.username == creator  ?
-      <div className="ellipsis" onClick={toggleMenu}>
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-      </div>: null
-    }
+    <div className="ellipsis-menu">
+      {
+        user && user.username == creator  ?
+        <div className="ellipsis" onClick={toggleMenu}>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+        </div>: null
+      }
       {isOpen && (
         <div className="dropdown" ref={dropdownRef}>
           <ul>
@@ -55,7 +56,7 @@ const EllipsisMenu = (props) => {
           </ul>
         </div>
       )}
-      </div>
+    </div>
   );
 };
 
