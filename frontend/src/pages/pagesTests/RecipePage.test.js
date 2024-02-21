@@ -29,7 +29,7 @@ describe('RecipePage component', () => {
       
         // Odotetaan, että resepti latautuu ja sen tiedot näkyvät
         await waitFor(() => {
-            const headerElement = screen.getByText(mockRecipe.header);
+            const headerElement = screen.getByRole(mockRecipe.header);
             expect(headerElement).toBeInTheDocument();
         
             const descriptionElement = screen.getByText(mockRecipe.description);
