@@ -33,3 +33,40 @@ export const getRecipeViews = async (token) => {
         throw error;
     }
 }
+
+export const fetchRecipe = async (token, route) =>{
+    try{
+        if(token) {
+            let response = await fetch(`${BASE_URL}/api/recipe/${route}`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if(!response.ok){
+                throw new Error('Recipe not found');
+            }
+            return response.json();
+        }
+    } catch (error){
+        throw error;
+    }
+}
+
+export const removeRecipe = async (token, route) =>{
+    try{
+        if(token){
+            let response = await fetch(`${BASE_URL}/api/recipe/${route}`, {
+                method:'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization' : "Bearer " + token
+                }
+            });
+
+            return response.json();
+        }
+    } catch(error){
+        throw error;
+    }
+}
