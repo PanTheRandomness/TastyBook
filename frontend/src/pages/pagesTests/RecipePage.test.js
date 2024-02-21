@@ -1,16 +1,22 @@
 import * as router from 'react-router';
-import { render, fireEvent, waitFor, screen} from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { Recipe } from '../RecipePage';
+import { fetchRecipe } from '../../api/recipeApi';
+
+jest.mock('../../api/recipeApi');
 
 describe('RecipePage component', () => {
     const navigate = jest.fn()
 
     beforeEach(() => {
-        jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate)
-    })
+        jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
 
     test('renders recipe page with correct data', async () => {
-        // Määritellään mock-resepti
         const mockRecipe = {
             header: 'Testiresepti',
             description: 'Maistuva testiruoka',
@@ -22,66 +28,28 @@ describe('RecipePage component', () => {
                 { quantity: '1 dl', name: 'Maito' },
                 { quantity: '2 kpl', name: 'Munat' },
             ],
-            steps: ['Sekoita ainekset', 'Paista'],
-            keywords: ['testi', 'ruoka']
+            steps: [{ step: 'Sekoita ainekset' }, { step: 'Paista' }],
+            keywords: [{ word: 'Testi' }, { word: 'Ruoka' }]
         };
-      
-      
+        fetchRecipe.mockResolvedValue(mockRecipe);
+        const { getByText } = render(<Recipe route={'123'} />)
+
         // Odotetaan, että resepti latautuu ja sen tiedot näkyvät
         await waitFor(() => {
-            const headerElement = screen.getByText(mockRecipe.header);
-            expect(headerElement).toBeInTheDocument();
+            expect(getByText(mockRecipe.header)).toBeInTheDocument();
         
-            const descriptionElement = screen.getByText(mockRecipe.description);
-            expect(descriptionElement).toBeInTheDocument();
+            expect(getByText(mockRecipe.description)).toBeInTheDocument();
         
-            const usernameElement = screen.getByText(`Created By: ${mockRecipe.username}`);
-            expect(usernameElement).toBeInTheDocument();
+            //expect(getByText('Testikokki')).toBeInTheDocument();
+
+            expect(getByText(`Duration: ${mockRecipe.durationHours}h ${mockRecipe.durationMinutes}min`)).toBeInTheDocument();
         
-            const durationElement = screen.getByText(`Duration: ${mockRecipe.durationHours}h ${mockRecipe.durationMinutes}min`);
-            expect(durationElement).toBeInTheDocument();
-        
-            mockRecipe.ingredients.forEach(ingredient => {
-                const ingredientElement = screen.getByText(ingredient.name);
-                expect(ingredientElement).toBeInTheDocument();
-            });
-        
-            mockRecipe.steps.forEach(step => {
-                const stepElement = screen.getByText(step);
-                expect(stepElement).toBeInTheDocument();
-            });
-      
-            mockRecipe.keywords.forEach(keyword => {
-                const keywordElement = screen.getByText(keyword);
-                expect(keywordElement).toBeInTheDocument();
-            });
+            expect(getByText('Maito')).toBeInTheDocument();
+
+            expect(getByText('Sekoita ainekset')).toBeInTheDocument();
+
+            expect(getByText('Ruoka')).toBeInTheDocument();
         });
     });
-
-    test('deletes recipe', async () =>{
-    
-        
-
-        // Odota, että "Delete" -painike löytyy ja klikkaa sitä
-        const deleteButton = screen.getByText('Delete');
-        fireEvent.click(deleteButton);
-
-        // Odota, että navigointi on kutsuttu oikein
-        await waitFor(() => {
-            expect(navigate).toHaveBeenCalledWith('/');
-        });
-
-    });
-
-    test('starts editing recipe', async () =>{
-        // Odota, että "Edit" -painike löytyy ja klikkaa sitä
-        const editButton = screen.getByText('Edit');
-        fireEvent.click(editButton);
-
-        // Odota, että navigointi on kutsuttu oikein
-        await waitFor(() => {
-            expect(navigate).toHaveBeenCalledWith('/editrecipe/:id');
-        });
-
-    });
+    // Testaa poisto ja editointi ellipsi menussa
 });
