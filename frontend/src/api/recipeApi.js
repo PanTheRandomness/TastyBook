@@ -48,6 +48,14 @@ export const fetchRecipe = async (token, route) =>{
             }
             return response.json();
         }
+        else{
+            let response = await fetch(`${BASE_URL}/api/recipe/${route}`);
+
+            if(!response.ok){
+                throw new Error('Recipe not found');
+            }
+            return response.json();
+        }
     } catch (error){
         throw error;
     }
@@ -63,6 +71,10 @@ export const removeRecipe = async (token, route) =>{
                     'Authorization' : "Bearer " + token
                 }
             });
+
+            if (!response.ok) {
+                throw new Error(`Deletion failed: ${response.statusText}`);
+            }
 
             return response.json();
         }

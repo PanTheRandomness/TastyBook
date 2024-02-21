@@ -55,9 +55,11 @@ const Recipe = (props) =>{
         try {
             console.log("Starting deletion...");
             const response = await removeRecipe(token, route);
-            console.log("Recipe deleted successfully.");
-            navigate("/");
-            
+            if(response.ok){
+                console.log("Recipe deleted successfully.");
+                navigate("/");
+            }
+
         } catch (error) {
             window.alert("Unable to delete recipe: ", error);
         }
