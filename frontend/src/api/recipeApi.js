@@ -76,7 +76,7 @@ export const removeRecipe = async (token, route) =>{
                 throw new Error(`Deletion failed: ${response.statusText}`);
             }
 
-            return response.json();
+            return response;
         }
     } catch(error){
         throw error;

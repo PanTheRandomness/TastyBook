@@ -61,7 +61,7 @@ const Recipe = (props) =>{
             }
 
         } catch (error) {
-            window.alert("Unable to delete recipe: ", error);
+            window.alert("Unable to delete recipe: " + error);
         }
     }
 
