@@ -8,9 +8,7 @@ const Admin = () => {
   const [token] = useToken();
   const [userIdToDelete, setUserIdToDelete] = useState('');
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [error] = useState(null);
-  const [currentUserId, setCurrentUserId] = useState('');
-
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -18,7 +16,7 @@ const Admin = () => {
         const response = await getAllUsers(token);
         setUsers(response);
       } catch (error) {
-        window.alert("Error fetching user data.");
+        setError("Error fetching user data.");
       }
     };
   
@@ -28,14 +26,12 @@ const Admin = () => {
   const handleDeleteUser = (userId) => {
     const currentUser = users.find(user => user.id === userId);
     if (currentUser && currentUser.admin) {
-      window.alert("Admin user cannot delete themselves.");
+      setError("Admins cannot remove admins");
     } else {
       setShowConfirmationModal(true);
       setUserIdToDelete(userId);
     }
   };
-  
-  
   
   const confirmDeletion = async (confirmed) => {
     if (confirmed) {
@@ -44,7 +40,7 @@ const Admin = () => {
         setUsers(users.filter(user => user.id !== userIdToDelete));
         setShowConfirmationModal(false);
       } catch (error) {
-        window.alert("Error deleting user");        
+        setError("Error deleting user");        
       }
     } else {
       setShowConfirmationModal(false);
@@ -54,7 +50,7 @@ const Admin = () => {
   return (
     <div className="adminContainer">
       <h2>Admin Page</h2>
-      {error && <p className="error-message">{error}</p>}
+      {error && <div className="error-message">{error}</div>}
       <div className="adminHead">
         <table>
           <thead>
