@@ -1,6 +1,7 @@
 const { getRecipeRoutes } = require("../recipeApi");
 const { getRecipeViews } = require("../recipeApi");
 const { fetchRecipe } = require("../recipeApi");
+const { removeRecipe } = require("../recipeApi");
 const BASE_URL = "http://localhost:3004";
 
 describe("getRecipeRoutes", () => {
@@ -99,7 +100,7 @@ describe("getRecipeViews", () => {
 
 describe("fetchRecipe", () => {
     const BASE_URL = "http://localhost:3004";
-    const route = "mockRoute";  // Määrittele route tässä
+    const route = "mockRoute";  
 
     beforeEach(() => {
         global.fetch = jest.fn();
@@ -150,3 +151,56 @@ describe("fetchRecipe", () => {
 });
 
 //removeRecipe-testit
+
+global.fetch = jest.fn();
+
+describe("removeRecipe", () => {
+    const BASE_URL = "http://localhost:3004";
+    const route = "mockRoute";
+    const token = "mockToken";
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should remove recipe with token", async () => {
+
+        const expectedFetchOptions = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        };
+
+        global.fetch.mockResolvedValueOnce({
+            ok: true,
+            json: jest.fn().mockResolvedValueOnce({ message: "Recipe deleted successfully" }),
+        });
+
+        const response = await removeRecipe(token, route);
+        expect(global.fetch).toHaveBeenCalledWith(`${BASE_URL}/api/recipe/${route}`, expectedFetchOptions);
+        const responseData = await response.json();
+        expect(responseData.message).toEqual("Recipe deleted successfully");
+    });
+
+    it("should throw an error if deletion fails", async () => {
+        global.fetch.mockRejectedValueOnce(new Error("Deletion failed"));
+
+        await expect(removeRecipe(token, route)).rejects.toThrow("Deletion failed");
+
+        expect(global.fetch).toHaveBeenCalledWith(`${BASE_URL}/api/recipe/${route}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+    });
+
+    it("should not call fetch if token is undefined", async () => {
+         await removeRecipe(undefined, route);
+
+        expect(global.fetch).not.toHaveBeenCalled();
+    });
+});
