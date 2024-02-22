@@ -65,15 +65,10 @@ const Recipe = (props) =>{
         }
     }
 
-    const editRecipe = () =>{
-        console.log("Starting edit...");
-        navigate("/editrecipe/" + route);
-    }
-
     return(
         <div>
             <div className='recipe-container'>
-                <RecipeHead recipe={recipe} onDelete={deleteRecipe} onEdit={editRecipe}/>
+                <RecipeHead recipe={recipe} onDelete={deleteRecipe} route={route}/>
                 <div className='recipe-foot'>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={recipe.ingredients} page="recipepage"/>
@@ -98,7 +93,7 @@ const RecipeHead = (props) =>{
         <div className='recipe-head'>
             <div>
                 <h1>{recipe.header} {/*<img src='rating_star.png' alt="Star Rating"/>{recipe.rating}*/}</h1>
-                <EllipsisMenu onDelete={props.onDelete} onEdit={props.onEdit} creator={recipe.username} />
+                <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
             </div>
             <p>{recipe.description}</p>
             <p> Created By: {recipe.username} <br/> 

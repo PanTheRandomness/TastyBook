@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useUser } from '../customHooks/useUser';
+import { useNavigate } from 'react-router-dom';
 
 const EllipsisMenu = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const user = useUser();
   const creator = props.creator;
+  const route = props.route;
+  const navigate = useNavigate();
   
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -28,11 +31,13 @@ const EllipsisMenu = (props) => {
   const handleEditClick = () => {
     console.log('Edit recipe selected...');
     setIsOpen(false);
-    props.onEdit();
+    console.log("Starting edit...");
+    navigate("/editrecipe/" + route);
   };
 
   const handleDeleteClick = () => {
     setIsOpen(false);
+    //Modaaliin
     if(window.confirm("Are you certain you want to delete this recipe? Deletion cannot be undone.")){
       props.onDelete();
     }
@@ -42,7 +47,7 @@ const EllipsisMenu = (props) => {
     <div className="ellipsis-menu">
       {
         user && user.username === creator  ?
-        <div className="ellipsis" onClick={toggleMenu}>
+        <div className="ellipsis" onClick={toggleMenu} data-testid="ellipsis">
           <div className="dot"></div>
           <div className="dot"></div>
           <div className="dot"></div>

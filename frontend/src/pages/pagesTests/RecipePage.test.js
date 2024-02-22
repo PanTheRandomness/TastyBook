@@ -51,5 +51,4 @@ describe('RecipePage component', () => {
             expect(getByText('Ruoka')).toBeInTheDocument();
         });
     });
-    // Testaa poisto ja editointi ellipsi menussa
 });
