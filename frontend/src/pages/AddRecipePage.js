@@ -395,7 +395,7 @@ const AddRecipe = (props) =>{
 const SaveDialog = ({ isOpen, onClose, onConfirm, title}) =>{
     let text = "Are you sure you want to save this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.";
     return (
-        <div className={`modal ${isOpen ? 'open' : ''}`}>
+        <div className={`modal ${isOpen ? 'open' : ''}`} data-testid={"save-dialog"}>
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
                 <h2 className='modal-header'>{title}</h2>

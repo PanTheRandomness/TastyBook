@@ -53,8 +53,8 @@ const EllipsisMenu = (props) => {
       {isOpen && (
         <div className="dropdown" ref={dropdownRef}>
           <ul>
-            <li onClick={handleEditClick}>Edit recipe</li>
-            <li onClick={handleDeleteClick} style={{color:'red'}}>Delete recipe</li>
+            <li onClick={handleEditClick} data-testid={"editrecipe"}>Edit recipe</li>
+            <li onClick={handleDeleteClick} style={{color:'red'}} data-testid={"deleterecipe"}>Delete recipe</li>
           </ul>
         </div>
       )}

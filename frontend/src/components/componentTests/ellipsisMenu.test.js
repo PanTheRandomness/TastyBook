@@ -32,23 +32,21 @@ describe('EllipsisMenu component', () => {
     });
 
     test('closes menu when clicked outside', () => {
-        const { getByText, queryByText, getByTestId } = render(<EllipsisMenu {...mockProps} />);
+        const { queryByText, getByTestId } = render(<EllipsisMenu {...mockProps} />);
         
         fireEvent.click(getByTestId('ellipsis'));
-        expect(getByText('Edit recipe')).toBeInTheDocument();
+        expect(getByTestId('editrecipe')).toBeInTheDocument();
 
         fireEvent.mouseDown(document);
         expect(queryByText('Edit recipe')).not.toBeInTheDocument();
     });
 
     test('confirms deletion when delete is clicked', () => {
-        const { getByText, getByTestId } = render(<EllipsisMenu {...mockProps} />);
+        const { getByTestId } = render(<EllipsisMenu {...mockProps} />);
         
         fireEvent.click(getByTestId('ellipsis'));
-        fireEvent.click(getByText('Delete recipe'));
+        fireEvent.click(getByTestId('deleterecipe'));
 
-        //Muokkaa, kun dialogi on modaalissa!
-        expect(window.confirm).toBeCalledWith("Are you certain you want to delete this recipe? Deletion cannot be undone.");
         expect(mockProps.onDelete).toBeCalled();
     });
 
@@ -56,10 +54,10 @@ describe('EllipsisMenu component', () => {
         const navigateMock = jest.fn();
         router.useNavigate.mockReturnValue(navigateMock);
 
-        const { getByTestId, getByText } = render(<EllipsisMenu {...mockProps} />);
+        const { getByTestId } = render(<EllipsisMenu {...mockProps} />);
         
         fireEvent.click(getByTestId('ellipsis'));
-        fireEvent.click(getByText('Edit recipe'));
+        fireEvent.click(getByTestId('editrecipe'));
 
         expect(navigateMock).toBeCalledWith("/editrecipe/recipeHash123");
     });

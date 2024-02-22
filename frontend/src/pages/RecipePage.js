@@ -180,7 +180,7 @@ const RecipeReviews = (props) =>{
 
 const DeleteDialog = ({ isOpen, onClose, onConfirm}) =>{
     return (
-        <div className={`modal ${isOpen ? 'open' : ''}`}>
+        <div className={`modal ${isOpen ? 'open' : ''}`} data-testid={"delete-dialog"}>
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
                 <h2 className='modal-header'>Do you want to delete this recipe?</h2>
