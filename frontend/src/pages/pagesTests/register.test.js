@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import { Register } from '../Register';
 import { register } from '../../api/userApi';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -49,7 +49,6 @@ describe('Register component', () => {
 
   test('should log error when register fails', async () => {
     // Arrange
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
     const onLoginMock = jest.fn();
     const name = 'testname';
     const email = 'testemail';
@@ -80,6 +79,9 @@ describe('Register component', () => {
     fireEvent.submit(getByTestId('register-button'));
 
     // Assert
-    await waitFor(() => expect(alertMock).toHaveBeenCalledWith('Registering failed.'));
+    await waitFor(async () => {
+      const errorElement = await screen.findByText('Email or username is already in use.');
+      expect(errorElement).toBeInTheDocument();
+    });
   });
 });

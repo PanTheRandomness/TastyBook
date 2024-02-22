@@ -1,15 +1,15 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import { AdminRegister } from '../AdminRegister';
 import { adminregister } from '../../api/userApi';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-// Mock the register function
+
 jest.mock('../../api/userApi', () => ({
   adminregister: jest.fn(),
 }));
 
-describe('Register component', () => {
+describe('AdminRegister component', () => {
   test('should call onLogin with token and navigate to "/" when registering succeeds', async () => {
     // Arrange
     const token = 'mockedToken';
@@ -40,8 +40,8 @@ describe('Register component', () => {
       target: { value: password },
     });
     fireEvent.change(getByPlaceholderText('api key'), {
-        target: { value: api_key },
-      });
+      target: { value: api_key },
+    });
     fireEvent.submit(getByTestId('register-button'));
 
     // Assert
@@ -53,7 +53,6 @@ describe('Register component', () => {
 
   test('should log error when adminregister fails', async () => {
     // Arrange
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
     const onLoginMock = jest.fn();
     const name = 'testname';
     const email = 'testemail';
@@ -64,29 +63,33 @@ describe('Register component', () => {
     adminregister.mockRejectedValueOnce(new Error(errorMessage));
 
     // Act
-    const { getByPlaceholderText, getByTestId } = render(
+    render(
       <Router>
         <AdminRegister onLogin={onLoginMock} />
       </Router>
     );
-    fireEvent.change(getByPlaceholderText('name'), {
+
+    fireEvent.change(screen.getByPlaceholderText('name'), {
       target: { value: name },
     });
-    fireEvent.change(getByPlaceholderText('email'), {
+    fireEvent.change(screen.getByPlaceholderText('email'), {
       target: { value: email },
     });
-    fireEvent.change(getByPlaceholderText('username'), {
+    fireEvent.change(screen.getByPlaceholderText('username'), {
       target: { value: username },
     });
-    fireEvent.change(getByPlaceholderText('password'), {
+    fireEvent.change(screen.getByPlaceholderText('password'), {
       target: { value: password },
     });
-    fireEvent.change(getByPlaceholderText('api key'), {
-        target: { value: api_key },
-      });
-    fireEvent.submit(getByTestId('register-button'));
+    fireEvent.change(screen.getByPlaceholderText('api key'), {
+      target: { value: api_key },
+    });
+    fireEvent.submit(screen.getByTestId('register-button'));
 
     // Assert
-    await waitFor(() => expect(alertMock).toHaveBeenCalledWith('Registering failed.'));
+    await waitFor(async () => {
+      const errorElement = await screen.findByText("Registering failed.");
+      expect(errorElement).toBeInTheDocument();
+    });
   });
 });
