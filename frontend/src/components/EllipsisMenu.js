@@ -37,10 +37,7 @@ const EllipsisMenu = (props) => {
 
   const handleDeleteClick = () => {
     setIsOpen(false);
-    //Modaaliin
-    if(window.confirm("Are you certain you want to delete this recipe? Deletion cannot be undone.")){
-      props.onDelete();
-    }
+    props.onDelete();
   };
   
   return (

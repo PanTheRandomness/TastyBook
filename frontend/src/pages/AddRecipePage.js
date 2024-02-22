@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { RecipeKeywords, KeywordDialog } from '../components/addRecipeComponents/RecipeKeywords';
 import { RecipeSteps, StepDialog } from '../components/addRecipeComponents/RecipeSteps';
 import { RecipeIngredients, IngredientDialog } from '../components/addRecipeComponents/RecipeIngredients';
+import ErrorModal from '../components/ErrorModal';
 
 const AddRecipe = (props) =>{
     const { addRecipeRoute, route } = props;
@@ -23,6 +24,7 @@ const AddRecipe = (props) =>{
     const [isModalIOpen, setModalIOpen] = useState(false);
     const [isModalSOpen, setModalSOpen] = useState(false);
     const [isModalKOpen, setModalKOpen] = useState(false);
+    const [isSaveModalOpen, setSaveModalOpen] = useState(false);
 
     const openModalI = () => setModalIOpen(true);
     const closeModalI = () => {setModalIOpen(false); setQt(0); setUnit(''); setIng(''); setEditingIngredient(false);}
@@ -30,6 +32,8 @@ const AddRecipe = (props) =>{
     const closeModalS = () => {setModalSOpen(false); setText(''); setEditingStep(false);}
     const openModalK = () => setModalKOpen(true);
     const closeModalK = () => {setModalKOpen(false); setW(''); setEditingKeyword(false);}
+    const openSaveModal = () => setSaveModalOpen(true);
+    const closeSaveModal = () => setSaveModalOpen(false);
     
     const [text, setText] = useState('');
     const [w, setW] = useState('');
@@ -46,6 +50,11 @@ const AddRecipe = (props) =>{
     const navigate = useNavigate();
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState(null);
+    
+    const [isErrorModalOpen, setErrorModalOpen] = useState(false);
+    const [errorText, setErrorText] = useState('');
+    const openErrorModal = () => setErrorModalOpen(true);
+    const closeErrorModal = () => {setErrorModalOpen(false); setErrorText('');}
 
     useEffect(()=>{
         const loadrecipe = async () =>{
@@ -72,7 +81,8 @@ const AddRecipe = (props) =>{
                     throw new Error('Recipe not found');
                 }
             } catch (error) {
-                window.alert("An error occurred while loading recipe: " + error);
+                setErrorText("An error occurred while loading recipe: " + error);
+                openErrorModal();
             }
         }
         if(route)loadrecipe();
@@ -105,7 +115,8 @@ const AddRecipe = (props) =>{
                 navigate("/recipe/" + data.hash);
             }
         } catch (error) {
-            window.alert("Unable to post recipe: " + error);
+            setErrorText("Unable to post recipe: " + error);
+            openErrorModal();
         }
     }
 
@@ -135,13 +146,11 @@ const AddRecipe = (props) =>{
             if(response.ok){
                 navigate("/recipe/" + route);
                 setEditing(false);
-            } else {
-                console.log("Response status:", response.status);
-                window.alert("Failed to save modified recipe. Status: " + response.status);
             }
         } catch (error) {
             console.error("Error while saving modified recipe:", error);
-            window.alert("Unable to post modified recipe: " + error);
+            setErrorText("Unable to post modified recipe: " + error);
+            openErrorModal();
         }
     }
 
@@ -165,7 +174,8 @@ const AddRecipe = (props) =>{
             setEditingIngredient(true);
             openModalI();
         } else {
-            window.alert("Ingredient not found: " + ingredient);
+            setErrorText("Ingredient not found: " + ingredient);
+            openErrorModal();
         }
     }
 
@@ -192,7 +202,8 @@ const AddRecipe = (props) =>{
             setIngredients(newIngredients);
             console.log("Removed ingredient: ", ingredient);
         } else {
-            window.alert("Ingredient not found: ", ingredient);
+            setErrorText("Ingredient not found: " + ingredient);
+            openErrorModal();
         }
     }
 
@@ -209,7 +220,8 @@ const AddRecipe = (props) =>{
             setText(step);
             openModalS();
         } else {
-            window.alert("Step not found: " + step);
+            setErrorText("Step not found: " + step);
+            openErrorModal();
         }
     }
 
@@ -232,7 +244,8 @@ const AddRecipe = (props) =>{
     
             console.log("Removed step: " + step);
         } else {
-            window.alert("Step not found: " + step);
+            setErrorText("Step not found: " + step);
+            openErrorModal();
         }
     }
 
@@ -249,7 +262,8 @@ const AddRecipe = (props) =>{
             setW(keyword);
             openModalK();
         } else {
-            window.alert("Keyword not found: " + keyword);
+            setErrorText("Keyword not found: " + keyword);
+            openErrorModal();
         }
     }
 
@@ -273,7 +287,8 @@ const AddRecipe = (props) =>{
     
             console.log("Removed keyword: " + word);
         } else {
-            window.alert("Keyword not found: " + word);
+            setErrorText("Keyword not found: " + word);
+            openErrorModal();
         }
     }
 
@@ -294,17 +309,8 @@ const AddRecipe = (props) =>{
     }
 
     const postBtnClicked = () =>{
-        //Modaaliin nämä
-        if(editing){
-            if(window.confirm("Are you sure you want to save this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
-                saveRecipe();
-            }
-        }
-        else{
-            if(window.confirm("Are you sure you want to post this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.")){
-                postRecipe();
-            }
-        }
+        //Tässä muutos, vaikuttaako testeihin?
+        openSaveModal();
     }
 
     return(
@@ -380,8 +386,25 @@ const AddRecipe = (props) =>{
             {isModalIOpen ? <IngredientDialog isOpen={isModalIOpen} onClose={closeModalI} onAdd={addIngredient} onSaveEdited={saveEditedIngredient} editingIngredient={editingIngredient} qt={qt} onQtChange={setQt} unit={unit} onUnitChange={setUnit} ing={ing} onIngChange={setIng}/> : null}
             {isModalSOpen ? <StepDialog isOpen={isModalSOpen} onClose={closeModalS} onAdd={addStep} onSaveEdited={saveEditedStep} editingStep={editingStep} text={text} onTextChange={setText}/> : null}
             {isModalKOpen ? <KeywordDialog isOpen={isModalKOpen} onClose={closeModalK} onAdd={addKeyword}  onSaveEdited={saveEditedKeyword} editingKeyword={editingKeyword} w={w} onWChange={setW}/> : null}
+            {!isSaveModalOpen ? null : editing ? <SaveDialog isOpen={isSaveModalOpen} onClose={closeSaveModal} onConfirm={saveRecipe} title={"Do you want to save this recipe?"} /> : <SaveDialog isOpen={isSaveModalOpen} onClose={closeSaveModal} onConfirm={postRecipe} title={"Do you want to post this recipe?"}/>}
+            {isErrorModalOpen ? <ErrorModal isOpen={isErrorModalOpen} onClose={closeErrorModal} errortext={errorText} /> : null}
         </div>
     );
 }
 
-export { AddRecipe };
+const SaveDialog = ({ isOpen, onClose, onConfirm, title}) =>{
+    let text = "Are you sure you want to save this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.";
+    return (
+        <div className={`modal ${isOpen ? 'open' : ''}`}>
+            <div className="modal-content">
+                <span className="close" onClick={onClose}>&times;</span>
+                <h2 className='modal-header'>{title}</h2>
+                <p className='modal-text'>{text}</p>
+                <button onClick={() => onConfirm()} data-testid='confirm-button'>Confirm</button>
+                <button onClick={() => onClose()} data-testid='cancel-button'>Cancel</button>
+            </div>
+        </div>
+    );
+}
+
+export { AddRecipe, SaveDialog };

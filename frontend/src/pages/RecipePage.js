@@ -6,6 +6,7 @@ import '../Styles/Recipe.css';
 import '../Styles/Ellipsis.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
+import ErrorModal  from '../components/ErrorModal';
 import { fetchRecipe, removeRecipe } from '../api/recipeApi';
 
 const Recipe = (props) =>{
@@ -13,6 +14,14 @@ const Recipe = (props) =>{
     const [token] = useToken();
     const navigate = useNavigate();
     const user = useUser();
+    const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+    const openDeleteModal = () => setDeleteModalOpen(true);
+    const closeDeleteModal = () => setDeleteModalOpen(false);
+
+    const [isErrorModalOpen, setErrorModalOpen] = useState(false);
+    const [errorText, setErrorText] = useState('');
+    const openErrorModal = () => setErrorModalOpen(true);
+    const closeErrorModal = () => {setErrorModalOpen(false); setErrorText('');}
     
     //esimerkkiresepti kehitystä varten, poista tiedot kun reseptejä voidaan tarkkailla
     //TODO: Miten tämä poistetaan?
@@ -45,7 +54,8 @@ const Recipe = (props) =>{
                 setRecipe(response);
 
             } catch (error) {
-                window.alert("An error occurred while loading recipe: " + error);
+                setErrorText("An error occurred while loading recipe: " + error);
+                openErrorModal();
             }
         }
         getRecipe();
@@ -54,6 +64,7 @@ const Recipe = (props) =>{
     const deleteRecipe = async () =>{
         try {
             console.log("Starting deletion...");
+            closeDeleteModal();
             const response = await removeRecipe(token, route);
             if(response.ok){
                 console.log("Recipe deleted successfully.");
@@ -61,14 +72,15 @@ const Recipe = (props) =>{
             }
 
         } catch (error) {
-            window.alert("Unable to delete recipe: " + error);
+            setErrorText("An error occurred while loading recipe: " + error);
+            openErrorModal();
         }
     }
 
     return(
         <div>
             <div className='recipe-container'>
-                <RecipeHead recipe={recipe} onDelete={deleteRecipe} route={route}/>
+                <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route}/>
                 <div className='recipe-foot'>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={recipe.ingredients} page="recipepage"/>
@@ -77,6 +89,8 @@ const Recipe = (props) =>{
                     {/*<RecipeReviews reviews={recipe.reviews}/>*/}
                 </div>
             </div>
+            {isDeleteModalOpen ? <DeleteDialog isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={deleteRecipe}/>:null}
+            {isErrorModalOpen ? <ErrorModal isOpen={isErrorModalOpen} onClose={closeErrorModal} errortext={errorText} /> : null}
         </div>
     );
 }
@@ -164,4 +178,18 @@ const RecipeReviews = (props) =>{
 }
 */
 
-export { Recipe, RecipeHead, RecipeIngredients, RecipeSteps };
+const DeleteDialog = ({ isOpen, onClose, onConfirm}) =>{
+    return (
+        <div className={`modal ${isOpen ? 'open' : ''}`}>
+            <div className="modal-content">
+                <span className="close" onClick={onClose}>&times;</span>
+                <h2 className='modal-header'>Do you want to delete this recipe?</h2>
+                <p className='modal-text'>Are you certain you want to delete this recipe? Deletion cannot be undone.</p>
+                <button onClick={() => onConfirm()} data-testid='confirm-button'>Confirm</button>
+                <button onClick={() => onClose()} data-testid='cancele-button'>Cancel</button>
+            </div>
+        </div>
+    );
+}
+
+export { Recipe, RecipeHead, RecipeIngredients, RecipeSteps, DeleteDialog };
