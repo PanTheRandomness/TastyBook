@@ -1,6 +1,6 @@
 import * as router from 'react-router';
 import { render, waitFor } from '@testing-library/react';
-import { Recipe } from '../RecipePage';
+import { Recipe, DeleteDialog } from '../RecipePage';
 import { fetchRecipe } from '../../api/recipeApi';
 
 jest.mock('../../api/recipeApi');

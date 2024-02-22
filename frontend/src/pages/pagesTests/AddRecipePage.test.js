@@ -1,7 +1,7 @@
 import React from 'react';
 import * as router from 'react-router';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { AddRecipe } from '../AddRecipePage';
+import { AddRecipe, SaveDialog } from '../AddRecipePage';
 
 describe('AddRecipe component', () => {
     const navigate = jest.fn()
