@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 const NewPassword = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     const onUpdatePasswordClicked = async (event) => {
@@ -12,7 +13,7 @@ const NewPassword = () => {
 
         // Tarkista, että uudet salasanat ovat samat
         if (newPassword !== confirmNewPassword) {
-            window.alert("Passwords do not match.");
+            setError("Passwords do not match.");
             return;
         }
 
@@ -24,7 +25,7 @@ const NewPassword = () => {
             navigate('/login');
         } catch (error) {
             console.error("Password update failed.", error);
-            window.alert("Password update failed.");
+            setError("Password update failed.");
         }
     }
 
@@ -32,6 +33,7 @@ const NewPassword = () => {
         <div className="passwordBody">
             <form className="passwordForm" onSubmit={onUpdatePasswordClicked}>
                 <h1>Enter new password</h1>
+                {error && <div className="error-message">{error}</div>}
                 <input
                     className="passwordInput"
                     placeholder="New password"

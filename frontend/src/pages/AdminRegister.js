@@ -10,6 +10,7 @@ const AdminRegister = ({ onLogin }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [api_key, setApi_key] = useState('');
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     const onRegisterClicked = async (event) => {
@@ -20,7 +21,12 @@ const AdminRegister = ({ onLogin }) => {
             onLogin(token);
             navigate("/");
         } catch (error) {
-            window.alert("Registering failed.");
+            if (error.message === "Username or email is already in use.") {
+                setError("Email or username is already in use.");
+            } else {
+                
+                setError("Registering failed.");
+            }
           
         }
     };
@@ -30,6 +36,7 @@ const AdminRegister = ({ onLogin }) => {
             <div className="registerForm">
             <form onSubmit={onRegisterClicked}>
                 <h1>Admin register</h1>
+                {error && <div className="error-message">{error}</div>}
                 <input className="registerForminput" placeholder="name" value={name} onChange={e => setName(e.target.value)} />
                 <input className="registerForminput" placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
                 <input  className="registerForminput" placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />

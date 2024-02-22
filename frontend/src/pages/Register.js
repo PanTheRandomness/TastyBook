@@ -10,6 +10,7 @@ const Register = ({ onLogin }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const [error, setError] = useState(null);
 
     const onRegisterClicked = async (event) => {
         event.preventDefault();
@@ -22,10 +23,10 @@ const Register = ({ onLogin }) => {
             navigate("/");
         } catch (error) {
             if (error.message === "Username or email is already in use.") {
-                window.alert("Email or username is already in use.");
+                setError("Email or username is already in use.");
             } else {
                 
-                window.alert("Registering failed.");
+                setError("Registering failed.");
             }
           
         }
@@ -36,6 +37,7 @@ const Register = ({ onLogin }) => {
             <div className="registerForm">
                 <form onSubmit={onRegisterClicked}>
                     <h1>Register</h1>
+                    {error && <div className="error-message">{error}</div>}
                     <input className="registerForminput" placeholder="name" value={name} onChange={e => setName(e.target.value)} />
                     <input className="registerForminput" placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
                     <input  className="registerForminput" placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />

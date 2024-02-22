@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Login = ({onLogin}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     const onLoginClicked = async (event) => {
@@ -16,7 +17,7 @@ const Login = ({onLogin}) => {
             onLogin(token);
             navigate('/');
         } catch (error) {
-            window.alert("Logging in failed.");
+            setError("Logging in failed.");
         }
     }
 
@@ -24,6 +25,7 @@ const Login = ({onLogin}) => {
     <div className="loginFormbody">
         <form className="loginForm" onSubmit={onLoginClicked}>
             <h1>Login</h1>
+            {error && <div className="error-message">{error}</div>}
             <input className="loginForminput"  placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
             <input className="loginForminput" placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
             <button className="loginFormbutton" disabled={!username || !password} data-testid="login-button">Login</button>
