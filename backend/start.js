@@ -24,6 +24,9 @@ app.use(userRoutes);
 const adminRoutes = require("./src/routes/adminRoutes");
 app.use(adminRoutes);
 
+const reviewRoutes = require("./src/routes/reviewRoutes");
+app.use(reviewRoutes);
+
 const errorHandling = require("./src/middleware/errorHandling");
 app.use(errorHandling);
 
