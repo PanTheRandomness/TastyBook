@@ -38,20 +38,17 @@ const Search = ({ token }) => {
 
   return (
     <div>
-      <h2>Recipe Search</h2>
-      <form onSubmit={handleSearch}>
-        <label>
-          Search by name or ingredients:
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </label>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Searching...' : 'Search'}
-        </button>
-      </form>
+      <h2>Recipe Search</h2> 
+      <label htmlFor="searchInput">Search by name or ingredients:  </label>
+      <input
+        id="searchInput"
+        type="text"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <button onClick={handleSearch} disabled={loading}>
+        {loading ? 'Searching...' : 'Search'}
+      </button>
       {error && (
         <div className="error-message">{error}</div>
       )}
