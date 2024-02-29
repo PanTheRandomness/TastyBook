@@ -6,12 +6,12 @@ let userMiddleware = require("../middleware/verifyUser");
 
 /*  /api/recipes GET
 
-    Palauttaa reseptien id:n, otskikon, tekijän, hashin, ja muita tietoja?
+    Palauttaa reseptien id:n, otskikon, tekijän, hashin, arvostelujen keskiarvo, ja muita tietoja?
 
     {
         recipes: [
-            { id: 1, header: "Keitto", username: "user1", hash: "123" },
-            { id: 2, header: "Paistos", username: "user2", hash: "234" }
+            { id: 1, header: "Keitto", username: "user1", hash: "123", average_rating: 3 },
+            { id: 2, header: "Paistos", username: "user2", hash: "234", average_rating: 4 }
         ]
     }
 
@@ -51,6 +51,7 @@ router.route("/api/recipe/urls").get(userMiddleware.isUserLoggedIn, ctrl.getAllR
     "modified": null,
     "durationHours": 1,
     "durationMinutes": 30,
+    "average_rating": 4,
     "ingredients": [
         {
             "id": 1,

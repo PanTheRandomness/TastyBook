@@ -36,7 +36,7 @@ describe("getRecipes", () => {
 
         const result = await getRecipes(null, true);
 
-        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes FROM recipe r LEFT JOIN user u ON r.User_id=u.id WHERE 1=1", []);
+        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id WHERE 1=1", []);
         expect(result).toEqual([{ id: 1 }, { id: 2 }]);
     });
 
@@ -46,7 +46,7 @@ describe("getRecipes", () => {
 
         const result = await getRecipes(hash, true);
 
-        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes FROM recipe r LEFT JOIN user u ON r.User_id=u.id WHERE 1=1 AND r.hash=?", [hash]);
+        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id WHERE 1=1 AND r.hash=?", [hash]);
         expect(result).toEqual([{ id: 1 }]);
     });
 
@@ -56,7 +56,7 @@ describe("getRecipes", () => {
 
         const result = await getRecipes(null, false);
 
-        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes FROM recipe r LEFT JOIN user u ON r.User_id=u.id WHERE 1=1 AND r.visibleToAll=1", []);
+        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id WHERE 1=1 AND r.visibleToAll=1", []);
         expect(result).toEqual([{ id: 1 }]);
     });
 });

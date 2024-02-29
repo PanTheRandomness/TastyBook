@@ -2,6 +2,7 @@ const sql = require("../db/recipeSQL");
 const { addRecipesKeyword, getRecipesKeywords, deleteRecipesKeywords } = require("./keywordController");
 const { addRecipesIngredient, getRecipesIngredients, deleteRecipesIngredients } = require("./ingredientController");
 const crypto = require("crypto");
+const { getReviews } = require("../db/reviewSQL");
 
 const getAllRecipes = async (req, res) => {
     try {
@@ -39,6 +40,8 @@ const getRecipe = async (req, res) => {
         recipe.steps = steps;
         const keywords = await getRecipesKeywords(recipe.id);
         recipe.keywords = keywords;
+        const reviews = await getReviews(recipe.id);
+        recipe.reviews = reviews;
 
         res.status(200).json(recipe);
     } catch (error) {

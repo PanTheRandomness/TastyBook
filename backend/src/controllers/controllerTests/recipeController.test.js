@@ -3,11 +3,13 @@ const sql = require("../../db/recipeSQL");
 const { addRecipesKeyword, getRecipesKeywords, deleteRecipesKeywords } = require("../keywordController");
 const { addRecipesIngredient, getRecipesIngredients, deleteRecipesIngredients } = require("../ingredientController");
 const crypto = require("crypto");
+const { getReviews } = require("../../db/reviewSQL");
 
 jest.mock("../../db/recipeSQL");
 jest.mock("../keywordController");
 jest.mock("../ingredientController");
 jest.mock("crypto");
+jest.mock("../../db/reviewSQL")
 
 describe("getAllRecipes", () => {
     let req, res;
@@ -131,6 +133,7 @@ describe("getRecipe", () => {
         sql.getSteps.mockResolvedValue([{ number: 1, step: "eka" }, { number: 2, step: "toka" }]);
         getRecipesIngredients.mockResolvedValue([{ id: 1, name: "potato", quantity: "5kg"}, { id: 2, name: "tomato", quantity: "2"}]);
         getRecipesKeywords.mockResolvedValue([{ id: 1, word: "Soup" }, { id: 2, word: "Meat" }]);
+        getReviews.mockResolvedValue([{ id: 1 }, { id: 2 }]);
 
         await getRecipe(req, res);
 
@@ -141,7 +144,8 @@ describe("getRecipe", () => {
                 visibleToAll: 1,
                 steps: [{ number: 1, step: "eka" }, { number: 2, step: "toka" }],
                 ingredients: [{ id: 1, name: "potato", quantity: "5kg"}, { id: 2, name: "tomato", quantity: "2"}],
-                keywords: [{ id: 1, word: "Soup" }, { id: 2, word: "Meat" }]
+                keywords: [{ id: 1, word: "Soup" }, { id: 2, word: "Meat" }],
+                reviews: [{ id: 1 }, { id: 2 }]
             }
         );
     });
@@ -153,6 +157,7 @@ describe("getRecipe", () => {
         sql.getSteps.mockResolvedValue([{ number: 1, step: "eka" }, { number: 2, step: "toka" }]);
         getRecipesIngredients.mockResolvedValue([{ id: 1, name: "potato", quantity: "5kg"}, { id: 2, name: "tomato", quantity: "2"}]);
         getRecipesKeywords.mockResolvedValue([{ id: 1, word: "Soup" }, { id: 2, word: "Meat" }]);
+        getReviews.mockResolvedValue([{ id: 1 }, { id: 2 }]);
 
         await getRecipe(req, res);
 
@@ -163,7 +168,8 @@ describe("getRecipe", () => {
                 visibleToAll: 0,
                 steps: [{ number: 1, step: "eka" }, { number: 2, step: "toka" }],
                 ingredients: [{ id: 1, name: "potato", quantity: "5kg"}, { id: 2, name: "tomato", quantity: "2"}],
-                keywords: [{ id: 1, word: "Soup" }, { id: 2, word: "Meat" }]
+                keywords: [{ id: 1, word: "Soup" }, { id: 2, word: "Meat" }],
+                reviews: [{ id: 1 }, { id: 2 }]
             }
         );
     });

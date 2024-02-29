@@ -8,7 +8,7 @@ const getAllRecipeHashes = (loggedIn) => {
 
 const getRecipes = (hash, loggedIn) => {
     let params = [];
-    let query = "SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes FROM recipe r LEFT JOIN user u ON r.User_id=u.id WHERE 1=1";
+    let query = "SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id WHERE 1=1";
     if (hash) {
         query += " AND r.hash=?";
         params.push(hash);

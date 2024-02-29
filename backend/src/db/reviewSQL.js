@@ -5,4 +5,9 @@ const addReview = (rating, text, recipeId, userId) => {
     return executeSQL(query, [rating, text, recipeId, userId]);
 }
 
-module.exports = { addReview };
+const getReviews = (recipeId) => {
+    const query = "SELECT r.id, r.rating, r.text, u.username FROM review r LEFT JOIN user u ON r.User_id=u.id WHERE r.Recipe_id=?";
+    return executeSQL(query, [recipeId]);
+}
+
+module.exports = { addReview, getReviews };
