@@ -6,14 +6,26 @@ const getAllRecipeHashes = (loggedIn) => {
     return executeSQL(query, []);
 }
 
-const getRecipes = (hash, loggedIn) => {
+const getRecipes = (hash, loggedIn, ingredient, keyword) => {
     let params = [];
-    let query = "SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id WHERE 1=1";
+    let query = "SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id";
+    if (ingredient) query += " LEFT JOIN recipesingredient ri ON ri.Recipe_id = r.id LEFT JOIN ingredient i ON ri.Ingredient_id = i.id";
+    if (keyword) query += " LEFT JOIN recipeskeyword rk ON rk.Recipe_id = r.id LEFT JOIN keyword k ON rk.Keyword_id = k.id";
+    query += " WHERE 1=1";
     if (hash) {
         query += " AND r.hash=?";
         params.push(hash);
     }
     if (!loggedIn) query += " AND r.visibleToAll=1";
+    if (ingredient) {
+        query += " AND i.name LIKE ?";
+        params.push(`%${ingredient}%`);
+    }
+    if (keyword) {
+        query += " AND k.word LIKE ?";
+        params.push(`%${keyword}%`);
+    }
+    query += " GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes";
     return executeSQL(query, params);
 }
 

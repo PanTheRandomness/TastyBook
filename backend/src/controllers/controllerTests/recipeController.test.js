@@ -15,7 +15,7 @@ describe("getAllRecipes", () => {
     let req, res;
 
     beforeEach(() => {
-        req = {};
+        req = { query: {}};
         res = {
             status: jest.fn(() => res),
             json: jest.fn(),

@@ -13,6 +13,8 @@ let userMiddleware = require("../middleware/verifyUser");
         "recipeId": 8
     }
 
+    rating pitää olla 1-5
+
     Jos token puuttuu req.headers.authorization:nista, se on väärin tai vanhentunut, palauttaa statuskoodin 401
 
     Jos sellaista reseptiä ei löytynyt, palauttaa statuskoodin 404

@@ -8,6 +8,10 @@ let userMiddleware = require("../middleware/verifyUser");
 
     Palauttaa reseptien id:n, otskikon, tekijän, hashin, arvostelujen keskiarvo, ja muita tietoja?
 
+    Reseptejä voi myös hakea avainsanalla tai ainesosalla
+    Esimerkki:
+    /api/recipes?keyword=testi&ingredient=testi
+
     {
         recipes: [
             { id: 1, header: "Keitto", username: "user1", hash: "123", average_rating: 3 },
@@ -82,6 +86,20 @@ router.route("/api/recipe/urls").get(userMiddleware.isUserLoggedIn, ctrl.getAllR
         {
             "id": 2,
             "word": "sana"
+        }
+    ],
+    "reviews": [
+        {
+            "id": 1,
+            "rating": 3,
+            "text": "asd",
+            "username": "testuser"
+        },
+        {
+            "id": 2,
+            "rating": 3,
+            "text": "asd",
+            "username": "testuser"
         }
     ]
 }

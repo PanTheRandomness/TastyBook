@@ -6,7 +6,9 @@ const { getReviews } = require("../db/reviewSQL");
 
 const getAllRecipes = async (req, res) => {
     try {
-        const recipes = await sql.getRecipes(null, req.loggedIn);
+        // Tähän tarkastus että keyword ja ingredient pitää olla vähintään tietyn pituisia?
+        const { keyword, ingredient } = req.query;
+        const recipes = await sql.getRecipes(null, req.loggedIn, keyword, ingredient);
         if (req.loggedIn) return res.status(200).json({ loggedIn: true, recipes });
         res.status(200).json({ recipes });
     } catch (error) {
