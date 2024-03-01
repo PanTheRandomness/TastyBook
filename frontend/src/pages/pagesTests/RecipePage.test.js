@@ -51,4 +51,6 @@ describe('RecipePage component', () => {
             expect(getByText('Ruoka')).toBeInTheDocument();
         });
     });
+
+    //TODO: ainesosien ja avainsanojen näyttämisen testit
 });
