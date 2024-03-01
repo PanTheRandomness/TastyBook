@@ -11,7 +11,7 @@ const RecipeKeywords = (props) =>{
 
     return(
         <div>
-            <ul className='recipeform-keywords'>{words}</ul>
+            <ul data-testid="recipeKeywords" className='recipeform-keywords'>{words}</ul>
         </div>
     );
 }

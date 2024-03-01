@@ -2,6 +2,14 @@ import React from 'react';
 import * as router from 'react-router';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { AddRecipe, SaveDialog } from '../AddRecipePage';
+import { RecipeIngredients } from '../../components/addRecipeComponents/RecipeIngredients';
+import { RecipeKeywords } from '../../components/addRecipeComponents/RecipeKeywords';
+import { RecipeSteps } from '../../components/addRecipeComponents/RecipeSteps';
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => jest.fn()
+}));
 
 describe('AddRecipe component', () => {
     const navigate = jest.fn()
@@ -49,8 +57,66 @@ describe('Recipe submission eligibility tests', () => {
     });
 });
 
-/*describe('Editing recipe tests', () =>{
-    test('displays correct information when loading recipe for editing', async () => {
+jest.mock('../../api/recipeApi');
 
+describe('Editing recipe tests', () =>{
+    test('loads and displays recipe data correctly on component mount (editing recipe)', async () => {
+        const mockRecipe = {
+            id: 335,
+            header: 'Testiresepti',
+            visibleToAll: 1,
+            description: 'Testaava resepti',
+            durationHours: 2,
+            durationMinutes: 10,
+            ingredients: [{ quantity: '1 dl', name: 'Jauho' }, { quantity: '5 dl', name: 'Vesi' }, { quantity: '3 kpl', name: 'Valkosipulin kynsi' }],
+            steps: [{ step: 'Sekoita vesi ja jauho' }, { step: 'Murskaa kynnet' }, { step: 'Sekoita kynnet jauhoseoksen joukkoon' }, { step: 'Paista uunissa' }],
+            keywords: [{ word: 'Testi' }, { word: 'Valkosipuli' }]
+        };
+
+        const fetchMock = jest.fn().mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve(mockRecipe)
+        });
+
+        global.fetch = fetchMock;
+
+        const route = 'mockRoute';
+
+        const { getByTestId, getByText } = render(<AddRecipe route={route} />);
+
+
+        await waitFor(() => {
+            expect(fetchMock).toHaveBeenCalledWith(`http://localhost:3004/api/recipe/${route}`, expect.any(Object));
+        });
+
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+
+        await waitFor(() => {
+            expect(getByTestId('recipeNameInput')).toHaveValue(mockRecipe.header);
+            expect(getByTestId('recipeDescriptionInput')).toHaveValue(mockRecipe.description);
+            expect(getByTestId('visibleInput')).toHaveAttribute('checked');
+            expect(getByTestId('recipeHoursInput')).toHaveValue(mockRecipe.durationHours);
+            expect(getByTestId('recipeMinutesInput')).toHaveValue(mockRecipe.durationMinutes);
+
+            expect(getByTestId('recipeIngredients')).toBeInTheDocument();
+            expect(getByTestId('recipeKeywords')).toBeInTheDocument();
+            expect(getByTestId('recipeSteps')).toBeInTheDocument();
+
+            const ingredientsContainer = getByTestId('recipeIngredients');
+            const keywordsContainer = getByTestId('recipeKeywords');
+            const stepsContainer = getByTestId('recipeSteps');
+
+            expect(ingredientsContainer).toHaveTextContent('1 dl Jauho');
+            expect(ingredientsContainer).toHaveTextContent('5 dl Vesi');
+            expect(ingredientsContainer).toHaveTextContent('3 kpl Valkosipulin kynsi');
+
+            expect(keywordsContainer).toHaveTextContent('Testi');
+            expect(keywordsContainer).toHaveTextContent('Valkosipuli');
+
+            expect(stepsContainer).toHaveTextContent('Sekoita vesi ja jauho');
+            expect(stepsContainer).toHaveTextContent('Murskaa kynnet');
+            expect(stepsContainer).toHaveTextContent('Sekoita kynnet jauhoseoksen joukkoon');
+            expect(stepsContainer).toHaveTextContent('Paista uunissa');
+        });
     });
-});*/
+});

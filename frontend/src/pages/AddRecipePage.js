@@ -309,7 +309,6 @@ const AddRecipe = (props) =>{
     }
 
     const postBtnClicked = () =>{
-        //Tässä muutos, vaikuttaako testeihin?
         openSaveModal();
     }
 
@@ -329,7 +328,7 @@ const AddRecipe = (props) =>{
                         <th>Visibility:</th>
                         <td>
                             <label>
-                                <input className="recipeinput" type='checkbox' defaultChecked={true} onChange={(e) => e.target.checked ? setVisibleToAll(1):setVisibleToAll(0)}/>
+                                <input data-testid="visibleInput" className="recipeinput" type='checkbox' defaultChecked={true} onChange={(e) => e.target.checked ? setVisibleToAll(1):setVisibleToAll(0)}/>
                                 Public
                             </label>
                             {visibleToAll?null:<p style={{color:"#3c493c", fontStyle:"italic"}}>Recipe will only be visible to registered users</p>}
@@ -349,7 +348,7 @@ const AddRecipe = (props) =>{
                     <tr className='recipeform-item'>
                         <th>Image:</th>
                         <td>
-                            <input className="recipeinput" type='file' value={image} accept="image/*" onChange={(e) => setImage(e.target.value)}/>
+                            <input data-testId="recipeImageInput" className="recipeinput" type='file' value={image} accept="image/*" onChange={(e) => setImage(e.target.value)}/>
                         </td>
                     </tr>
                     <tr className='recipeform-item'>

@@ -100,7 +100,7 @@ const RecipeHead = (props) =>{
     const createdFormatted = new Date(props.recipe.created).toLocaleDateString('fi-FI');
     
     const calculateAvgRating = () =>{
-
+        //TODO: keskiarvon laskeminen
     }
 
     return(

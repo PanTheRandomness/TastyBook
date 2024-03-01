@@ -11,7 +11,7 @@ const RecipeSteps = (props) =>{
 
     return(
         <div className='recipeform-steps'>
-            <ol >{steps}</ol>
+            <ol data-testid="recipeSteps">{steps}</ol>
         </div>
     );
 }

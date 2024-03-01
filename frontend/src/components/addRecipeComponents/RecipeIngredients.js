@@ -16,7 +16,7 @@ const RecipeIngredients = (props)=>{
     });
 
     return(
-        <table className='recipeform-ingredients'>
+        <table data-testid="recipeIngredients" className='recipeform-ingredients'>
             <tbody>{ingredientList}</tbody>
         </table>
     );
