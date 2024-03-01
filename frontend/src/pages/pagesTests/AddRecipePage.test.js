@@ -2,9 +2,6 @@ import React from 'react';
 import * as router from 'react-router';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { AddRecipe, SaveDialog } from '../AddRecipePage';
-import { RecipeIngredients } from '../../components/addRecipeComponents/RecipeIngredients';
-import { RecipeKeywords } from '../../components/addRecipeComponents/RecipeKeywords';
-import { RecipeSteps } from '../../components/addRecipeComponents/RecipeSteps';
 
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
@@ -57,10 +54,31 @@ describe('Recipe submission eligibility tests', () => {
     });
 });
 
+describe('SaveDialog tests', () => {
+    test('opens and confirms SaveDialog', async () => {
+        const onCloseMock = jest.fn();
+        const onConfirmMock = jest.fn();
+
+        const { getByText, getByTestId } = render(
+            <SaveDialog isOpen={true} onClose={onCloseMock} onConfirm={onConfirmMock} title="Save Recipe" />
+        );
+
+        expect(getByText('Are you sure you want to save this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.')).toBeInTheDocument();
+
+        fireEvent.click(getByTestId('confirm-button'));
+
+        await waitFor(() => {
+            expect(onConfirmMock).toHaveBeenCalled();
+        });
+
+        expect(onCloseMock).not.toHaveBeenCalled();
+    });
+});
+
 jest.mock('../../api/recipeApi');
 
 describe('Editing recipe tests', () =>{
-    test('loads and displays recipe data correctly on component mount (editing recipe)', async () => {
+    test('loads and displays recipe data correctly on component mount (editing recipe), opens savedialog after editing', async () => {
         const mockRecipe = {
             id: 335,
             header: 'Testiresepti',
@@ -83,7 +101,6 @@ describe('Editing recipe tests', () =>{
         const route = 'mockRoute';
 
         const { getByTestId, getByText } = render(<AddRecipe route={route} />);
-
 
         await waitFor(() => {
             expect(fetchMock).toHaveBeenCalledWith(`http://localhost:3004/api/recipe/${route}`, expect.any(Object));
@@ -118,5 +135,26 @@ describe('Editing recipe tests', () =>{
             expect(stepsContainer).toHaveTextContent('Sekoita kynnet jauhoseoksen joukkoon');
             expect(stepsContainer).toHaveTextContent('Paista uunissa');
         });
+
+        const recipeNameInput = getByTestId('recipeNameInput');
+        fireEvent.change(recipeNameInput, { target: { value: 'Uusi reseptin nimi' } });
+        await waitFor(() => {
+            expect(recipeNameInput.value).toBe('Uusi reseptin nimi');
+        });
+
+        const saveRecipeButton = getByText('Save Recipe');
+        fireEvent.click(saveRecipeButton);
+
+        await waitFor(() => {
+            expect(getByText('Are you sure you want to save this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.')).toBeInTheDocument();
+        });
+
+        const confirmButton = getByTestId('confirm-button');
+        fireEvent.click(confirmButton);
+
+        /*Testataan muuttuivatko tiedot... meneekö integraatiotestiin?
+        await waitFor(() => {
+            expect(getByText('Uusi reseptin nimi')).toBeInTheDocument();
+        });*/
     });
 });
