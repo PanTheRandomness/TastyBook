@@ -43,7 +43,7 @@ const EllipsisMenu = (props) => {
   return (
     <div className="ellipsis-menu">
       {
-        user && user.username === creator  ?
+        user && (user.username === creator || user.role === 'admin') ?
         <div className="ellipsis" onClick={toggleMenu} data-testid="ellipsis">
           <div className="dot"></div>
           <div className="dot"></div>
