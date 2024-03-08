@@ -11,6 +11,7 @@ import { fetchRecipe, removeRecipe } from '../api/recipeApi';
 
 const Recipe = (props) =>{
     const { route } = props;
+    const user = useUser();
     const [token] = useToken();
     const navigate = useNavigate();
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -54,14 +55,19 @@ const Recipe = (props) =>{
         try {
             console.log("Starting deletion...");
             closeDeleteModal();
-            const response = await removeRecipe(token, route);
-            if(response.ok){
-                console.log("Recipe deleted successfully.");
-                navigate("/");
+            if(user.role === 'admin'){
+                //TODO: Mitä "adminille poisto eri osoitteeseen" tarkoittikaan?
+            }
+            else{
+                const response = await removeRecipe(token, route);
+                if(response.ok){
+                    console.log("Recipe deleted successfully.");
+                    navigate("/");
+                }
             }
 
         } catch (error) {
-            setErrorText("An error occurred while loading recipe: " + error);
+            setErrorText("An error occurred while deleting recipe: " + error);
             openErrorModal();
         }
     }
