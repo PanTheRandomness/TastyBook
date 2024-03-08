@@ -22,28 +22,18 @@ const Recipe = (props) =>{
     const openErrorModal = () => setErrorModalOpen(true);
     const closeErrorModal = () => {setErrorModalOpen(false); setErrorText('');}
     
-    //esimerkkiresepti kehitystä varten, poista tiedot kun reseptejä voidaan tarkkailla
-    //TODO: Miten tämä poistetaan?
     const [recipe, setRecipe] = useState({
-        "header" : "Reseptin nimi",
-        "description" : "Nami nami ruokaa",
+        "header" : "",
+        "description" : "",
         "visibleToAll" : true,
-        "creator" : "Joku Heppu",
-        "rating" : 5,
-        "durationHours" : 2,
-        "durationMinutes" : 15,
-        "ingredients" : [
-            {"quantity": "1 dl", "ingredient":"flour"}, 
-            {"quantity": "2 tsp", "ingredient":"salt"},
-            {"quantity": "1 tbsp", "ingredient":"pepper"}
-        ],
-        "steps" : ["Eka kohta", "Toka kohta", "Kolmas kohta", "jne"],
-        "keywords" : ["Eka sana", "Toka sana", "Kolmas sana"], 
-        "reviews" : [
-            {"username":"joku", "rating":"5/5", "text":"Oli kyllä mainio!"},
-            {"username":"t", "rating":"2/5", "text":"Liian helppo :("},
-            {"username":"möh", "rating":"4/5", "text":"Maukas"}
-        ]
+        "creator" : "",
+        "rating" : 0,
+        "durationHours" : 0,
+        "durationMinutes" : 0,
+        "ingredients" : [],
+        "steps" : [],
+        "keywords" : [], 
+        "reviews" : []
     });
 
     useEffect(()=>{
