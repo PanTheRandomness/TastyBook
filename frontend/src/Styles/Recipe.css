@@ -132,3 +132,9 @@ button{
 .recipeform-step{
     color:#F1DBBF;
 }
+
+.notfound{
+    text-align: center;
+    font-style: italic;
+    padding-top: 10%;
+}

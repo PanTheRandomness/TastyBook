@@ -13,7 +13,6 @@ const Recipe = (props) =>{
     const { route } = props;
     const [token] = useToken();
     const navigate = useNavigate();
-    const user = useUser();
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
     const openDeleteModal = () => setDeleteModalOpen(true);
     const closeDeleteModal = () => setDeleteModalOpen(false);

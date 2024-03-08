@@ -13,6 +13,7 @@ import { getRecipeRoutes } from "./api/recipeApi";
 import "./Styles/NavBar.css";
 import { useUser } from "./customHooks/useUser";
 import Search from "./components/search";
+import NotFound from "./pages/NotFoundPage";
 
 const App = () => {
   const user = useUser();
@@ -100,8 +101,8 @@ const App = () => {
           ))
         }
 
-<Route path='/search' element={<Search />} />
-
+        <Route path='/search' element={<Search />} />
+        <Route path='/*' element={<NotFound />} />
 
       </Routes>
     </Router>
