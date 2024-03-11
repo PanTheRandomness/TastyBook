@@ -1,6 +1,6 @@
 import * as router from 'react-router';
 import { render, waitFor } from '@testing-library/react';
-import { Recipe, DeleteDialog } from '../RecipePage';
+import { Recipe } from '../RecipePage';
 import { fetchRecipe } from '../../api/recipeApi';
 
 jest.mock('../../api/recipeApi');
@@ -49,8 +49,15 @@ describe('RecipePage component', () => {
             expect(getByText('Sekoita ainekset')).toBeInTheDocument();
 
             expect(getByText('Ruoka')).toBeInTheDocument();
+
+            mockRecipe.keywords.forEach(keyword => {
+                expect(getByText(keyword.word)).toBeInTheDocument();
+            });
+
+            mockRecipe.ingredients.forEach(ingredient => {
+                expect(getByText(ingredient.name)).toBeInTheDocument();
+                expect(getByText(ingredient.quantity)).toBeInTheDocument();
+            });
         });
     });
-
-    //TODO: ainesosien ja avainsanojen näyttämisen testit
 });

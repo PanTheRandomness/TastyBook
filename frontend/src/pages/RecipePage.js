@@ -156,7 +156,7 @@ const RecipeSteps = (props) =>{
 
 /*
 const RecipeReviews = (props) =>{
-    //HUOM! Mieti asettelu!
+    //HUOM! Ei vielä käytössä
     const reviews = props.reviews.map((r, i) =>{
         return <tr key={i}><th>{r.rating}</th><td>{r.username}:</td><td><i>{r.text}</i></td></tr>
     });
