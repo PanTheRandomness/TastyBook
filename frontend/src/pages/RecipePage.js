@@ -56,7 +56,7 @@ const Recipe = (props) =>{
             console.log("Starting deletion...");
             closeDeleteModal();
             if(user.role === 'admin'){
-                //TODO: Mitä "adminille poisto eri osoitteeseen" tarkoittikaan?
+                //TODO: Adminille poisto eri osoitteeseen = määrittele poiston osoite, kun se on toteutettu taustalle
             }
             else{
                 const response = await removeRecipe(token, route);
