@@ -25,7 +25,6 @@ const NewPassword = () => {
             // Voit ohjata käyttäjän takaisin kirjautumissivulle tai muihin tarvittaviin sivuihin
             navigate('/login');
         } catch (error) {
-            console.error("Password update failed.", error);
             setError("Password update failed.");
         }
     }
