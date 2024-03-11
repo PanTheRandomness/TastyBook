@@ -7,7 +7,7 @@ import '../Styles/Ellipsis.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
 import ErrorModal  from '../components/ErrorModal';
-import { fetchRecipe, removeRecipe } from '../api/recipeApi';
+import { fetchRecipe, removeRecipe, removeRecipeAdmin } from '../api/recipeApi';
 
 const Recipe = (props) =>{
     const { route } = props;
@@ -56,7 +56,11 @@ const Recipe = (props) =>{
             console.log("Starting deletion...");
             closeDeleteModal();
             if(user.role === 'admin'){
-                //TODO: Adminille poisto eri osoitteeseen = määrittele poiston osoite, kun se on toteutettu taustalle
+                const response = await removeRecipeAdmin(token, route);
+                if(response.ok){
+                    console.log("Recipe deleted successfully.");
+                    navigate("/");
+                }
             }
             else{
                 const response = await removeRecipe(token, route);

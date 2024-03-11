@@ -82,3 +82,25 @@ export const removeRecipe = async (token, route) =>{
         throw error;
     }
 }
+
+export const removeRecipeAdmin = async (token, route) =>{
+    try{
+        if(token){
+            let response = await fetch(`${BASE_URL}/api/recipe/${route}/admin`, {
+                method:'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization' : "Bearer " + token
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Deletion failed: ${response.statusText}`);
+            }
+
+            return response;
+        }
+    } catch(error){
+        throw error;
+    }
+}
