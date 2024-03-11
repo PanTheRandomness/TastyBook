@@ -27,6 +27,11 @@ app.use(adminRoutes);
 const reviewRoutes = require("./src/routes/reviewRoutes");
 app.use(reviewRoutes);
 
+/*
+const emailRoutes = require("./src/routes/emailRoutes");
+app.use(emailRoutes);
+*/
+
 const errorHandling = require("./src/middleware/errorHandling");
 app.use(errorHandling);
 

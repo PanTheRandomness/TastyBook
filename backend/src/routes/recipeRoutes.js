@@ -3,6 +3,7 @@ var router = express.Router();
 
 let ctrl = require("../controllers/recipeController");
 let userMiddleware = require("../middleware/verifyUser");
+let adminMiddleware = require("../middleware/verifyAdmin");
 
 /*  /api/recipes GET
 
@@ -168,5 +169,7 @@ router.route("/api/recipe/:hash").delete(userMiddleware.verifyJWT, ctrl.deleteRe
 */
 
 router.route("/api/recipe/:hash").put(userMiddleware.verifyJWT, ctrl.editRecipe);
+
+router.route("/api/recipe/:hash/admin").delete(userMiddleware.verifyJWT, adminMiddleware.verifyAdmin, ctrl.deleteRecipeAdmin);
 
 module.exports = router;

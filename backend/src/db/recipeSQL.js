@@ -1,3 +1,4 @@
+const { param } = require("../routes/emailRoutes");
 const { executeSQL } = require("./executeSQL");
 
 const getAllRecipeHashes = (loggedIn) => {
@@ -45,8 +46,16 @@ const getSteps = (recipeId) => {
 }
 
 const deleteRecipe = (hash, userId) => {
-    const query = "DELETE FROM recipe WHERE hash=? AND User_id=?";
-    return executeSQL(query, [hash, userId]);
+    let query, params;
+    if (userId) {
+        query = "DELETE FROM recipe WHERE hash=? AND User_id=?";
+        params = [hash, userId];
+    }
+    else {
+        query = "DELETE FROM recipe WHERE hash=?";
+        params = [hash];
+    }
+    return executeSQL(query, params);
 }
 
 const editRecipe = (header, description, visibleToAll, durationHours, durationMinutes, hash, userId) => {

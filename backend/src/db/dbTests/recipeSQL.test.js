@@ -143,6 +143,14 @@ describe("deleteRecipe", () => {
 
         expect(executeSQL).toHaveBeenCalledWith("DELETE FROM recipe WHERE hash=? AND User_id=?", [hash, userId]);
     });
+    
+    it("should delete delete recipe when no userId is given", async () => {
+        const hash = "123";
+
+        await deleteRecipe(hash);
+
+        expect(executeSQL).toHaveBeenCalledWith("DELETE FROM recipe WHERE hash=?", [hash]);
+    });
 });
 
 describe("editRecipe", () => {

@@ -98,6 +98,17 @@ const deleteRecipe = async (req, res) => {
     }
 }
 
+const deleteRecipeAdmin = async (req, res) => {
+    try {
+        const hash = req.params.hash;
+        const result = await sql.deleteRecipe(hash);
+        if (result.affectedRows === 0) return res.status(404).send();
+        res.status(200).send();
+    } catch (error) {
+        res.status(500).send();
+    }
+}
+
 const editRecipe = async (req, res) => {
     try {
         const hash = req.params.hash;
@@ -153,4 +164,4 @@ const checkRecipeBody = (header, description, visibleToAll, durationHours, durat
         throw new Error();
 }
 
-module.exports = { getAllRecipes, getAllRecipeHashes, getRecipe, addRecipe, deleteRecipe, editRecipe };
+module.exports = { getAllRecipes, getAllRecipeHashes, getRecipe, addRecipe, deleteRecipe, editRecipe, deleteRecipeAdmin };
