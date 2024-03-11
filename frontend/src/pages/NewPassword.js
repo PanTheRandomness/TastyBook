@@ -1,6 +1,7 @@
 import { useState } from "react";
 import '../Styles/NewPassword.css';
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import { updatePassword, checkPasswordMatch } from "../path/to/UserApi";
 
 const NewPassword = () => {
     const [newPassword, setNewPassword] = useState('');
@@ -12,14 +13,14 @@ const NewPassword = () => {
         event.preventDefault();
 
         // Tarkista, että uudet salasanat ovat samat
-        if (newPassword !== confirmNewPassword) {
+        if (!checkPasswordMatch(newPassword, confirmNewPassword)) {
             setError("Passwords do not match.");
             return;
         }
 
         try {
             // Tässä voit käyttää sopivaa API-kutsua salasanan päivittämiseksi
-            //await updatePassword(newPassword);
+            //await updatePassword(userId, newPassword);
 
             // Voit ohjata käyttäjän takaisin kirjautumissivulle tai muihin tarvittaviin sivuihin
             navigate('/login');

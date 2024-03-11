@@ -68,3 +68,30 @@ export const adminregister = async (username, name, email, password, api_key) =>
         throw error;
     }
 }
+
+//userApi uudelle salasanalle
+{/*
+export const updatePassword = async (userId, newPassword) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/update-password`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId, newPassword }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Password update failed: ${response.statusText}`);
+        }
+
+        return response.json();
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const checkPasswordMatch = (password, confirmPassword) => {
+    return password === confirmPassword;
+}
+*/}
