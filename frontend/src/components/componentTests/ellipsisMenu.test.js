@@ -75,4 +75,16 @@ describe('EllipsisMenu component', () => {
         
         expect(queryByTestId('ellipsis')).not.toBeInTheDocument();
     });
+
+    test('opens delete dialog when delete is clicked for admin user', () => {
+        const mockAdmin = { username: 'testadmin', role: 'admin' };
+        useUser.mockReturnValue(mockAdmin); // Mock admin user
+        const { getByTestId } = render(<EllipsisMenu {...mockProps} />);
+        
+        fireEvent.click(getByTestId('ellipsis'));
+        fireEvent.click(getByTestId('deleterecipe'));
+    
+        // Tarkista, että onDelete-funktiota on kutsuttu
+        expect(mockProps.onDelete).toBeCalled();
+    });
 });
