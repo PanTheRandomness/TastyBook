@@ -15,7 +15,7 @@ const AddRecipe = (props) =>{
     const [description, setDescription] = useState('');
     const [durationH, setDurationH] = useState(0);
     const [durationMin, setDurationMin] = useState(0);
-    const [image, setImage] = useState(''); //ei oliossa vielä tässä iteraatiossa
+    const [image, setImage] = useState(null);
     const [keywords, setKeywords] = useState([]);
     const [ingredients, setIngredients] = useState([]);
     const [steps, setSteps] = useState([]); 
@@ -50,6 +50,7 @@ const AddRecipe = (props) =>{
     const navigate = useNavigate();
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState(null);
+    const [imageChanged, setImageChanged] = useState(false);
     
     const [isErrorModalOpen, setErrorModalOpen] = useState(false);
     const [errorText, setErrorText] = useState('');
@@ -77,6 +78,7 @@ const AddRecipe = (props) =>{
                     setSteps(r.steps.map(item => item.step));
                     setKeywords(r.keywords.map(item => item.word));
                     setId(r.id);
+                    //Jos ID:llä löytyy kuva => setImage
                 } else {
                     throw new Error('Recipe not found');
                 }
@@ -89,7 +91,7 @@ const AddRecipe = (props) =>{
     },[]);
 
     const postRecipe = async () =>{
-        const requestOptions ={
+        const requestOptions = {
             method:'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -112,6 +114,28 @@ const AddRecipe = (props) =>{
             if(response.ok){
                 const data = await response.json();
                 addRecipeRoute(data.hash);
+                /*if(image){
+                    const finalImage = {
+                        Recipe_id : data.id,
+                        filename : image
+                    }
+                    try {
+                        const response = await fetch("http://localhost:3004/api/image", {
+                            method: 'POST',
+                            headers: {
+                                'Authorization' : "Bearer " + token
+                            },
+                            body: formData
+                        });
+
+                        if (response.ok) {
+                            // Kuva tallennettu onnistuneesti, ohjaa käyttäjä reseptisivulle
+                        }
+                    } catch (error) {
+                        setErrorText("Unable to post image: " + error);
+                        openErrorModal();
+                    }
+                }*/
                 navigate("/recipe/" + data.hash);
             }
         } catch (error) {
@@ -144,6 +168,28 @@ const AddRecipe = (props) =>{
             console.log("Save modified called...");
             const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
             if(response.ok){
+                /*if(imageChanged){
+                    const finalImage = {
+                        Recipe_id : data.id,
+                        filename : image
+                    }
+                    try {
+                        const response = await fetch("http://localhost:3004/api/image", {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization' : "Bearer " + token
+                            },
+                            body: formData
+                        });
+
+                        if (response.ok) {
+                            // Kuva tallennettu onnistuneesti, ohjaa käyttäjä reseptisivulle
+                        }
+                    } catch (error) {
+                        setErrorText("Unable to save modified image: " + error);
+                        openErrorModal();
+                    }
+                }*/
                 navigate("/recipe/" + route);
                 setEditing(false);
             }
@@ -312,6 +358,11 @@ const AddRecipe = (props) =>{
         openSaveModal();
     }
 
+    const handleImageChange = (e) => {
+        setImage(e.target.files[0]);
+        if(editing) setImageChanged(true);
+    }
+
     return(
         <div className='recipeform-body'>
             <table>
@@ -348,7 +399,7 @@ const AddRecipe = (props) =>{
                     <tr className='recipeform-item'>
                         <th>Image:</th>
                         <td>
-                            <input data-testId="recipeImageInput" className="recipeinput" type='file' value={image} accept="image/*" onChange={(e) => setImage(e.target.value)}/>
+                            <input data-testId="recipeImageInput" className="recipeinput" type='file' accept="image/*" onChange={(e) => handleImageChange(e)}/>
                         </td>
                     </tr>
                     <tr className='recipeform-item'>

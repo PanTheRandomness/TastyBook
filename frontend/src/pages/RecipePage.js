@@ -17,6 +17,7 @@ const Recipe = (props) =>{
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
     const openDeleteModal = () => setDeleteModalOpen(true);
     const closeDeleteModal = () => setDeleteModalOpen(false);
+    const [image, setImage] = useState(null);
 
     const [isErrorModalOpen, setErrorModalOpen] = useState(false);
     const [errorText, setErrorText] = useState('');
@@ -42,6 +43,7 @@ const Recipe = (props) =>{
             try {
                 const response = await fetchRecipe(token, route);
                 setRecipe(response);
+                // Onko reseptin id:llä kuvaa? jos on => setImage
 
             } catch (error) {
                 setErrorText("An error occurred while loading recipe: " + error);
@@ -79,7 +81,7 @@ const Recipe = (props) =>{
     return(
         <div>
             <div className='recipe-container'>
-                <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route}/>
+                <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} /*image={image}*/ />
                 <div className='recipe-foot'>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={recipe.ingredients} page="recipepage"/>
@@ -96,6 +98,7 @@ const Recipe = (props) =>{
 
 const RecipeHead = (props) =>{
     const recipe = props.recipe;
+    const image = props.image;
     const createdFormatted = new Date(props.recipe.created).toLocaleDateString('fi-FI');
     
     const calculateAvgRating = () =>{
@@ -108,6 +111,7 @@ const RecipeHead = (props) =>{
                 <h1>{recipe.header} {/*<img src='rating_star.png' alt="Star Rating"/>{recipe.rating}*/}</h1>
                 <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
             </div>
+            {/*image ? <img src={image} alt="Recipe Image" className='recipeimage'/>:null*/}
             <p>{recipe.description}</p>
             <p> Created By: {recipe.username} <br/> 
                 Creation date: {createdFormatted} <br/>
@@ -168,6 +172,7 @@ const RecipeReviews = (props) =>{
                 {props.reviews.length > 0 ? reviews : <tr><td><i className='review-placeholder'>No reviews have been posted yet.</i></td></tr>}
                 <tr> 
                     <td>
+                        jos ei kirjautunut: <a>log in</a> to leave a review
                         <button className='review-button'>Add review</button>
                     </td>
                 </tr>

@@ -138,3 +138,8 @@ button{
     font-style: italic;
     padding-top: 10%;
 }
+
+.recipeimage{
+    max-width: '100%';
+    height: 'auto';
+}
