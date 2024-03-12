@@ -3,6 +3,7 @@ import {Register} from './pages/Register';
 import {Login} from './pages/LoginPage';
 import {NewPassword} from './pages/NewPassword';
 import Admin from './pages/Admin';
+import Print from './components/Print';
 import {AdminRegister} from './pages/AdminRegister';
 import FrontPage from "./pages/FrontPage";
 import { Recipe } from './pages/RecipePage';
@@ -54,6 +55,12 @@ const App = () => {
     setToken("");
   }
 
+  //reseptin haku tulostusta varten
+  const getRecipeByHash = (hash) => {
+    const foundRecipe = recipeRoutes.find((route) => route.hash === hash);
+    return foundRecipe || null;
+  };
+
   if (!loading && errorMessage) return <p>{errorMessage}</p>
 
   return (
@@ -100,6 +107,16 @@ const App = () => {
             <Route key={route.hash} path={`/recipe/${route.hash}`} element={<Recipe route={route.hash} />}></Route>
           ))
         }
+        
+        {/*Reititys reseptin tulostukseen */}
+        {recipeRoutes.map((route) => (
+        <Route
+          key={route.hash}
+          path={`/print/${route.hash}`}
+          element={<Print recipe={getRecipeByHash(route.hash)} />}
+        ></Route>
+      ))}
+
 
         <Route path='/search' element={<Search />} />
         <Route path='/*' element={<NotFound />} />
