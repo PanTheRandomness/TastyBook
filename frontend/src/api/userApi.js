@@ -71,7 +71,7 @@ export const adminregister = async (username, name, email, password, api_key) =>
 
 //userApi uudelle salasanalle
 {/*
-export const updatePassword = async (userId, newPassword) => {
+export const updatePassword = async (newPassword) => {
     try {
         const response = await fetch(`${BASE_URL}/api/update-password`, {
             method: "PUT",
