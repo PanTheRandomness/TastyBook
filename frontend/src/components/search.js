@@ -11,9 +11,9 @@ const Search = ({ token }) => {
     const getRecipe = async () => {
       setLoading(true);
       try {
-        const response = await fetchRecipe(token, searchTerm); 
-        setSearchResults(response);
-        if (response.length === 0) {
+        const response = await fetchRecipe(token, `?keyword=${searchTerm}&ingredient=${searchTerm}`); 
+        setSearchResults(response.recipes);
+        if (response.recipes.length === 0) {
           setError('No recipes found.');
         } else {
           setError('');
