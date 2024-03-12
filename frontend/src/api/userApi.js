@@ -70,31 +70,23 @@ export const adminregister = async (username, name, email, password, api_key) =>
 }
 
 //userApi uudelle salasanalle
-{/*
-export const updatePassword = async (newPassword) => {
+export const updatePassword = async (newPassword, verificationString) => {
     try {
         const response = await fetch(`${BASE_URL}/api/update-password`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ userId, newPassword }),
+            body: JSON.stringify({ verificationString, newPassword }),
         });
 
         if (!response.ok) {
             throw new Error(`Password update failed: ${response.statusText}`);
         }
-
-        return response.json();
     } catch (error) {
         throw error;
     }
 }
-
-export const checkPasswordMatch = (password, confirmPassword) => {
-    return password === confirmPassword;
-}
-*/}
 
 export const verifyEmail = async (verificationString) => {
     try {
@@ -106,6 +98,21 @@ export const verifyEmail = async (verificationString) => {
             body: JSON.stringify({ verificationString })
         });
 
+        if (!response.ok) throw new Error();
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const forgotPassword = async (email) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/forgot-password`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email })
+        });
         if (!response.ok) throw new Error();
     } catch (error) {
         throw error;

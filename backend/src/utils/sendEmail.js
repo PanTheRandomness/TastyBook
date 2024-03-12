@@ -17,4 +17,18 @@ const verificationEmail = async (email, verificationString) => {
     }
 }
 
-module.exports = { verificationEmail };
+const passwordResetEmail = async (email, verificationString) => {
+    try {
+        return await mg.messages.create('sandbox89bb0b3d834f40b4acfe1588bd5066eb.mailgun.org', {
+            from: "<mailgun@sandbox89bb0b3d834f40b4acfe1588bd5066eb.mailgun.org>",
+            to: [email],
+            subject: "Password reset",
+            text: `To reset your password, click here:
+            http://localhost:3000/newpassword/${verificationString}`
+        });
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = { verificationEmail, passwordResetEmail };

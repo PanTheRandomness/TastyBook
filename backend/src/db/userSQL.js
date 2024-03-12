@@ -30,4 +30,14 @@ const verifyEmail = (verificationString) => {
     return executeSQL(query, [verificationString]);
 }
 
-module.exports = { findUserInfo, addEmail, addUser, getAllUsers, deleteUser, verifyEmail };
+const updateEmailVerification = (verificationString, email) => {
+    const query = "UPDATE email SET verificationString=? WHERE email=?";
+    return executeSQL(query, [verificationString, email]);
+}
+
+const updatePassword = (password, verificationString) => {
+    const query = "UPDATE user u LEFT JOIN email e ON u.Email_id=e.id SET password=? WHERE e.verificationString=?";
+    return executeSQL(query, [password, verificationString]);
+}
+
+module.exports = { findUserInfo, addEmail, addUser, getAllUsers, deleteUser, verifyEmail, updateEmailVerification, updatePassword };

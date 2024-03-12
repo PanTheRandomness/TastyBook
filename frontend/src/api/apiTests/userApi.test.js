@@ -187,3 +187,28 @@ describe("verifyEmail", () => {
     await expect(userApi.verifyEmail(verificationString)).rejects.toThrowError();
   });
 });
+
+describe("forgotPassword", () => {
+  test("should return nothing if sending email is successful", async () => {
+    const email = "test@example.com";
+
+    fetch.mockResolvedValueOnce({ ok: true });
+
+    await userApi.forgotPassword(email);
+    expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/forgot-password`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email })
+    })
+  });
+
+  test("should throw error if response is not ok", async () => {
+    const email = "test@example.com";
+    
+    fetch.mockResolvedValueOnce({ ok: false });
+
+    await expect(userApi.forgotPassword(email)).rejects.toThrowError();
+  });
+});

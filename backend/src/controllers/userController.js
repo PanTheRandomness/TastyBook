@@ -3,7 +3,9 @@ const sql = require("../db/userSQL");
 const { signJWT } = require("./signJWT");
 const { executeSQL } = require("../db/executeSQL");
 const { v4: uuidv4 } = require("uuid");
-const { verificationEmail } = require("../utils/sendEmail");
+const { verificationEmail, passwordResetEmail } = require("../utils/sendEmail");
+
+const WORK_FACTOR = 10;
 
 const signup = async (req, res) => {
     try {
@@ -11,8 +13,6 @@ const signup = async (req, res) => {
         if (!username || !name || !email || !password) return res.status(400).send();
         if (typeof username !== "string" || typeof name !== "string" || typeof email !== "string" || typeof password !== "string") return res.status(400).send();
         if (api_key && api_key !== process.env.ADMIN_REGISTRATION_API_KEY) return res.status(401).send();
-
-        const WORK_FACTOR = 10;
 
         let result;
         let role = null;
@@ -108,4 +108,41 @@ const verifyEmail = async (req, res) => {
     }
 }
 
-module.exports = { signup, login, getAllUsers, deleteUser, verifyEmail };
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const verificationString = uuidv4();
+
+        const result = await sql.updateEmailVerification(verificationString, email);
+
+        if (result.affectedRows === 0) return res.status(401).send();
+
+        try {
+            await passwordResetEmail(email, verificationString);
+        } catch (error) {
+            return res.status(400).send("Invalid email");
+        }
+
+        res.status(200).send();
+    } catch (error) {
+        res.status(500).send();
+    }
+}
+
+const updatePassword = async (req, res) => {
+    try {
+        const { newPassword, verificationString } = req.body;
+
+        const passwordHash = await bcrypt.hash(newPassword, WORK_FACTOR);
+
+        const result = await sql.updatePassword(passwordHash, verificationString);
+
+        if (result.affectedRows === 0) return res.status(401).send();
+
+        res.status(200).send();
+    } catch (error) {
+        res.status(500).send();
+    }
+}
+
+module.exports = { signup, login, getAllUsers, deleteUser, verifyEmail, forgotPassword, updatePassword };

@@ -16,6 +16,7 @@ import { useUser } from "./customHooks/useUser";
 import Search from "./components/search";
 import NotFound from "./pages/NotFoundPage";
 import EmailVerification from "./pages/EmailVerification";
+import ForgotPassword from "./pages/ForgotPassword";
 
 const App = () => {
   const user = useUser();
@@ -92,7 +93,7 @@ const App = () => {
         <Route path='/' element={<FrontPage onLogout={onLogout} />}></Route>
         <Route path='/register' element={<Register onLogin={onLogin} />}></Route>
         <Route path='/login' element={<Login onLogin={onLogin} />}></Route>
-        <Route path='/newpassword' element={<NewPassword />}></Route>
+        <Route path='/newpassword/:verificationString' element={<NewPassword />}></Route>
         { user && user.role === 'admin' && <Route path='/admin' element={<Admin />}></Route> }
         <Route path='/adminregister' element={<AdminRegister onLogin={onLogin} />}></Route>
         { (user && token) && <Route path='/newrecipe' element={<AddRecipe addRecipeRoute={addRecipeRoute} />}></Route> }
@@ -119,6 +120,7 @@ const App = () => {
       ))}
 
         <Route path='/verify-email/:verificationString' element={<EmailVerification />}></Route>
+        <Route path='/forgot-password' element={<ForgotPassword />}></Route>
         <Route path='/search' element={<Search />} />
         <Route path='/*' element={<NotFound />} />
 

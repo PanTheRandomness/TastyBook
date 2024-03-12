@@ -1,4 +1,4 @@
-const { findUserInfo, addEmail, addUser, getAllUsers, deleteUser, verifyEmail } = require("../userSQL");
+const { findUserInfo, addEmail, addUser, getAllUsers, deleteUser, verifyEmail, updateEmailVerification, updatePassword } = require("../userSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
@@ -112,4 +112,30 @@ describe("verifyEmail", () => {
 
         expect(executeSQL).toHaveBeenCalledWith("UPDATE user u LEFT JOIN email e ON u.Email_id=e.id SET u.isVerified=1 WHERE e.verificationString=?", [verificationString]);
     });
+});
+
+describe("updateEmailVerification", () => {
+    it("should update email verification string", async () => {
+        const verificationString = "123";
+        const email = "test@example.com";
+
+        executeSQL.mockResolvedValueOnce();
+
+        await updateEmailVerification(verificationString, email);
+
+        expect(executeSQL).toHaveBeenCalledWith("UPDATE email SET verificationString=? WHERE email=?", [verificationString, email]);
+    })
+});
+
+describe("updatePasswod", () => {
+    it("should update password", async () => {
+        const verificationString = "123";
+        const password = "asd";
+
+        executeSQL.mockResolvedValueOnce();
+
+        await updatePassword(password, verificationString);
+
+        expect(executeSQL).toHaveBeenCalledWith("UPDATE user u LEFT JOIN email e ON u.Email_id=e.id SET password=? WHERE e.verificationString=?", [password, verificationString]);
+    })
 });
