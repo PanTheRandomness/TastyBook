@@ -61,7 +61,6 @@ const Search = ({ token }) => {
           setError('');
         }
       } catch (error) {
-        console.error('Error searching recipes:', error);
         setError('Error searching recipes. Please try again later.');
       } finally {
         setLoading(false);

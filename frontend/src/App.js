@@ -17,6 +17,7 @@ import Search from "./components/search";
 import NotFound from "./pages/NotFoundPage";
 import EmailVerification from "./pages/EmailVerification";
 import ForgotPassword from "./pages/ForgotPassword";
+import RecipeList from "./components/RecipeList";
 
 const App = () => {
   const user = useUser();
@@ -122,6 +123,7 @@ const App = () => {
         <Route path='/verify-email/:verificationString' element={<EmailVerification />}></Route>
         <Route path='/forgot-password' element={<ForgotPassword />}></Route>
         <Route path='/search' element={<Search />} />
+        <Route path='/recipeList' element={<RecipeList />} />
         <Route path='/*' element={<NotFound />} />
 
       </Routes>
