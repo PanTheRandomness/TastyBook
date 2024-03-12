@@ -95,3 +95,19 @@ export const checkPasswordMatch = (password, confirmPassword) => {
     return password === confirmPassword;
 }
 */}
+
+export const verifyEmail = async (verificationString) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/verify-email`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ verificationString })
+        });
+
+        if (!response.ok) throw new Error();
+    } catch (error) {
+        throw error;
+    }
+}

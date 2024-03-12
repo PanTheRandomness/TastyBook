@@ -52,4 +52,6 @@ router.route("/api/signup").post(ctrl.signup);
 
 router.route("/api/login").post(ctrl.login);
 
+router.route("/api/verify-email").put(ctrl.verifyEmail)
+
 module.exports = router;
