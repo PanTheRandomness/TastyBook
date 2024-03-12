@@ -52,4 +52,10 @@ router.route("/api/signup").post(ctrl.signup);
 
 router.route("/api/login").post(ctrl.login);
 
+router.route("/api/verify-email").put(ctrl.verifyEmail);
+
+router.route("/api/forgot-password").put(ctrl.forgotPassword);
+
+router.route("/api/update-password").put(ctrl.updatePassword);
+
 module.exports = router;

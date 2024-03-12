@@ -1,12 +1,16 @@
 const bcrypt = require("bcrypt");
 const { signJWT } = require("../signJWT");
 const sql = require("../../db/userSQL");
-const { signup, login, getAllUsers, deleteUser } = require("../userController");
+const { signup, login, getAllUsers, deleteUser, forgotPassword, updatePassword } = require("../userController");
+const { v4: uuidv4 } = require("uuid");
+const { verificationEmail, passwordResetEmail } = require("../../utils/sendEmail");
 
 jest.mock("bcrypt");
 jest.mock("../signJWT");
 jest.mock("../../db/userSQL");
 jest.mock("../../db/executeSQL");
+jest.mock("uuid");
+jest.mock("../../utils/sendEmail");
 
 describe("signup", () => {
     let req, res;
@@ -46,12 +50,15 @@ describe("signup", () => {
         sql.addEmail.mockResolvedValue({ insertId: 1 });
         sql.addUser.mockResolvedValue({ insertId: 1 });
         bcrypt.hash.mockResolvedValue("hashedpassword");
+        uuidv4.mockResolvedValue("123");
+        verificationEmail.mockResolvedValue("123");
+
         signJWT.mockResolvedValue("mockedtoken");
 
         await signup(req, res);
 
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ token: "mockedtoken" });
+        expect(res.send).toHaveBeenCalled();
     });
 
     it("should handle successful signup with valid API key", async () => {
@@ -62,12 +69,13 @@ describe("signup", () => {
         sql.addEmail.mockResolvedValue({ insertId: 1 });
         sql.addUser.mockResolvedValue({ insertId: 1 });
         bcrypt.hash.mockResolvedValue("hashedpassword");
-        signJWT.mockResolvedValue("mockedtoken");
+        uuidv4.mockResolvedValue("123");
+        verificationEmail.mockResolvedValue("123");
 
         await signup(req, res);
 
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ token: "mockedtoken" });
+        expect(res.send).toHaveBeenCalled();
     });
 
     it("should handle invalid API key with 401 status code", async () => {
@@ -145,7 +153,7 @@ describe("login", () => {
 
     it("should handle successful login", async () => {
         // Mocking the necessary functions for successful login
-        sql.findUserInfo.mockResolvedValue([{ id: 1, name: "Test User", email: "test@example.com", password: "hashedpassword", admin: null }]);
+        sql.findUserInfo.mockResolvedValue([{ id: 1, name: "Test User", email: "test@example.com", password: "hashedpassword", admin: null, isVerified: 1 }]);
         bcrypt.compare.mockResolvedValue(true);
         signJWT.mockResolvedValue("mockedtoken");
 
@@ -177,12 +185,22 @@ describe("login", () => {
 
     it("should handle incorrect password with 401 status code", async () => {
         // Mocking the necessary functions for incorrect password
-        sql.findUserInfo.mockResolvedValue([{ id: 1, name: "Test User", email: "test@example.com", password: "hashedpassword", admin: null }]);
+        sql.findUserInfo.mockResolvedValue([{ id: 1, name: "Test User", email: "test@example.com", password: "hashedpassword", admin: null, isVerified: 1 }]);
         bcrypt.compare.mockResolvedValue(false);
 
         await login(req, res);
 
         expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should handle unverified user with 403 status code", async () => {
+        sql.findUserInfo.mockResolvedValue([{ id: 1, name: "Test User", email: "test@example.com", password: "hashedpassword", admin: null }]);
+        bcrypt.compare.mockResolvedValue(true);
+
+        await login(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(403);
         expect(res.send).toHaveBeenCalled();
     });
 
@@ -273,6 +291,95 @@ describe("deleteUser", () => {
         await deleteUser(req, res);
 
         expect(sql.deleteUser).toHaveBeenCalledWith(userId);
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalled();
+    });
+});
+
+describe("forgotPassword", () => {
+    beforeEach(() => {
+        req = {
+            body: { email: "test@example.com" }
+        };
+        res = {
+            status: jest.fn(() => res),
+            send: jest.fn(),
+        };
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should update verification string", async () => {
+        sql.updateEmailVerification.mockResolvedValue({ affectedRows: 1 });
+        passwordResetEmail.mockResolvedValue();
+
+        await forgotPassword(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should return status code 401 if affectedRows is zero", async () => {
+        sql.updateEmailVerification.mockResolvedValue({ affectedRows: 0 });
+
+        await forgotPassword(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should handle errors and return 500 status on failure", async () => {
+        const mockError = new Error("Database error");
+        sql.updateEmailVerification.mockRejectedValue(mockError);
+
+        await forgotPassword(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalled();
+    });
+});
+
+describe("updatePassword", () => {
+    beforeEach(() => {
+        req = {
+            body: { newPassword: "asd", verificationString: "123" }
+        };
+        res = {
+            status: jest.fn(() => res),
+            send: jest.fn(),
+        };
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should update password", async () => {
+        sql.updatePassword.mockResolvedValue({ affectedRows: 1 });
+
+        await updatePassword(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should return status code 401 if affectedRows is zero", async () => {
+        sql.updatePassword.mockResolvedValue({ affectedRows: 0 });
+
+        await updatePassword(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should handle errors and return 500 status on failure", async () => {
+        const mockError = new Error("Database error");
+        sql.updatePassword.mockRejectedValue(mockError);
+
+        await updatePassword(req, res);
+
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.send).toHaveBeenCalled();
     });
