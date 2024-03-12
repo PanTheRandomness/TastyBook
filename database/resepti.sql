@@ -20,6 +20,7 @@ USE `recipedb` ;
 CREATE TABLE IF NOT EXISTS `recipedb`.`Email` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(255) NOT NULL,
+  `verificationString` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
@@ -36,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `recipedb`.`User` (
   `name` VARCHAR(45) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   `admin` TINYINT NULL,
+  `isVerified` TINYINT NULL,
   PRIMARY KEY (`id`, `Email_id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_User_Email1_idx` (`Email_id` ASC) VISIBLE,
