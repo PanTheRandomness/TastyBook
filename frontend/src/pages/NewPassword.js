@@ -20,7 +20,7 @@ const NewPassword = () => {
 
         try {
             // Tässä voit käyttää sopivaa API-kutsua salasanan päivittämiseksi
-            //await updatePassword(userId, newPassword);
+            //await updatePassword(newPassword);
 
             // Voit ohjata käyttäjän takaisin kirjautumissivulle tai muihin tarvittaviin sivuihin
             navigate('/login');
