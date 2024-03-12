@@ -139,6 +139,12 @@ button{
     padding-top: 10%;
 }
 
+.picbutton{
+    width: 35px;
+    height: 35px;
+    padding-left: 25px;
+}
+
 .recipeimage{
     max-width: '100%';
     height: 'auto';

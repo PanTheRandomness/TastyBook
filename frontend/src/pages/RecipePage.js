@@ -24,6 +24,10 @@ const Recipe = (props) =>{
     const [errorText, setErrorText] = useState('');
     const openErrorModal = () => setErrorModalOpen(true);
     const closeErrorModal = () => {setErrorModalOpen(false); setErrorText('');}
+
+    const [isShareModalOpen, setShareModalOpen] = useState(false);
+    const openShareModal = () => setShareModalOpen(true);
+    const closeShareModal = () => setShareModalOpen(false);
     
     const [recipe, setRecipe] = useState({
         "header" : "",
@@ -82,7 +86,7 @@ const Recipe = (props) =>{
     return(
         <div>
             <div className='recipe-container'>
-                <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} /*image={image}*/ />
+                <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} /*isShareModalOpen={isShareModalOpen} onShare={}*/ /*image={image}*/ />
                 <div className='recipe-foot'>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={recipe.ingredients} page="recipepage"/>
@@ -93,6 +97,7 @@ const Recipe = (props) =>{
             </div>
             {isDeleteModalOpen ? <DeleteDialog isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={deleteRecipe}/>:null}
             {isErrorModalOpen ? <ErrorModal isOpen={isErrorModalOpen} onClose={closeErrorModal} errortext={errorText} /> : null}
+            {/*isShareModalOpen ? */}
         </div>
     );
 }
@@ -106,10 +111,23 @@ const RecipeHead = (props) =>{
         //TODO: keskiarvon laskeminen
     }
 
+    const saveToFavourites = () => {
+        //TODO: tallentaminen suosikkeihin
+    }
+
+    const share = () => {
+        //TODO: jakaminen
+    }
+
     return(
         <div className='recipe-head'>
             <div>
-                <h1>{recipe.header} {/*<img src='rating_star.png' alt="Star Rating"/>{recipe.rating}*/}</h1>
+                <h1>
+                    {recipe.header}
+                    <input type='image' src="/hearticon.ico" alt="Save to Favourites" onClick={saveToFavourites} className='picbutton' data-testid='saveToFavouritesButton' />
+                    <input type='image' src="/share.ico" alt="Share" onClick={share} className='picbutton' data-testid='shareButton' />
+                </h1>
+                {/*<img src='/rating_star.png' alt="Star Rating"/>{recipe.rating}*/}
                 <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
             </div>
             {/*image ? <img src={image} alt="Recipe Image" className='recipeimage'/>:null*/}
@@ -119,7 +137,6 @@ const RecipeHead = (props) =>{
                 <i>Duration: {recipe.durationHours}h {recipe.durationMinutes}min</i>
             </p>
             <RecipeKeywords keywords={recipe.keywords}/> <br/>
-            
         </div>
     );
 }
