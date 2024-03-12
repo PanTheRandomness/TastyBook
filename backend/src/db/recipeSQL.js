@@ -1,4 +1,3 @@
-const { param } = require("../routes/emailRoutes");
 const { executeSQL } = require("./executeSQL");
 
 const getAllRecipeHashes = (loggedIn) => {

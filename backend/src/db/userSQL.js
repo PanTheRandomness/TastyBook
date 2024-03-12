@@ -1,13 +1,13 @@
 const { executeSQL } = require("./executeSQL");
 
 const findUserInfo = (username) => {
-    let query = "SELECT id, password, admin FROM user WHERE username=?";
+    let query = "SELECT id, password, admin, isVerified FROM user WHERE username=?";
     return executeSQL(query, [username]);
 }
 
-const addEmail = (email) => {
-    const query = "INSERT INTO email (email) VALUES (?);";
-    return executeSQL(query, [email]);
+const addEmail = (email, verificationString) => {
+    const query = "INSERT INTO email (email, verificationString) VALUES (?,?);";
+    return executeSQL(query, [email, verificationString]);
 }
 
 const addUser = (username, name, emailId, password, admin) => {
@@ -25,4 +25,9 @@ const deleteUser = (userId) => {
     return executeSQL(query, [userId]);
 }
 
-module.exports = { findUserInfo, addEmail, addUser, getAllUsers, deleteUser };
+const verifyEmail = (verificationString) => {
+    const query = "UPDATE user u LEFT JOIN email e ON u.Email_id=e.id SET u.isVerified=1 WHERE e.verificationString=?";
+    return executeSQL(query, [verificationString]);
+}
+
+module.exports = { findUserInfo, addEmail, addUser, getAllUsers, deleteUser, verifyEmail };

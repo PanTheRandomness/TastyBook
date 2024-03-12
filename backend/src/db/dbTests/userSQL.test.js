@@ -1,4 +1,4 @@
-const { findUserInfo, addEmail, addUser, getAllUsers, deleteUser } = require("../userSQL");
+const { findUserInfo, addEmail, addUser, getAllUsers, deleteUser, verifyEmail } = require("../userSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
@@ -10,7 +10,7 @@ describe("findUserInfo", () => {
 
         const result = await findUserInfo(username);
 
-        expect(executeSQL).toHaveBeenCalledWith("SELECT id, password, admin FROM user WHERE username=?", [username]);
+        expect(executeSQL).toHaveBeenCalledWith("SELECT id, password, admin, isVerified FROM user WHERE username=?", [username]);
         expect(result).toEqual([{ id: 1, password: "password", admin: null }]);
     });
 });
@@ -19,10 +19,11 @@ describe("addEmail", () => {
     it("should insert an email into the database", async () => {
         executeSQL.mockResolvedValueOnce({ insertId: 1 });
         const email = "test@example.com";
+        const verificationString = "123"
 
-        const result = await addEmail(email);
+        const result = await addEmail(email, verificationString);
 
-        expect(executeSQL).toHaveBeenCalledWith("INSERT INTO email (email) VALUES (?);", [email]);
+        expect(executeSQL).toHaveBeenCalledWith("INSERT INTO email (email, verificationString) VALUES (?,?);", [email, verificationString]);
         expect(result).toEqual({ insertId: 1 });
     });
 });
@@ -98,5 +99,17 @@ describe("deleteUser", () => {
 
         // Check if the function returns the expected result
         expect(result).toEqual({ affectedRows: 0 });
+    });
+});
+
+describe("verifyEmail", () => {
+    it("should update isVerified", async () => {
+        const verificationString = "123";
+
+        executeSQL.mockResolvedValueOnce();
+
+        await verifyEmail(verificationString);
+
+        expect(executeSQL).toHaveBeenCalledWith("UPDATE user u LEFT JOIN email e ON u.Email_id=e.id SET u.isVerified=1 WHERE e.verificationString=?", [verificationString]);
     });
 });

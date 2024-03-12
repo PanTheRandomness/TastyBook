@@ -15,6 +15,7 @@ import "./Styles/NavBar.css";
 import { useUser } from "./customHooks/useUser";
 import Search from "./components/search";
 import NotFound from "./pages/NotFoundPage";
+import EmailVerification from "./pages/EmailVerification";
 
 const App = () => {
   const user = useUser();
@@ -117,7 +118,7 @@ const App = () => {
         ></Route>
       ))}
 
-
+        <Route path='/verify-email/:verificationString' element={<EmailVerification />}></Route>
         <Route path='/search' element={<Search />} />
         <Route path='/*' element={<NotFound />} />
 
