@@ -83,10 +83,14 @@ const Recipe = (props) =>{
         }
     }
 
+    const print = () =>{
+        //TODO: tulostuksen käynnistys
+    }
+
     return(
         <div>
             <div className='recipe-container'>
-                <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} /*isShareModalOpen={isShareModalOpen} onShare={}*/ /*image={image}*/ />
+                <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} isShareModalOpen={isShareModalOpen} onShare={openShareModal} /*image={image}*/ />
                 <div className='recipe-foot'>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={recipe.ingredients} page="recipepage"/>
@@ -97,7 +101,7 @@ const Recipe = (props) =>{
             </div>
             {isDeleteModalOpen ? <DeleteDialog isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={deleteRecipe}/>:null}
             {isErrorModalOpen ? <ErrorModal isOpen={isErrorModalOpen} onClose={closeErrorModal} errortext={errorText} /> : null}
-            {/*isShareModalOpen ? */}
+            {isShareModalOpen ? <ShareModal isOpen={isShareModalOpen} onClose={closeShareModal} onPrint={print} /> : null}
         </div>
     );
 }
@@ -116,7 +120,7 @@ const RecipeHead = (props) =>{
     }
 
     const share = () => {
-        //TODO: jakaminen
+        props.onShare(true);
     }
 
     return(
@@ -210,6 +214,20 @@ const DeleteDialog = ({ isOpen, onClose, onConfirm}) =>{
                 <p className='modal-text'>Are you certain you want to delete this recipe? Deletion cannot be undone.</p>
                 <button onClick={() => onConfirm()} data-testid='confirm-button'>Confirm</button>
                 <button onClick={() => onClose()} data-testid='cancele-button'>Cancel</button>
+            </div>
+        </div>
+    );
+}
+
+const ShareModal = ({ isOpen, onClose, onPrint}) =>{
+    return (
+        <div className={`modal ${isOpen ? 'open' : ''}`} data-testid={"share-dialog"}>
+            <div className="modal-content">
+                <span className="close" onClick={onClose}>&times;</span>
+                <h2 className='modal-header'>Share this recipe!</h2>
+                {/*Tähän se URL boksi! */}
+                <button onClick={() => onPrint()} data-testid='print-button'>Print</button>
+                {/*Printille joku nätimpi nappi? */}
             </div>
         </div>
     );

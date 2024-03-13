@@ -14,7 +14,6 @@ const EllipsisMenu = (props) => {
     setIsOpen(!isOpen);
   };
 
-  //Alla olevat kaksi (ja useRef) mahdollistavat menun sulkemisen klikkaamalla sen ulkopuolelta!
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
