@@ -4,11 +4,19 @@ import '../Styles/Search.css';
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
-const searchRecipes = async (keyword, loggedIn) => {
+const searchRecipes = async (keyword, ingredient, loggedIn) => {
   let url = `${BASE_URL}?`;
 
   if (keyword) {
     url += `keyword=${keyword}`;
+  }
+
+  if (ingredient) {
+    if (keyword) {
+      url += `&ingredient=${ingredient}`;
+    } else {
+      url += `ingredient=${ingredient}`;
+    }
   }
 
   if (!loggedIn) {
@@ -26,6 +34,7 @@ const searchRecipes = async (keyword, loggedIn) => {
     throw new Error('Error searching recipes: ' + error.message);
   }
 };
+
 
 const Search = ({ token }) => {
   const [searchTerm, setSearchTerm] = useState('');
