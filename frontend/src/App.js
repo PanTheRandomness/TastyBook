@@ -18,6 +18,7 @@ import NotFound from "./pages/NotFoundPage";
 import EmailVerification from "./pages/EmailVerification";
 import ForgotPassword from "./pages/ForgotPassword";
 import RecipeList from "./components/RecipeList";
+import './Styles/fonts.css';
 
 const App = () => {
   const user = useUser();
