@@ -12,6 +12,7 @@ import Print from '../components/Print';
 
 const Recipe = (props) =>{
     const { route } = props;
+    const [currentUrl, setCurrentUrl] = useState('');
     const user = useUser();
     const [token] = useToken();
     const navigate = useNavigate();
@@ -28,6 +29,7 @@ const Recipe = (props) =>{
     const [isShareModalOpen, setShareModalOpen] = useState(false);
     const openShareModal = () => setShareModalOpen(true);
     const closeShareModal = () => setShareModalOpen(false);
+    const [copied, setCopied] = useState(false);
     
     const [recipe, setRecipe] = useState({
         "header" : "",
@@ -43,6 +45,10 @@ const Recipe = (props) =>{
         "reviews" : []
     });
 
+    useEffect(() => {
+        setCurrentUrl(window.location.href);
+    }, []);
+
     useEffect(()=>{
         const getRecipe = async () =>{
             try {
@@ -57,6 +63,20 @@ const Recipe = (props) =>{
         }
         getRecipe();
     },[route]);
+
+    const copyUrlToClipboard = () => {
+        navigator.clipboard.writeText(currentUrl)
+          .then(() => {
+            setCopied(true);
+            setTimeout(() => {
+                setCopied(false);
+            }, 5000);
+          })
+          .catch((error) => {
+            setErrorText("An error occurred while loading recipe: " + error);
+            openErrorModal();
+        });
+    };
 
     const deleteRecipe = async () =>{
         try {
@@ -101,7 +121,7 @@ const Recipe = (props) =>{
             </div>
             {isDeleteModalOpen ? <DeleteDialog isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={deleteRecipe}/>:null}
             {isErrorModalOpen ? <ErrorModal isOpen={isErrorModalOpen} onClose={closeErrorModal} errortext={errorText} /> : null}
-            {isShareModalOpen ? <ShareModal isOpen={isShareModalOpen} onClose={closeShareModal} onPrint={print} /> : null}
+            {isShareModalOpen ? <ShareModal isOpen={isShareModalOpen} onClose={closeShareModal} onPrint={print} url={currentUrl} onCopy={copyUrlToClipboard} copied={copied} /> : null}
         </div>
     );
 }
@@ -219,15 +239,24 @@ const DeleteDialog = ({ isOpen, onClose, onConfirm}) =>{
     );
 }
 
-const ShareModal = ({ isOpen, onClose, onPrint}) =>{
+const ShareModal = ({ isOpen, onClose, onPrint, url, onCopy, copied}) =>{
+    
     return (
         <div className={`modal ${isOpen ? 'open' : ''}`} data-testid={"share-dialog"}>
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
                 <h2 className='modal-header'>Share this recipe!</h2>
-                {/*Tähän se URL boksi! */}
-                <button onClick={() => onPrint()} data-testid='print-button'>Print</button>
+                <p className='modal-text'>Copy the link below or print this recipe:</p>
+                <div className="modal-group">
+                    <input type='text' className='url' value={url} readonly />
+                    <button onClick={() => onCopy()} className='copy-button' data-testid='copy-button'>Copy</button>
+                </div>
+                <div className='modal-group'>
+                    <button onClick={() => onPrint()} data-testid='print-button' className='print-button'>Print</button>
+                    {copied ? <p className="copied-message"><i>Link has been successfully coped to clipboard!</i></p>:null}
+                </div>
                 {/*Printille joku nätimpi nappi? */}
+                {/*Tähän myös voi lisätä some-jakamispainikkeita, jos haluaa ja aikaa jää! */}
             </div>
         </div>
     );
