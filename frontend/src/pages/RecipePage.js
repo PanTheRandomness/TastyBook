@@ -233,4 +233,4 @@ const ShareModal = ({ isOpen, onClose, onPrint}) =>{
     );
 }
 
-export { Recipe, RecipeHead, RecipeIngredients, RecipeSteps, DeleteDialog };
+export { Recipe, RecipeHead, RecipeIngredients, RecipeSteps, DeleteDialog, ShareModal };
