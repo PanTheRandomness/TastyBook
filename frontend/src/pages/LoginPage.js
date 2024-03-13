@@ -23,15 +23,19 @@ const Login = ({onLogin}) => {
 
     return(
     <div className="loginFormbody">
-        <form className="loginForm" onSubmit={onLoginClicked}>
-            <h1>Login</h1>
-            {error && <div className="error-message">{error}</div>}
-            <input className="loginForminput"  placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
-            <input className="loginForminput" placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-            <button className="loginFormbutton" disabled={!username || !password} data-testid="login-button">Login</button>
-        </form>
+        <div className="loginForm">
+            <form  onSubmit={onLoginClicked}>
+                <h1>Login</h1>
+                {error && <div className="error-message">{error}</div>}
+                <input className="loginForminput"  placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
+                <input className="loginForminput" placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                <button className="loginFormbutton" disabled={!username || !password} data-testid="login-button">Login</button>
+            </form>
         {/*TODO: muotoilu */}
-        <button onClick={() => navigate("/forgot-password")}>Forgot password?</button>
+        <div className="loginFormLoginContainer">
+        <button className="loginFormbutton"  onClick={() => navigate("/forgot-password")}>Forgot password?</button>
+        </div>
+        </div>
     </div>
 );}
 

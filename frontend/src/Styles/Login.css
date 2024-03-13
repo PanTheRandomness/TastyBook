@@ -6,6 +6,7 @@
   height: 100vh;
   margin: 0;
   background-color: #506350;
+  margin-top:25px;
 }
 
 .loginForm {
@@ -20,11 +21,12 @@
     padding: 60px; 
    border-radius: 15px;
    border: 15px solid #B99B6B;
+   text-align: center;
      
   }
 
   .loginForminput {
-    width: 120%; 
+    width: 80%; 
     padding: 0.8rem; 
     margin-bottom: 1rem;
   }
@@ -32,4 +34,21 @@
   .loginFormbutton {
     width: 30%;
     padding: 0.8rem;
+  }
+
+  .loginFormLoginContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    color: #ffffff;
+   
+  }
+  .loginForm button {
+  
+    padding: 0.8rem 2rem;
+    box-sizing: content-box;
+    margin-top: 1rem;
+    align-self: center;
+   
   }
