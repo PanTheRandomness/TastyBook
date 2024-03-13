@@ -4,14 +4,11 @@
     right: 20px;
     display: flex;
     align-items: center;
-    /*Kuvaa sijoiteltaessa muokkaa alla:*/
-    margin-right: 30%;
   }
   
   .ellipsis {
     width: 20px;
     height: 20px;
-    position: relative;
     cursor: pointer;
   }
   
@@ -58,6 +55,7 @@
   .dropdown ul li {
     padding: 5px 10px;
     cursor: pointer;
+    font-size: medium;
   }
   
   .dropdown ul li:hover {

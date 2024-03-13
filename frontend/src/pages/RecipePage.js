@@ -126,9 +126,9 @@ const RecipeHead = (props) =>{
                     {recipe.header}
                     <input type='image' src="/hearticon.ico" alt="Save to Favourites" onClick={saveToFavourites} className='picbutton' data-testid='saveToFavouritesButton' />
                     <input type='image' src="/share.ico" alt="Share" onClick={share} className='picbutton' data-testid='shareButton' />
+                    <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
                 </h1>
                 {/*<img src='/rating_star.png' alt="Star Rating"/>{recipe.rating}*/}
-                <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
             </div>
             {/*image ? <img src={image} alt="Recipe Image" className='recipeimage'/>:null*/}
             <p>{recipe.description}</p>
