@@ -8,7 +8,7 @@ describe('Search component', () => {
     expect(searchInputLabel).toBeInTheDocument();
   });
 
- /* test('displays search results correctly', async () => {
+ /* test('displays search results correctly.', async () => {
     render(<Search />);
     const searchInput = screen.getByLabelText('Search by name or ingredient:');
     fireEvent.change(searchInput, { target: { value: 'pasta' } });
