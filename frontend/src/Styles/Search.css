@@ -1,0 +1,13 @@
+.searchContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.searchViewContainer > * {
+    flex: 1 1 25%;
+    max-width: 50%;
+    margin: 10px;
+    background-color: #AA5656;
+    border-radius: 15px;
+    border: 15px solid #B99B6B;
+}
