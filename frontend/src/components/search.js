@@ -1,21 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
+import '../Styles/Search.css'; 
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
-const searchRecipes = async (keyword, ingredient, loggedIn) => {
+const searchRecipes = async (keyword, loggedIn) => {
   let url = `${BASE_URL}?`;
 
   if (keyword) {
     url += `keyword=${keyword}`;
-  }
-
-  if (ingredient) {
-    if (keyword) {
-      url += `&ingredient=${ingredient}`;
-    } else {
-      url += `ingredient=${ingredient}`;
-    }
   }
 
   if (!loggedIn) {
@@ -53,7 +46,7 @@ const Search = ({ token }) => {
     const getRecipes = async () => {
       setLoading(true);
       try {
-        const recipes = await searchRecipes(searchTerm, null, loggedIn);
+        const recipes = await searchRecipes(searchTerm, loggedIn);
         setSearchResults(recipes);
         if (recipes.length === 0 && searchTerm !== '') {
           setError('No recipes found.');
@@ -75,13 +68,13 @@ const Search = ({ token }) => {
   const handleSearch = (e) => {
     e.preventDefault();
     setSearchResults([]);
-    setSearchTerm(e.target.value);
+    searchRecipes(searchTerm, loggedIn);
   };
 
   return (
-    <div>
+    <div> 
       <h2>Recipe Search</h2>
-      <label htmlFor="searchInput">Search by name or ingredients:</label>
+      <label htmlFor="searchInput">Search by name or ingredient:</label>
       <input
         id="searchInput"
         type="text"
@@ -95,7 +88,7 @@ const Search = ({ token }) => {
       {searchResults.length > 0 && (
         <div>
           <h3>Search Results:</h3>
-          <ul>
+          <ul className="searchViewContainer">
             {searchResults.map((recipe, index) => (
               <li key={index}>
                 <Link to={`/recipe/${recipe.hash}`}>
