@@ -90,7 +90,8 @@ const App = () => {
             </div>
         }
       </nav>
-
+      <div className="separator"></div>
+      
       <Routes>
         <Route path='/' element={<FrontPage onLogout={onLogout} />}></Route>
         <Route path='/register' element={<Register onLogin={onLogin} />}></Route>

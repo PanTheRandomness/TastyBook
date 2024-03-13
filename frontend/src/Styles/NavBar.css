@@ -19,3 +19,8 @@ nav {
     margin-left: 1rem;
     margin-right: 1rem;
 }
+
+.separator {
+    border-bottom: 3px solid #6A704C;
+    margin-bottom: 20px;
+}
