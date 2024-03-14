@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
 import ErrorModal  from '../components/ErrorModal';
 import { fetchRecipe, removeRecipe, removeRecipeAdmin } from '../api/recipeApi';
-import Print from '../components/Print';
 
 const Recipe = (props) =>{
     const { route } = props;
@@ -142,7 +141,7 @@ const RecipeHead = (props) =>{
     }
     const print = () => {
         window.print();
-     };
+    }
 
     return(
         <div className='recipe-head'>
