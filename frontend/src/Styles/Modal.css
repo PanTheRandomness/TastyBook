@@ -11,20 +11,21 @@
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.644);
-    color: #F1DBBF;
+    color: #6A704C;
 }
 
 .modal-header {
-    color: #F1DBBF;
+    color: #6A704C;
 }
   
 .modal-content {
-    background-color:#506350;
+    background-color:#EDE1D1;
     margin: 15% auto;
     padding: 20px;
-    border: 5px solid #2c362c;
+    border: 5px solid #412E27;
     width: 25%;
     border-radius: 25px;
+    padding-bottom: 2%;
 }
   
 .close{
@@ -42,20 +43,12 @@
 
 .modal-content > button, .copy-button {
     float:right;
-    border-radius: 5px;
+    border-radius: 10px;
     border-style: hidden;
-    background-color: #AA5656;
-    color:#fdbbbb;
-}
-
-.print-button {
-    float:right;
-    border-radius: 5px;
-    border-style: hidden;
-    background-color: #AA5656;
-    color:#fdbbbb;
-    margin-bottom: 10px;
-    margin-top: 10px;
+    background-color: #6A704C;
+    color:#412E27;
+    font-family: 'CustomFont', sans-serif;
+    font-weight: bold;
 }
 
 .modalInput {
@@ -64,7 +57,7 @@
 }
 
 .modal-text {
-    color: #F1DBBF;
+    color: #6A704C;
 }
 
 .modal-group {
