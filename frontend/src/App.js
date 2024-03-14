@@ -3,7 +3,7 @@ import {Register} from './pages/Register';
 import {Login} from './pages/LoginPage';
 import {NewPassword} from './pages/NewPassword';
 import Admin from './pages/Admin';
-import Print from './components/Print';
+
 import {AdminRegister} from './pages/AdminRegister';
 import FrontPage from "./pages/FrontPage";
 import { Recipe } from './pages/RecipePage';
@@ -18,6 +18,7 @@ import NotFound from "./pages/NotFoundPage";
 import EmailVerification from "./pages/EmailVerification";
 import ForgotPassword from "./pages/ForgotPassword";
 import RecipeList from "./components/RecipeList";
+import './Styles/fonts.css';
 
 const App = () => {
   const user = useUser();
@@ -58,19 +59,13 @@ const App = () => {
     setToken("");
   }
 
-  //reseptin haku tulostusta varten
-  const getRecipeByHash = (hash) => {
-    const foundRecipe = recipeRoutes.find((route) => route.hash === hash);
-    return foundRecipe || null;
-  };
-
   if (!loading && errorMessage) return <p>{errorMessage}</p>
 
   return (
     <Router>
       <nav>
         <div>
-          <NavLink className={"navLink"} to={"/"}>Tasty Book</NavLink>
+          <NavLink data-testid="logo" className={"navLink"} to={"/"}><img src='/book.png' alt="Logo" height={80} width={80}/><img src='/text.png' alt="Logo" height={60} width={300}/></NavLink>
         </div>
         {
           (user && token) ?
@@ -89,7 +84,8 @@ const App = () => {
             </div>
         }
       </nav>
-
+      <div className="separator"></div>
+      
       <Routes>
         <Route path='/' element={<FrontPage onLogout={onLogout} />}></Route>
         <Route path='/register' element={<Register onLogin={onLogin} />}></Route>
@@ -110,15 +106,6 @@ const App = () => {
             <Route key={route.hash} path={`/recipe/${route.hash}`} element={<Recipe route={route.hash} />}></Route>
           ))
         }
-        
-        {/*Reititys reseptin tulostukseen */}
-        {recipeRoutes.map((route) => (
-        <Route
-          key={route.hash}
-          path={`/print/${route.hash}`}
-          element={<Print recipe={getRecipeByHash(route.hash)} />}
-        ></Route>
-      ))}
 
         <Route path='/verify-email/:verificationString' element={<EmailVerification />}></Route>
         <Route path='/forgot-password' element={<ForgotPassword />}></Route>

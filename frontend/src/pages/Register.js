@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { register } from "../api/userApi";
 import '../Styles/Register.css';
+import '../Styles/RegistrationDialog.css';
 import { useNavigate } from "react-router-dom";
 
 
@@ -11,27 +12,23 @@ const Register = ({ onLogin }) => {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const [error, setError] = useState(null);
+    const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
-    const onRegisterClicked = async (event) => {
-        event.preventDefault();
+   
+const onRegisterClicked = async (event) => {
+    event.preventDefault();
+    try {
+        const response = await register(username, name, email, password);
+        setIsSuccessDialogOpen(response.ok);
+    } catch (error) {
+        setError(error.message);
+    }
+};
 
-
-        try {
-            const response = await register(username, name, email, password);
-            const { token } = response;
-            onLogin(token);
-            navigate("/");
-        } catch (error) {
-            if (error.message === "Username or email is already in use.") {
-                setError("Email or username is already in use.");
-            } else {
-                
-                setError("Registering failed.");
-            }
-          
-        }
-    };
-      
+    const closeSuccessDialog = () => {
+        setIsSuccessDialogOpen(false);     
+      };
+       
     return (
         <div className="registerFormbody">
             <div className="registerForm">
@@ -49,6 +46,14 @@ const Register = ({ onLogin }) => {
                     <button className="registerFormbutton" onClick={() => navigate("/login")} data-testid="login-button">Login</button>
                 </div>
             </div>
+            {isSuccessDialogOpen && (
+                <div className="dialog-overlay" onClick={closeSuccessDialog}>
+                    <div className="dialog-content">
+                    <h3>You have received an email with a confirmation link.</h3>
+                    <button className="dialog-button" onClick={closeSuccessDialog}>OK</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

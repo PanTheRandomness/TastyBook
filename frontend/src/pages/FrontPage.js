@@ -33,6 +33,7 @@ const FrontPage = ({ onLogout }) => {
     return (
         <div>
             <h1 className="frontpageheader">Tasty Book Recipes:</h1>
+            {/*SearchBar tähän */}
             <div className="recipeViewContainer">
                 {
                     recipes.map(recipe => (

@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 import { useToken } from '../customHooks/useToken';
@@ -8,7 +8,7 @@ import { RecipeSteps, StepDialog } from '../components/addRecipeComponents/Recip
 import { RecipeIngredients, IngredientDialog } from '../components/addRecipeComponents/RecipeIngredients';
 import ErrorModal from '../components/ErrorModal';
 
-const AddRecipe = (props) =>{
+const AddRecipe = (props) => {
     const { addRecipeRoute, route } = props;
     const [token,] = useToken();
     const [name, setName] = useState('');
@@ -18,7 +18,7 @@ const AddRecipe = (props) =>{
     const [image, setImage] = useState(null);
     const [keywords, setKeywords] = useState([]);
     const [ingredients, setIngredients] = useState([]);
-    const [steps, setSteps] = useState([]); 
+    const [steps, setSteps] = useState([]);
     const [visibleToAll, setVisibleToAll] = useState(1);
 
     const [isModalIOpen, setModalIOpen] = useState(false);
@@ -27,14 +27,14 @@ const AddRecipe = (props) =>{
     const [isSaveModalOpen, setSaveModalOpen] = useState(false);
 
     const openModalI = () => setModalIOpen(true);
-    const closeModalI = () => {setModalIOpen(false); setQt(0); setUnit(''); setIng(''); setEditingIngredient(false);}
+    const closeModalI = () => { setModalIOpen(false); setQt(0); setUnit(''); setIng(''); setEditingIngredient(false); }
     const openModalS = () => setModalSOpen(true);
-    const closeModalS = () => {setModalSOpen(false); setText(''); setEditingStep(false);}
+    const closeModalS = () => { setModalSOpen(false); setText(''); setEditingStep(false); }
     const openModalK = () => setModalKOpen(true);
-    const closeModalK = () => {setModalKOpen(false); setW(''); setEditingKeyword(false);}
+    const closeModalK = () => { setModalKOpen(false); setW(''); setEditingKeyword(false); }
     const openSaveModal = () => setSaveModalOpen(true);
     const closeSaveModal = () => setSaveModalOpen(false);
-    
+
     const [text, setText] = useState('');
     const [w, setW] = useState('');
     const [qt, setQt] = useState(0);
@@ -46,22 +46,22 @@ const AddRecipe = (props) =>{
     const [eStepIndex, setEStepIndex] = useState(-1);
     const [eIngIndex, setEIngIndex] = useState(-1);
     const [eKeywordIndex, setEKeywordIndex] = useState(-1);
-    
+
     const navigate = useNavigate();
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState(null);
     const [imageChanged, setImageChanged] = useState(false);
-    
+
     const [isErrorModalOpen, setErrorModalOpen] = useState(false);
     const [errorText, setErrorText] = useState('');
     const openErrorModal = () => setErrorModalOpen(true);
-    const closeErrorModal = () => {setErrorModalOpen(false); setErrorText('');}
+    const closeErrorModal = () => { setErrorModalOpen(false); setErrorText(''); }
 
-    useEffect(()=>{
-        const loadrecipe = async () =>{
-            const requestOptions ={
+    useEffect(() => {
+        const loadrecipe = async () => {
+            const requestOptions = {
                 headers: {
-                    'Authorization' : "Bearer " + token
+                    'Authorization': "Bearer " + token
                 }
             }
             try {
@@ -87,31 +87,31 @@ const AddRecipe = (props) =>{
                 openErrorModal();
             }
         }
-        if(route)loadrecipe();
-    },[]);
+        if (route) loadrecipe();
+    }, []);
 
-    const postRecipe = async () =>{
+    const postRecipe = async () => {
         const requestOptions = {
-            method:'POST',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization' : "Bearer " + token
+                'Authorization': "Bearer " + token
             },
             body: JSON.stringify({
-                header : name,
-                description : description,
-                visibleToAll : visibleToAll,
-                durationHours : durationH,
-                durationMinutes : durationMin,
-                ingredients : ingredients,
-                steps : steps,
-                keywords : keywords
+                header: name,
+                description: description,
+                visibleToAll: visibleToAll,
+                durationHours: durationH,
+                durationMinutes: durationMin,
+                ingredients: ingredients,
+                steps: steps,
+                keywords: keywords
             })
         }
 
         try {
             const response = await fetch("http://localhost:3004/api/recipe", requestOptions);
-            if(response.ok){
+            if (response.ok) {
                 const data = await response.json();
                 addRecipeRoute(data.hash);
                 /*if(image){
@@ -144,30 +144,30 @@ const AddRecipe = (props) =>{
         }
     }
 
-    const saveRecipe = async () =>{
-        const requestOptions ={
-            method:'PUT',
+    const saveRecipe = async () => {
+        const requestOptions = {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization' : "Bearer " + token
+                'Authorization': "Bearer " + token
             },
             body: JSON.stringify({
                 id: id,
-                header : name,
-                description : description,
-                visibleToAll : visibleToAll,
-                durationHours : durationH,
-                durationMinutes : durationMin,
-                steps : steps,
-                keywords : keywords,
-                ingredients : ingredients
+                header: name,
+                description: description,
+                visibleToAll: visibleToAll,
+                durationHours: durationH,
+                durationMinutes: durationMin,
+                steps: steps,
+                keywords: keywords,
+                ingredients: ingredients
             })
         }
 
         try {
             console.log("Save modified called...");
             const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
-            if(response.ok){
+            if (response.ok) {
                 /*if(imageChanged){
                     const finalImage = {
                         Recipe_id : data.id,
@@ -200,16 +200,16 @@ const AddRecipe = (props) =>{
         }
     }
 
-    const addIngredient = (quantity, unit, ingredient) =>{
+    const addIngredient = (quantity, unit, ingredient) => {
         let q = quantity + " " + unit;
         setIngredients([...ingredients, {
-            quantity : q,
-            name : ingredient
+            quantity: q,
+            name: ingredient
         }]);
         closeModalI();
     }
 
-    const editIngredient = (ingredient) =>{
+    const editIngredient = (ingredient) => {
         const index = ingredients.indexOf(ingredient);
         if (index !== -1) {
             setEIngIndex(index);
@@ -225,7 +225,7 @@ const AddRecipe = (props) =>{
         }
     }
 
-    const saveEditedIngredient = () =>{
+    const saveEditedIngredient = () => {
         const newQuantity = qt + " " + unit;
         const editedIngredient = {
             quantity: newQuantity,
@@ -240,7 +240,7 @@ const AddRecipe = (props) =>{
         setEIngIndex(-1);
     }
 
-    const removeIngredient = (ingredient) =>{
+    const removeIngredient = (ingredient) => {
         const index = ingredients.indexOf(ingredient);
         if (index !== -1) {
             const newIngredients = [...ingredients];
@@ -253,12 +253,12 @@ const AddRecipe = (props) =>{
         }
     }
 
-    const addStep = (step) =>{
+    const addStep = (step) => {
         setSteps([...steps, step]);
         closeModalS();
     }
 
-    const editStep = (step) =>{
+    const editStep = (step) => {
         const index = steps.indexOf(step);
         if (index !== -1) {
             setEStepIndex(index);
@@ -271,7 +271,7 @@ const AddRecipe = (props) =>{
         }
     }
 
-    const saveEditedStep = (step) =>{
+    const saveEditedStep = (step) => {
         const updatedSteps = [...steps];
         updatedSteps[eStepIndex] = step;
         setSteps(updatedSteps);
@@ -281,13 +281,13 @@ const AddRecipe = (props) =>{
         setEStepIndex(-1);
     }
 
-    const removeStep= (step) =>{
+    const removeStep = (step) => {
         const index = steps.indexOf(step);
         if (index !== -1) {
             const newSteps = [...steps];
             newSteps.splice(index, 1);
             setSteps(newSteps);
-    
+
             console.log("Removed step: " + step);
         } else {
             setErrorText("Step not found: " + step);
@@ -295,12 +295,12 @@ const AddRecipe = (props) =>{
         }
     }
 
-    const addKeyword = (keyword) =>{
+    const addKeyword = (keyword) => {
         setKeywords([...keywords, keyword]);
         closeModalK();
     }
 
-    const editKeyword = (keyword) =>{
+    const editKeyword = (keyword) => {
         const index = keywords.indexOf(keyword);
         if (index !== -1) {
             setEKeywordIndex(index);
@@ -313,7 +313,7 @@ const AddRecipe = (props) =>{
         }
     }
 
-    const saveEditedKeyword = (keyword) =>{
+    const saveEditedKeyword = (keyword) => {
         const updatedKeywords = [...keywords];
         updatedKeywords[eKeywordIndex] = keyword;
         setKeywords(updatedKeywords);
@@ -324,13 +324,13 @@ const AddRecipe = (props) =>{
         setEKeywordIndex(-1);
     }
 
-    const removeKeyword = (word) =>{
+    const removeKeyword = (word) => {
         const index = keywords.indexOf(word);
         if (index !== -1) {
             const newKeywords = [...keywords];
             newKeywords.splice(index, 1);
             setKeywords(newKeywords);
-    
+
             console.log("Removed keyword: " + word);
         } else {
             setErrorText("Keyword not found: " + word);
@@ -338,111 +338,120 @@ const AddRecipe = (props) =>{
         }
     }
 
-    const handleHoursChange = (e) =>{
+    const handleHoursChange = (e) => {
         let value = parseInt(e.target.value);
         if (value > 200) {
-          value = 200;
+            value = 200;
         }
         setDurationH(value);
     }
 
-    const handleMinutesChange = (e) =>{
+    const handleMinutesChange = (e) => {
         let value = parseInt(e.target.value);
         if (value > 59) {
-          value = 59;
+            value = 59;
         }
         setDurationMin(value);
     }
 
-    const postBtnClicked = () =>{
+    const postBtnClicked = () => {
         openSaveModal();
     }
 
     const handleImageChange = (e) => {
         setImage(e.target.files[0]);
-        if(editing) setImageChanged(true);
+        if (editing) setImageChanged(true);
     }
 
-    return(
+    return (
         <div className='recipeform-body'>
-            <table>
-                <tbody className='recipeform-container'>
-                    <tr className='recipeform-item'>
-                        <th>Recipe name:</th>
-                        <td><input data-testid="recipeNameInput" className="recipeinput" type='text' value={name} onChange={(e) => setName(e.target.value)} /></td>
-                    </tr>
-                    <tr className='recipeform-item'>
-                        <th>Recipe description:</th>
-                        <td><textarea data-testid="recipeDescriptionInput" className="recipeinput" rows="10" cols="50" value={description} onChange={(e) => setDescription(e.target.value)} /></td>
-                    </tr>
-                    <tr className='recipeform-item'>
-                        <th>Visibility:</th>
-                        <td>
-                            <label>
-                                <input data-testid="visibleInput" className="recipeinput" type='checkbox' defaultChecked={true} onChange={(e) => e.target.checked ? setVisibleToAll(1):setVisibleToAll(0)}/>
-                                Public
-                            </label>
-                            {visibleToAll?null:<p style={{color:"#3c493c", fontStyle:"italic"}}>Recipe will only be visible to registered users</p>}
-                        </td>
-                    </tr>
-                    <tr className='recipeform-item'>
-                        <th>Recipe duration:</th>
-                        <td>
-                            <label>
-                                <input data-testid="recipeHoursInput" className="recipeinput" type='number' value={durationH} min="0" max="200" onChange={(e) => handleHoursChange(e)} /> hours 
-                            </label> <br/>
-                            <label>
-                                <input data-testid="recipeMinutesInput" className="recipeinput" type='number' value={durationMin} min="0" max="59" onChange={(e) => handleMinutesChange(e)} /> minutes
-                            </label>
-                        </td>
-                    </tr>
-                    <tr className='recipeform-item'>
-                        <th>Image:</th>
-                        <td>
-                            <input data-testId="recipeImageInput" className="recipeinput" type='file' accept="image/*" onChange={(e) => handleImageChange(e)}/>
-                        </td>
-                    </tr>
-                    <tr className='recipeform-item'>
-                        <th>Ingredients:</th>
-                        <td>
-                            {ingredients.length < 1 ? null : <RecipeIngredients ingredients={ingredients} page="recipeform" onEdit={editIngredient} onRemove={removeIngredient}/>}
-                        </td>
-                        <td><button data-testid="addIngredient" className='addbutton' onClick={openModalI}>Add ingredient</button></td>
-                    </tr>
-                    <tr className='recipeform-item'>
-                        <th>Steps:</th>
-                        <td>
-                            {steps.length < 1 ? null : <RecipeSteps steps={steps} onEdit={editStep} onRemove={removeStep}/>}
-                        </td>
-                        <td><button data-testid="addStep" className='addbutton' onClick={openModalS}>Add step</button></td>
-                    </tr>
-                    <tr className='recipeform-item'>
-                        <th>Keywords:</th>
-                        <td>
-                            {keywords.length < 1 ? null : <RecipeKeywords keywords={keywords} onEdit={editKeyword} onRemove={removeKeyword}/>}
-                        </td>
-                        <td><button data-testid="addKeyword" className='addbutton' onClick={openModalK}>Add keyword</button></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            {!editing?
-                                <button className='postbutton' onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1  || keywords.length < 1 }>Save & Post Recipe</button>:
-                                <button className='saverecipebutton' onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1  || keywords.length < 1 }>Save Recipe</button>
-                            }
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            {isModalIOpen ? <IngredientDialog isOpen={isModalIOpen} onClose={closeModalI} onAdd={addIngredient} onSaveEdited={saveEditedIngredient} editingIngredient={editingIngredient} qt={qt} onQtChange={setQt} unit={unit} onUnitChange={setUnit} ing={ing} onIngChange={setIng}/> : null}
-            {isModalSOpen ? <StepDialog isOpen={isModalSOpen} onClose={closeModalS} onAdd={addStep} onSaveEdited={saveEditedStep} editingStep={editingStep} text={text} onTextChange={setText}/> : null}
-            {isModalKOpen ? <KeywordDialog isOpen={isModalKOpen} onClose={closeModalK} onAdd={addKeyword}  onSaveEdited={saveEditedKeyword} editingKeyword={editingKeyword} w={w} onWChange={setW}/> : null}
-            {!isSaveModalOpen ? null : editing ? <SaveDialog isOpen={isSaveModalOpen} onClose={closeSaveModal} onConfirm={saveRecipe} title={"Do you want to save this recipe?"} /> : <SaveDialog isOpen={isSaveModalOpen} onClose={closeSaveModal} onConfirm={postRecipe} title={"Do you want to post this recipe?"}/>}
+            <div className='recipeform'>
+                <div className='recipeform-top'>
+                    <h1>New Recipe:</h1>
+                </div>
+                <div className='recipeform-mid'>
+                    <table className='recipeform-left'>
+                        <tbody className='recipeform-container'>
+                            <tr className='recipeform-item'>
+                                <th>Recipe name:</th>
+                                <td><input data-testid="recipeNameInput" className="recipeinput" type='text' value={name} onChange={(e) => setName(e.target.value)} /></td>
+                            </tr>
+                            <tr className='recipeform-item'>
+                                <th>Recipe description:</th>
+                                <td><textarea data-testid="recipeDescriptionInput" className="recipeinput" rows="10" cols="50" value={description} onChange={(e) => setDescription(e.target.value)} /></td>
+                            </tr>
+                            <tr className='recipeform-item'>
+                                <th>Visibility:</th>
+                                <td>
+                                    <label>
+                                        <input data-testid="visibleInput" className="recipeinput" type='checkbox' defaultChecked={true} onChange={(e) => e.target.checked ? setVisibleToAll(1) : setVisibleToAll(0)} />
+                                        Public
+                                        {visibleToAll ? null : <div style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage'>Recipe will only be visible to registered users</div>}
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr className='recipeform-item'>
+                                <th>Recipe duration:</th>
+                                <td>
+                                    <label>
+                                        <input data-testid="recipeHoursInput" className="recipeinput" type='number' value={durationH} min="0" max="200" onChange={(e) => handleHoursChange(e)} /> hours
+                                    </label> <br />
+                                    <label>
+                                        <input data-testid="recipeMinutesInput" className="recipeinput" type='number' value={durationMin} min="0" max="59" onChange={(e) => handleMinutesChange(e)} /> minutes
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr className='recipeform-item'>
+                                <th>Image:</th>
+                                <td>
+                                    <input data-testId="recipeImageInput" className="recipeinput" type='file' accept="image/*" onChange={(e) => handleImageChange(e)} />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table className='recipeform-right'>
+                        <tbody className='recipeform-container'>
+                            <tr className='recipeform-item'>
+                                <th>Ingredients:</th>
+                                <td>
+                                    {ingredients.length < 1 ? null : <RecipeIngredients ingredients={ingredients} page="recipeform" onEdit={editIngredient} onRemove={removeIngredient} />}
+                                </td>
+                                <td><button data-testid="addIngredient" className='addbutton' onClick={openModalI}>+</button></td>
+                            </tr>
+                            <tr className='recipeform-item'>
+                                <th>Steps:</th>
+                                <td>
+                                    {steps.length < 1 ? null : <RecipeSteps steps={steps} onEdit={editStep} onRemove={removeStep} />}
+                                </td>
+                                <td><button data-testid="addStep" className='addbutton' onClick={openModalS}>+</button></td>
+                            </tr>
+                            <tr className='recipeform-item'>
+                                <th>Keywords:</th>
+                                <td>
+                                    {keywords.length < 1 ? null : <RecipeKeywords keywords={keywords} onEdit={editKeyword} onRemove={removeKeyword} />}
+                                </td>
+                                <td><button data-testid="addKeyword" className='addbutton' onClick={openModalK}>+</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div className='recipeform-bottom'>
+                    {!editing ?
+                        <button className='postbutton' onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1 || keywords.length < 1}>Save & Post Recipe</button> :
+                        <button className='saverecipebutton' onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1 || keywords.length < 1}>Save Recipe</button>
+                    }
+                </div>
+            </div>
+            {isModalIOpen ? <IngredientDialog isOpen={isModalIOpen} onClose={closeModalI} onAdd={addIngredient} onSaveEdited={saveEditedIngredient} editingIngredient={editingIngredient} qt={qt} onQtChange={setQt} unit={unit} onUnitChange={setUnit} ing={ing} onIngChange={setIng} /> : null}
+            {isModalSOpen ? <StepDialog isOpen={isModalSOpen} onClose={closeModalS} onAdd={addStep} onSaveEdited={saveEditedStep} editingStep={editingStep} text={text} onTextChange={setText} /> : null}
+            {isModalKOpen ? <KeywordDialog isOpen={isModalKOpen} onClose={closeModalK} onAdd={addKeyword} onSaveEdited={saveEditedKeyword} editingKeyword={editingKeyword} w={w} onWChange={setW} /> : null}
+            {!isSaveModalOpen ? null : editing ? <SaveDialog isOpen={isSaveModalOpen} onClose={closeSaveModal} onConfirm={saveRecipe} title={"Do you want to save this recipe?"} /> : <SaveDialog isOpen={isSaveModalOpen} onClose={closeSaveModal} onConfirm={postRecipe} title={"Do you want to post this recipe?"} />}
             {isErrorModalOpen ? <ErrorModal isOpen={isErrorModalOpen} onClose={closeErrorModal} errortext={errorText} /> : null}
         </div>
     );
 }
 
-const SaveDialog = ({ isOpen, onClose, onConfirm, title}) =>{
+const SaveDialog = ({ isOpen, onClose, onConfirm, title }) => {
     let text = "Are you sure you want to save this recipe? TastyBook is not responsible for any copyright infringments or other violations contained in, or concerning this recipe. You will be able to modify the recipe later.";
     return (
         <div className={`modal ${isOpen ? 'open' : ''}`} data-testid={"save-dialog"}>

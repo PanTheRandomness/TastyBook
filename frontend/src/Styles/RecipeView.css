@@ -1,6 +1,10 @@
+/*
+    Vanhat värit: #698269, #B99B6B, #F1DBBF, #AA5656, #3c493c
+    Uudet värit: Primary: #6A704C, Accent: #412E27, Background: #EDE1D1, Secondary backgound: #e2d2bd
+*/
 .recipeView {
     background: none;
-    color: inherit;
+    color: #412E27;
     border: none;
     font: inherit;
     cursor: pointer;
@@ -8,4 +12,8 @@
     text-decoration: none;
     margin-left: 1rem;
     margin-right: 1rem;
+}
+
+.recipeView > div {
+    color: #412E27;
 }

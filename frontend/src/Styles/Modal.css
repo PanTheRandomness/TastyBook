@@ -1,4 +1,8 @@
-.modal{
+/*
+    Vanhat värit: #698269, #B99B6B, #F1DBBF, #AA5656, #3c493c
+    Uudet värit: Primary: #6A704C, Accent: #412E27, Background: #EDE1D1, Secondary backgound: #e2d2bd
+*/
+.modal {
     position: fixed;
     z-index: 1;
     left: 0;
@@ -7,47 +11,68 @@
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.644);
-    color: #683131;
+    color: #6A704C;
 }
 
-.modal-header{
-    color: #683131;
+.modal-header {
+    color: #6A704C;
 }
   
-.modal-content{
-    background-color: #F1DBBF;
+.modal-content {
+    background-color:#EDE1D1;
     margin: 15% auto;
     padding: 20px;
-    border: 5px solid #B99B6B;
+    border: 5px solid #412E27;
     width: 25%;
     border-radius: 25px;
+    padding-bottom: 2%;
 }
   
 .close{
-    color: #683131;
+    color: #9b9792;
     font-size: 28px;
     font-weight: bold;
     float:right;
 }
   
-.close:hover,.close:focus{
+.close:hover, .close:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
 }
 
-.modal-content > button{
+.modal-content > button, .copy-button {
     float:right;
-    border-radius: 5px;
+    border-radius: 10px;
     border-style: hidden;
-    background-color: #B99B6B;
+    background-color: #6A704C;
+    color:#412E27;
+    font-family: 'CustomFont', sans-serif;
+    font-weight: bold;
 }
 
-.modalInput{
+.modalInput {
     border-style:hidden;
     border-radius: 3px;
 }
 
-.modal-text{
-    color: #683131;
+.modal-text {
+    color: #6A704C;
+}
+
+.modal-group {
+    display: flex;
+    align-items: center;
+}
+
+.url {
+    border-radius: 2px;
+    border-style: hidden;
+    width: 80%;
+    flex: 1;
+}
+
+.copied-message {
+    font-size: small;
+    color: #19221c;
 }

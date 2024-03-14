@@ -8,10 +8,10 @@ import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
 import ErrorModal  from '../components/ErrorModal';
 import { fetchRecipe, removeRecipe, removeRecipeAdmin } from '../api/recipeApi';
-import Print from '../components/Print';
 
 const Recipe = (props) =>{
     const { route } = props;
+    const [currentUrl, setCurrentUrl] = useState('');
     const user = useUser();
     const [token] = useToken();
     const navigate = useNavigate();
@@ -28,6 +28,7 @@ const Recipe = (props) =>{
     const [isShareModalOpen, setShareModalOpen] = useState(false);
     const openShareModal = () => setShareModalOpen(true);
     const closeShareModal = () => setShareModalOpen(false);
+    const [copied, setCopied] = useState(false);
     
     const [recipe, setRecipe] = useState({
         "header" : "",
@@ -43,6 +44,10 @@ const Recipe = (props) =>{
         "reviews" : []
     });
 
+    useEffect(() => {
+        setCurrentUrl(window.location.href);
+    }, []);
+
     useEffect(()=>{
         const getRecipe = async () =>{
             try {
@@ -57,6 +62,20 @@ const Recipe = (props) =>{
         }
         getRecipe();
     },[route]);
+
+    const copyUrlToClipboard = () => {
+        navigator.clipboard.writeText(currentUrl)
+          .then(() => {
+            setCopied(true);
+            setTimeout(() => {
+                setCopied(false);
+            }, 5000);
+          })
+          .catch((error) => {
+            setErrorText("An error occurred while loading recipe: " + error);
+            openErrorModal();
+        });
+    };
 
     const deleteRecipe = async () =>{
         try {
@@ -82,11 +101,12 @@ const Recipe = (props) =>{
             openErrorModal();
         }
     }
+    
 
     return(
         <div>
             <div className='recipe-container'>
-                <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} /*isShareModalOpen={isShareModalOpen} onShare={}*/ /*image={image}*/ />
+                <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} isShareModalOpen={isShareModalOpen} onShare={openShareModal} /*image={image}*/ />
                 <div className='recipe-foot'>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={recipe.ingredients} page="recipepage"/>
@@ -97,7 +117,7 @@ const Recipe = (props) =>{
             </div>
             {isDeleteModalOpen ? <DeleteDialog isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={deleteRecipe}/>:null}
             {isErrorModalOpen ? <ErrorModal isOpen={isErrorModalOpen} onClose={closeErrorModal} errortext={errorText} /> : null}
-            {/*isShareModalOpen ? */}
+            {isShareModalOpen ? <ShareModal isOpen={isShareModalOpen} onClose={closeShareModal} url={currentUrl} onCopy={copyUrlToClipboard} copied={copied} /> : null}
         </div>
     );
 }
@@ -116,7 +136,10 @@ const RecipeHead = (props) =>{
     }
 
     const share = () => {
-        //TODO: jakaminen
+        props.onShare(true);
+    }
+    const print = () => {
+        window.print();
     }
 
     return(
@@ -126,9 +149,10 @@ const RecipeHead = (props) =>{
                     {recipe.header}
                     <input type='image' src="/hearticon.ico" alt="Save to Favourites" onClick={saveToFavourites} className='picbutton' data-testid='saveToFavouritesButton' />
                     <input type='image' src="/share.ico" alt="Share" onClick={share} className='picbutton' data-testid='shareButton' />
+                    <button onClick={print}>Print</button>
+                    <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
                 </h1>
                 {/*<img src='/rating_star.png' alt="Star Rating"/>{recipe.rating}*/}
-                <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
             </div>
             {/*image ? <img src={image} alt="Recipe Image" className='recipeimage'/>:null*/}
             <p>{recipe.description}</p>
@@ -215,4 +239,23 @@ const DeleteDialog = ({ isOpen, onClose, onConfirm}) =>{
     );
 }
 
-export { Recipe, RecipeHead, RecipeIngredients, RecipeSteps, DeleteDialog };
+const ShareModal = ({ isOpen, onClose, url, onCopy, copied}) =>{
+    
+    return (
+        <div className={`modal ${isOpen ? 'open' : ''}`} data-testid={"share-dialog"}>
+            <div className="modal-content">
+                <span className="close" onClick={onClose}>&times;</span>
+                <h2 className='modal-header'>Share this recipe!</h2>
+                <p className='modal-text'>Copy the link below or print this recipe:</p>
+                <div className="modal-group">
+                    <input type='text' className='url' value={url} readonly />
+                    <button onClick={() => onCopy()} className='copy-button' data-testid='copy-button'>Copy</button>
+                </div>
+                {copied ? <p className="copied-message"><i>Link has been successfully coped to clipboard!</i></p>:null}
+                {/*Tähän myös voi lisätä some-jakamispainikkeita, jos haluaa ja aikaa jää! */}
+            </div>
+        </div>
+    );
+}
+
+export { Recipe, RecipeHead, RecipeIngredients, RecipeSteps, DeleteDialog, ShareModal };

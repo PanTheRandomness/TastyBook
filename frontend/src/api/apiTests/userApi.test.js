@@ -29,7 +29,7 @@ describe('register function', () => {
         const response = await userApi.register(username, name, email, password);  // Use userApi.register instead of register
 
       // Assert
-      expect(response).toEqual({});
+      expect(response).toEqual({ ok: true });
       expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/signup`, {
         method: 'POST',
         headers: {
@@ -48,9 +48,7 @@ describe('register function', () => {
       });
 
       // Act and Assert
-      await expect(userApi.register('testuser', 'Test User', 'test@example.com', 'testpassword')).rejects.toThrowError(
-        `Registering failed: ${errorMessage}`
-      );
+      await expect(userApi.register('testuser', 'Test User', 'test@example.com', 'testpassword')).rejects.toThrowError(errorMessage);
     });
 });
 
@@ -65,7 +63,7 @@ describe('register function', () => {
 
       // Act and Assert
       await expect(userApi.register('testuser', 'Test User', 'test@example.com', 'testpassword')).rejects.toThrowError(
-          'Username or email is already in use.'
+          'Email or username is already in use.'
       );
     });
 
@@ -130,7 +128,7 @@ describe('adminregister', () => {
       const response = await userApi.adminregister(username, name, email, password, api_key);
 
       // Assert
-      expect(response).toEqual({});
+      expect(response).toEqual({ ok: true });
       expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/signup`, {
         method: 'POST',
         headers: {
@@ -142,16 +140,14 @@ describe('adminregister', () => {
 
     test('should throw an error if admin registration fails', async () => {
       // Arrange
-      const errorMessage = 'Admin registration failed';
+      const errorMessage = 'Registration failed';
       fetch.mockResolvedValueOnce({
         ok: false,
         statusText: errorMessage,
       });
 
       // Act and Assert
-      await expect(userApi.adminregister('adminuser', 'Admin User', 'admin@example.com', 'adminpassword', 'testapikey')).rejects.toThrowError(
-        `Admin registering failed: ${errorMessage}`
-      );
+      await expect(userApi.adminregister('adminuser', 'Admin User', 'admin@example.com', 'adminpassword', 'testapikey')).rejects.toThrowError(errorMessage);
     });
   });
 

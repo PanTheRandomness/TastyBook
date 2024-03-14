@@ -1,17 +1,18 @@
+/*
+    Vanhat värit: #698269, #B99B6B, #F1DBBF, #AA5656, #3c493c
+    Uudet värit: Primary: #6A704C, Accent: #412E27, Background: #EDE1D1, Secondary backgound: #e2d2bd
+*/
 .ellipsis-menu {
     position: absolute;
     top: 20px;
     right: 20px;
     display: flex;
     align-items: center;
-    /*Kuvaa sijoiteltaessa muokkaa alla:*/
-    margin-right: 30%;
   }
   
   .ellipsis {
     width: 20px;
     height: 20px;
-    position: relative;
     cursor: pointer;
   }
   
@@ -58,6 +59,7 @@
   .dropdown ul li {
     padding: 5px 10px;
     cursor: pointer;
+    font-size: medium;
   }
   
   .dropdown ul li:hover {

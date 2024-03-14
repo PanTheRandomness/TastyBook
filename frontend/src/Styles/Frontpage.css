@@ -1,18 +1,26 @@
+/*
+    Vanhat värit: #698269, #B99B6B, #F1DBBF, #AA5656, #3c493c
+    Uudet värit: Primary: #6A704C, Accent: #412E27, Background: #EDE1D1, Secondary backgound: #e2d2bd
+*/
+
 .recipeViewContainer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    background-color: #e2d2bd;
 }
 
 .recipeViewContainer > * {
     flex: 1 1 25%;
     max-width: 25%;
     margin: 10px;
-    background-color: #AA5656;
-    border-radius: 15px;
-    border: 15px solid #B99B6B;
+    background-color: #EDE1D1;
+    border-radius: 20px;
+    border: 10px solid #6A704C;
+    color: #412E27;
 }
 
 .frontpageheader {
     text-align: center;
+    color: #6A704C;
 }

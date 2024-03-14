@@ -1,17 +1,24 @@
+/*
+    Vanhat värit: #698269, #B99B6B, #F1DBBF, #AA5656, #3c493c
+    Uudet värit: Primary: #6A704C, Accent: #412E27, Background: #EDE1D1, Secondary backgound: #e2d2bd
+*/
 nav {
     display: flex;
     justify-content: space-between;
-    background-color: #AA5656;
 }
 
 .navLink {
     background: none;
-    color: inherit;
+    color: #6A704C;
     border: none;
     font: inherit;
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 3rem;
     text-decoration: none;
     margin-left: 1rem;
     margin-right: 1rem;
+}
+
+.separator {
+    border-bottom: 3px solid #6A704C;
 }

@@ -1,62 +1,114 @@
 /*
-    Värit: #698269, #B99B6B, #F1DBBF, #AA5656, #3c493c
+    Vanhat värit: #698269, #B99B6B, #F1DBBF, #AA5656, #3c493c
+    Uudet värit: Primary: #6A704C, Accent: #412E27, Background: #EDE1D1, Secondary backgound: #e2d2bd
 */
 
-body{
-    background-color: #506350;
+body {
+    background-color: #EDE1D1;
+    font-family: 'CustomFont', sans-serif;
 }
 
-button{
+button {
     cursor: pointer;
 }
 
-.recipeform-body{
-    display: flex;
-    justify-content: center;
-    color:#F1DBBF;
+.recipeform {
+    background-color: #EDE1D1;
+    border-radius: 40px;
+    margin: 1rem;
 }
 
-.recipeform-container{
+.recipeform-body {
+    display: flex;
+    flex-direction: column;
+    color: #412E27;
+    background-color: #e2d2bd;
+}
+
+.recipeform-top {
+    color: #6A704C;
+    margin: 2rem;
+    padding-left: 13%;
+}
+
+.recipeform-mid {
+    display: flex;
+    flex-direction: row;
+    margin: 2rem;
+    padding-left: 10%;
+}
+
+.recipeform-bottom {
+    padding-left: 45%;
+}
+
+.recipeform-left, .recipeform-right {
+    margin: 2rem;
+}
+
+.recipeform-container {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    background-color:#698269;
+    color: #6A704C;
     align-items:left;
     border-radius: 20px;
 }
 
-.recipeform-item{
-    margin:10px;
+.recipeform-item {
+    margin: 10px;
     border-radius: 5px;
     display: flex;
+    font-size: x-large;
 }
 
-.recipeinput{
-    border-style:hidden;
+.recipeinput {
+    border-style: hidden;
     border-radius: 3px;
 }
 
-.addbutton{
-    border-radius: 5px;
+.addbutton {
+    border-radius: 15px;
     border-style: hidden;
-    background-color: #AA5656;
-    color:#F1DBBF;
+    background-color: #6A704C;
+    color: #412E27;
+    font-family: 'CustomFont', sans-serif;
+    font-weight: bold;
+    font-size: large;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
-.editremovebutton{
-    background-color: #506350;
-    color:#96be96;
+.editremovebutton {
+    border-radius: 10px;
     border-style: hidden;
-    border-radius: 5px;
+    background-color: #6A704C;
+    color: #412E27;
+    font-family: 'CustomFont', sans-serif;
+    font-weight: bold;
+    font-size: large;
 }
 
-.postbutton, .saverecipebutton{
-    position: relative;
-    border-radius: 5px;
+.postbutton, .saverecipebutton {
+    border-radius: 20px;
     border-style: hidden;
+    background-color: #6A704C;
+    font-family: 'CustomFont', sans-serif;
+    font-weight: bold;
+    font-size: x-large;
+    color: #412E27;
+    padding: 7px;
 }
 
-.recipe-container{
+.visibilityMessage {
+    font-size: medium;
+}
+
+.recipeform-keyword, .recipeform-steps > ol > li {
+    color: #6A704C;
+}
+
+.recipe-container {
     display: flex;
     flex-direction: column;
     background-color: #B99B6B;
@@ -65,7 +117,7 @@ button{
     margin: 30px;
 }
 
-.recipe-head{
+.recipe-head {
     background-color: #AA5656;
     border-radius: 20px;
     margin: 10px;
@@ -77,7 +129,7 @@ button{
     margin: 10px;
 }
 
-.recipe-head > button{
+.recipe-head > button {
     background-color: #506350;
     color:#F1DBBF;
     border-style: none;
@@ -85,7 +137,7 @@ button{
     margin:10px;
 }
 
-.keywords > li{
+.keywords > li {
     background-color: #506350;
     border-radius: 10px;
     display: inline;
@@ -94,12 +146,12 @@ button{
     cursor: pointer;
 }
 
-.recipe-foot{
+.recipe-foot {
     display: flex;
     flex-wrap: wrap;
 }
 
-.recipe{
+.recipe {
     background-color: #F1DBBF;
     display: flex;
     flex-direction: column;
@@ -110,11 +162,11 @@ button{
     color: #3c493c;
 }
 
-.recipe-steps{
+.recipe-steps {
     color: #3c493c;
 }
 
-.recipe-reviews, .review-placeholder{
+.recipe-reviews, .review-placeholder {
     background-color: #AA5656;
     border-radius: 20px;
     margin: 10px;
@@ -122,30 +174,30 @@ button{
     flex-basis: 25%;
 }
 
-.review-button{
+.review-button {
     border-style: none;
     border-radius: 10px;
     background-color:#506350;
     color:#F1DBBF;
 }
 
-.recipeform-step{
+.recipeform-step {
     color:#F1DBBF;
 }
 
-.notfound{
+.notfound {
     text-align: center;
     font-style: italic;
     padding-top: 10%;
 }
 
-.picbutton{
+.picbutton {
     width: 35px;
     height: 35px;
     padding-left: 25px;
 }
 
-.recipeimage{
+.recipeimage {
     max-width: '100%';
     height: 'auto';
 }
