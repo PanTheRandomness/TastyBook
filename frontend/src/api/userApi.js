@@ -1,6 +1,8 @@
 const BASE_URL = "http://localhost:3004";
 
-export const register = async (username, name, email, password) => {
+//vanha koodi
+
+{/*export const register = async (username, name, email, password) => {
     try {
         const response = await fetch(`${BASE_URL}/api/signup`, {
             method: "POST",
@@ -22,12 +24,38 @@ export const register = async (username, name, email, password) => {
             }
         }
 
-
         return response.json();
     } catch (error) {
         throw error;
     }
 }
+*/}
+
+//uusi koodi:
+export const register = async (username, name, email, password) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/signup`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, name, email, password }),
+        });
+
+        if (!response.ok) {
+            let errorMessage = "Registration failed.";
+            if (response.status === 409) {
+                errorMessage = "Email or username is already in use.";
+            }
+            throw new Error(errorMessage);
+        }
+
+        return { ok: true };
+    } catch (error) {
+        throw error;
+    }
+};
+
 
 export const login = async (username, password) => {
     try {
