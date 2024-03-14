@@ -1,11 +1,10 @@
 import { useState } from "react";
 import '../Styles/Print.css';
 
-const Print = (props) =>{
-    const recipe = props.recipe;
+const Print = ({ recipe }) =>{
 
     return(
-        <div className='print-container'>
+        <div id="recipe-to-print" className='print-container'>
             <h1>{recipe.header}</h1>
             <p>{recipe.description}</p>
             <p>Created By: {recipe.username}</p>

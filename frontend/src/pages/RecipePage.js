@@ -102,10 +102,7 @@ const Recipe = (props) =>{
             openErrorModal();
         }
     }
-
-    const print = () =>{
-        //TODO: tulostuksen käynnistys
-    }
+    
 
     return(
         <div>
@@ -121,7 +118,8 @@ const Recipe = (props) =>{
             </div>
             {isDeleteModalOpen ? <DeleteDialog isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={deleteRecipe}/>:null}
             {isErrorModalOpen ? <ErrorModal isOpen={isErrorModalOpen} onClose={closeErrorModal} errortext={errorText} /> : null}
-            {isShareModalOpen ? <ShareModal isOpen={isShareModalOpen} onClose={closeShareModal} onPrint={print} url={currentUrl} onCopy={copyUrlToClipboard} copied={copied} /> : null}
+            {isShareModalOpen ? <ShareModal isOpen={isShareModalOpen} onClose={closeShareModal} url={currentUrl} onCopy={copyUrlToClipboard} copied={copied} /> : null}
+            
         </div>
     );
 }
@@ -142,6 +140,9 @@ const RecipeHead = (props) =>{
     const share = () => {
         props.onShare(true);
     }
+    const print = () => {
+        window.print();
+     };
 
     return(
         <div className='recipe-head'>
@@ -150,6 +151,7 @@ const RecipeHead = (props) =>{
                     {recipe.header}
                     <input type='image' src="/hearticon.ico" alt="Save to Favourites" onClick={saveToFavourites} className='picbutton' data-testid='saveToFavouritesButton' />
                     <input type='image' src="/share.ico" alt="Share" onClick={share} className='picbutton' data-testid='shareButton' />
+                    <button onClick={print}>Print</button>
                     <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
                 </h1>
                 {/*<img src='/rating_star.png' alt="Star Rating"/>{recipe.rating}*/}
