@@ -4,7 +4,7 @@
 */
 .recipeView {
     background: none;
-    color: inherit;
+    color: #412E27;
     border: none;
     font: inherit;
     cursor: pointer;
@@ -12,4 +12,8 @@
     text-decoration: none;
     margin-left: 1rem;
     margin-right: 1rem;
+}
+
+.recipeView > div {
+    color: #412E27;
 }

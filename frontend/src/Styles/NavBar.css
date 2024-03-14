@@ -5,16 +5,15 @@
 nav {
     display: flex;
     justify-content: space-between;
-    background-color: #AA5656;
 }
 
 .navLink {
     background: none;
-    color: inherit;
+    color: #6A704C;
     border: none;
     font: inherit;
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 3rem;
     text-decoration: none;
     margin-left: 1rem;
     margin-right: 1rem;
@@ -22,5 +21,4 @@ nav {
 
 .separator {
     border-bottom: 3px solid #6A704C;
-    margin-bottom: 20px;
 }

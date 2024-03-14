@@ -6,8 +6,10 @@ const RecipeView = (props) => {
     return (
         <NavLink className={"recipeView"} to={`/recipe/${recipe.hash}`}>
             <h3>{recipe.header}</h3>
+            {/*<img src='/rating_star.png' alt="Star Rating"/>*/}{/*Arviointi tähän */}
             { recipe.username ? <div>By: {recipe.username}</div> :
             <div>By: Deleted user</div> }
+            {/*Kuvan asettelu sivuun*/}
         </NavLink>
     );
 }

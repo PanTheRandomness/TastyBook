@@ -65,7 +65,7 @@ const App = () => {
     <Router>
       <nav>
         <div>
-          <NavLink className={"navLink"} to={"/"}>Tasty Book</NavLink>
+          <NavLink className={"navLink"} to={"/"}><img src='/book.png' alt="Logo" height={80} width={80}/><img src='/text.png' alt="Logo" height={60} width={300}/></NavLink>
         </div>
         {
           (user && token) ?
