@@ -28,9 +28,9 @@ describe('Navigation component', () => {
         jest.spyOn(token, 'useToken').mockReturnValue([mockToken, jest.fn()]);
 
         await waitFor(() => {
-            const { getByText } = render(<App />);
+            const { getByText, getByTestId } = render(<App />);
 
-            expect(getByText('Tasty Book')).toBeInTheDocument();
+            expect(getByTestId('logo')).toBeInTheDocument();
             expect(getByText('Add Recipe')).toBeInTheDocument();
             expect(getByText('Logout')).toBeInTheDocument();
         });
@@ -44,9 +44,9 @@ describe('Navigation component', () => {
         jest.spyOn(token, 'useToken').mockReturnValue([mockToken, jest.fn()]);
 
         await waitFor(() => {
-            const { getByText } = render(<App />);
+            const { getByText, getByTestId } = render(<App />);
 
-            expect(getByText('Tasty Book')).toBeInTheDocument();
+            expect(getByTestId('logo')).toBeInTheDocument();
             expect(getByText('Register')).toBeInTheDocument();
             expect(getByText('Login')).toBeInTheDocument();
         });
