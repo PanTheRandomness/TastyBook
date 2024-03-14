@@ -146,21 +146,21 @@ const editRecipe = async (req, res) => {
 }
 
 const checkRecipeBody = (header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients) => {
-    if (typeof header !== "string" ||
-        typeof description !== "string" ||
+    if (typeof header !== "string" || header.length > 45 ||
+        typeof description !== "string" || description.length > 2000 ||
         !(visibleToAll === 0 || visibleToAll === 1) ||
         typeof durationHours !== "number" || durationHours < 0 ||
         typeof durationMinutes !== "number" || durationMinutes < 0 || durationMinutes > 59)
         throw new Error();
 
-    if (!Array.isArray(steps) || !steps.every(step => typeof step === "string")) throw new Error();
+    if (!Array.isArray(steps) || !steps.every(step => typeof step === "string" && step.length <= 255)) throw new Error();
 
-    if (!Array.isArray(keywords) || !keywords.every(word => typeof word === "string")) throw new Error();
+    if (!Array.isArray(keywords) || !keywords.every(word => typeof word === "string" && word.length <= 45)) throw new Error();
 
     if (!Array.isArray(ingredients) || !ingredients.every(ingredient =>
         typeof ingredient === "object" &&
-        typeof ingredient.name === "string" &&
-        typeof ingredient.quantity === "string"))
+        typeof ingredient.name === "string" && ingredient.name.length <= 45 &&
+        typeof ingredient.quantity === "string" && ingredient.quantity.length <= 45))
         throw new Error();
 }
 

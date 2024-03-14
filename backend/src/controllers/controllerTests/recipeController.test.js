@@ -221,6 +221,14 @@ describe("addRecipe", () => {
         expect(res.send).toHaveBeenCalled();
     });
 
+    it ("should handle too long items with 400 status code", async () => {
+        req.body.header = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultrices lacinia varius. Morbi at congue risus, nec facilisis nibh. Curabitur arcu nulla, tincidunt nec dictum eget, iaculis nec felis.";
+        await addRecipe(req, res);
+    
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.send).toHaveBeenCalled();
+    });
+
     it("should handle inserting recipes into the database", async () => {
         const mockDigest = jest.fn(() => "hashedRecipe");
         const createHashSpy = jest.spyOn(crypto, "createHash").mockReturnValue({

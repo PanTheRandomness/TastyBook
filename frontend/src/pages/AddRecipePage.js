@@ -404,7 +404,7 @@ const AddRecipe = (props) => {
                             <tr className='recipeform-item'>
                                 <th>Image:</th>
                                 <td>
-                                    <input data-testId="recipeImageInput" className="recipeinput" type='file' accept="image/*" onChange={(e) => handleImageChange(e)} />
+                                    <input data-testid="recipeImageInput" className="recipeinput" type='file' accept="image/*" onChange={(e) => handleImageChange(e)} />
                                 </td>
                             </tr>
                         </tbody>

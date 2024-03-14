@@ -22,8 +22,10 @@ describe("EmailVerification", () => {
     it("renders null while loading", async () => {
         useParams.mockReturnValue({ verificationString: "some_verification_string" });
 
-        const { container } = render(<EmailVerification />);
-        expect(container.firstChild).toBeNull();
+        await act(async () => {
+            const { container } = render(<EmailVerification />);
+            expect(container.firstChild).toBeNull();
+        });
     });
 
     it("renders error message on failed verification", async () => {
