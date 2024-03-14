@@ -17,7 +17,6 @@ const Register = ({ onLogin }) => {
    
 const onRegisterClicked = async (event) => {
     event.preventDefault();
-
     try {
         const response = await register(username, name, email, password);
         setIsSuccessDialogOpen(response.ok);
@@ -27,8 +26,7 @@ const onRegisterClicked = async (event) => {
 };
 
     const closeSuccessDialog = () => {
-        setIsSuccessDialogOpen(false); // Suljetaan dialogi
-        //navigate("/"); // Voit lisätä tarvittaessa uudelleenohjauksen
+        setIsSuccessDialogOpen(false);     
       };
        
     return (

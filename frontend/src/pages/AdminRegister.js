@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { adminregister } from "../api/userApi";
 import '../Styles/Register.css';
+import '../Styles/RegistrationDialog.css';
 import { useNavigate } from "react-router-dom";
 
 
@@ -12,24 +13,21 @@ const AdminRegister = ({ onLogin }) => {
     const [api_key, setApi_key] = useState('');
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
     const onRegisterClicked = async (event) => {
         event.preventDefault();
         try {
             const response = await adminregister(username, name, email, password, api_key);
-            const { token } = response;
-            onLogin(token);
-            navigate("/");
+            setIsSuccessDialogOpen(response.ok);
         } catch (error) {
-            if (error.message === "Username or email is already in use.") {
-                setError("Email or username is already in use.");
-            } else {
-                
-                setError("Registering failed.");
-            }
-          
+            setError(error.message);
         }
     };
+    
+        const closeSuccessDialog = () => {
+            setIsSuccessDialogOpen(false); 
+          };
       
     return (
         <div className="registerFormbody">
@@ -45,6 +43,14 @@ const AdminRegister = ({ onLogin }) => {
                 <button className="registerFormbutton" disabled={!username || !password} data-testid="register-button">Register</button>
             </form>
             </div>
+            {isSuccessDialogOpen && (
+                <div className="dialog-overlay" onClick={closeSuccessDialog}>
+                    <div className="dialog-content">
+                    <h3>You have received an email with a confirmation link.</h3>
+                    <button className="dialog-button" onClick={closeSuccessDialog}>OK</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

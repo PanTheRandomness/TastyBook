@@ -1,37 +1,5 @@
 const BASE_URL = "http://localhost:3004";
 
-//vanha koodi
-
-{/*export const register = async (username, name, email, password) => {
-    try {
-        const response = await fetch(`${BASE_URL}/api/signup`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ username, name, email, password }),
-        });
-
-        //kaksi eri erroria, toinen että säpo ja username jo käytössä, toinen että serveri kaatui
-       
-        if (!response.ok) {
-            if (response.status === 409) {
-                // Käyttäjätunnus tai sähköposti on jo käytössä
-                throw new Error("Username or email is already in use.");
-            } else {
-                // Muut virhetilanteet
-                throw new Error(`Registering failed: ${response.statusText}`);
-            }
-        }
-
-        return response.json();
-    } catch (error) {
-        throw error;
-    }
-}
-*/}
-
-//uusi koodi:
 export const register = async (username, name, email, password) => {
     try {
         const response = await fetch(`${BASE_URL}/api/signup`, {
@@ -88,10 +56,14 @@ export const adminregister = async (username, name, email, password, api_key) =>
         });
 
         if (!response.ok) {
-            throw new Error(`Admin registering failed: ${response.statusText}`);
+            let errorMessage = "Registration failed.";
+            if (response.status === 409) {
+                errorMessage = "Email or username is already in use.";
+            }
+            throw new Error(errorMessage);
         }
 
-        return response.json();
+        return { ok: true };
     } catch (error) {
         throw error;
     }
