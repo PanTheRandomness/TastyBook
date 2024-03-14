@@ -1,13 +1,13 @@
 .dialog-overlay {
     position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 10px;
-    border-radius: 10px;
-    max-width: 100%;
-    text-align: center;
-    background-color: #506350;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.644);
+    color: #F1DBBF;
     
     
 }
@@ -18,12 +18,16 @@
   }
 
 .dialog-content {
-    background-color:#AA5656;
+    background-color:#506350;
+    margin: 8% auto;
     padding: 20px;
-    border-radius: 10px;
-    max-width: 80%;
-    text-align: center;
-    border: 15px solid #B99B6B;
+    border: 5px solid #2c362c;
+    width: 25%;
+    border-radius: 25px;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
 }
 
 .dialog-button {
@@ -33,6 +37,7 @@
     color: black;
     border: none;
     cursor: pointer;
+    
 }
 
 .dialog-button:hover {
