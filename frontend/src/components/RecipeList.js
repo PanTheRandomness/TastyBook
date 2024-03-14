@@ -1,39 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; 
+import { useEffect, useState } from 'react';
+import { useUser } from '../customHooks/useUser'; 
+import { Link } from 'react-router-dom';
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
-const RecipeList = ({ currentUsername }) => {
+const RecipeList = () => {
+  const user = useUser(); 
   const [userRecipes, setUserRecipes] = useState([]);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    const fetchUserRecipes = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}?username=${currentUsername}`);
+  const fetchUserRecipes = async () => {
+    try {
+      console.log(user); // Tulosta käyttäjäobjekti konsoliin tarkistukseksi alkuun
+      if (user && user.loggedIn) { 
+        const response = await fetch(`${BASE_URL}?username=recipe.${user.username}`);
         if (!response.ok) {
           throw new Error('Failed to fetch user recipes');
         }
         const data = await response.json();
-        if (data.recipes.length === 0) {
-          setError('No recipes found.');
-        } else {
-          setUserRecipes(data.recipes);
-          setError('');
-        }
-      } catch (error) {
-        setError('Error fetching user recipes.');
+        setUserRecipes(data.recipes);
+        setError('');
+      } else {
+        setError('User not logged in.');
+        setUserRecipes([]);
       }
-    };
-  
-    if (currentUsername) {
-      fetchUserRecipes();
+    } catch (error) {
+      setError('Error fetching recipes.');
+      setUserRecipes([]);
     }
-  }, [currentUsername]);
-  
+  };
+
+  useEffect(() => {
+    fetchUserRecipes();
+  }, [user]); 
 
   const handleSortByName = () => {
-    const sorted = [...userRecipes].sort((a, b) => a.name.localeCompare(b.name));
+    const sorted = [...userRecipes].sort((a, b) => {
+      if (a.name && b.name) {
+        return a.name.localeCompare(b.name);
+      } else {
+        return 0;
+      }
+    });
     setUserRecipes(sorted);
   };
 

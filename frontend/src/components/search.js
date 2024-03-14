@@ -1,26 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../Styles/Search.css'; 
+import { useToken } from '../customHooks/useToken';
+
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
 const searchRecipes = async (keyword, ingredient, loggedIn) => {
+  console.log("Search term:", keyword);
+  console.log("Ingredient:", ingredient);
+  console.log("Logged in:", loggedIn);
+
   let url = `${BASE_URL}?`;
 
   if (keyword) {
-    url += `keyword=${keyword}`;
+    url += `name=${encodeURIComponent(keyword)}`;
   }
 
   if (ingredient) {
-    if (keyword) {
-      url += `&ingredient=${ingredient}`;
+    if (url.includes('?')) {
+      url += `&ingredient=${encodeURIComponent(ingredient)}`;
     } else {
-      url += `ingredient=${ingredient}`;
+      url += `ingredient=${encodeURIComponent(ingredient)}`;
     }
   }
 
   if (!loggedIn) {
-    url += '&visibleToAll=true';
+    if (url.includes('?')) {
+      url += `&visibleToAll=true`;
+    } else {
+      url += `visibleToAll=true`;
+    }
   }
 
   try {
@@ -36,12 +46,16 @@ const searchRecipes = async (keyword, ingredient, loggedIn) => {
 };
 
 
-const Search = ({ token }) => {
+
+
+const Search = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
+  const [token] = useToken();
+
 
   useEffect(() => {
     if (token) {
@@ -55,7 +69,7 @@ const Search = ({ token }) => {
     const getRecipes = async () => {
       setLoading(true);
       try {
-        const recipes = await searchRecipes(searchTerm, loggedIn);
+        const recipes = await searchRecipes(searchTerm, '', loggedIn);
         setSearchResults(recipes);
         if (recipes.length === 0 && searchTerm !== '') {
           setError('No recipes found.');
@@ -74,12 +88,25 @@ const Search = ({ token }) => {
     }
   }, [searchTerm, loggedIn]);
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
     setSearchResults([]);
-    searchRecipes(searchTerm, loggedIn);
+    setLoading(true);
+    try {
+      const recipes = await searchRecipes(searchTerm, '', loggedIn);
+      setSearchResults(recipes);
+      if (recipes.length === 0 && searchTerm !== '') {
+        setError('No recipes found.');
+      } else {
+        setError('');
+      }
+    } catch (error) {
+      setError('Error searching recipes. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
   };
-
+  
   return (
     <div> 
       <h2>Recipe Search</h2>
