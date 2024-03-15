@@ -10,20 +10,18 @@ jest.mock('../../api/userApi', () => ({
 }));
 
 describe('Register component', () => {
-  test('should call onLogin with token and navigate to "/" when registering succeeds', async () => {
+  test('should display success dialog when registering succeeds', async () => {
     // Arrange
-    const token = 'mockedToken';
-    const onLoginMock = jest.fn();
     const name = 'testname';
     const email = 'testemail';
     const username = 'testuser';
     const password = 'testpassword';
-    register.mockResolvedValueOnce({ token });
+    register.mockResolvedValueOnce({ ok: true });
 
     // Act
-    const { getByPlaceholderText, getByTestId } = render(
+    const { getByPlaceholderText, getByTestId, queryByText } = render(
       <Router>
-        <Register onLogin={onLoginMock} />
+        <Register />
       </Router>
     );
     fireEvent.change(getByPlaceholderText('name'), {
@@ -41,9 +39,8 @@ describe('Register component', () => {
     fireEvent.submit(getByTestId('register-button'));
 
     // Assert
-    await waitFor(() => {
-      expect(onLoginMock).toHaveBeenCalledWith(token);
-      expect(window.location.pathname).toBe('/');
+    await waitFor(async () => {
+      expect(queryByText('You have received an email with a confirmation link.')).toBeInTheDocument();
     });
   });
 
@@ -60,7 +57,7 @@ describe('Register component', () => {
     // Act
     const { getByPlaceholderText, getByTestId } = render(
       <Router>
-        <Register onLogin={onLoginMock} />
+        <Register />
       </Router>
     );
     fireEvent.change(getByPlaceholderText('name'), {
@@ -80,7 +77,7 @@ describe('Register component', () => {
 
     // Assert
     await waitFor(async () => {
-      const errorElement = await screen.findByText('Email or username is already in use.');
+      const errorElement = await screen.findByText(errorMessage);
       expect(errorElement).toBeInTheDocument();
     });
   });
