@@ -105,13 +105,17 @@ const Recipe = (props) =>{
 
     return(
         <div>
-            <div className='recipe-container'>
-                <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} isShareModalOpen={isShareModalOpen} onShare={openShareModal} /*image={image}*/ />
-                <div className='recipe-foot'>
+            <div className='recipe-border'>
+                <div className='recipe-container'>
+                    <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} isShareModalOpen={isShareModalOpen} onShare={openShareModal} /*image={image}*/ />
+                    <div className="separator"></div>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={recipe.ingredients} page="recipepage"/>
                         <RecipeSteps steps={recipe.steps}/>
                     </div>
+                </div>
+                <div className='reviews-container'>
+                    <h1>Reviews</h1>
                     {/*<RecipeReviews reviews={recipe.reviews}/>*/}
                 </div>
             </div>
@@ -144,23 +148,27 @@ const RecipeHead = (props) =>{
 
     return(
         <div className='recipe-head'>
-            <div>
+            <div className='recipehead-container'>
                 <h1>
+                    {/*Ellipsin sijoittelu!*/}
                     {recipe.header}
                     <input type='image' src="/hearticon.ico" alt="Save to Favourites" onClick={saveToFavourites} className='picbutton' data-testid='saveToFavouritesButton' />
                     <input type='image' src="/share.ico" alt="Share" onClick={share} className='picbutton' data-testid='shareButton' />
-                    <button onClick={print}>Print</button>
+                    <button className='printbutton' onClick={print}>Print</button>
                     <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
                 </h1>
                 {/*<img src='/rating_star.png' alt="Star Rating"/>{recipe.rating}*/}
+                <p>{recipe.description}</p>
+                <p> Created By: {recipe.username} <br/> 
+                    Creation date: {createdFormatted} <br/>
+                    <i>Duration: {recipe.durationHours}h {recipe.durationMinutes}min</i>
+                </p>
+                <RecipeKeywords keywords={recipe.keywords}/> <br/>
             </div>
-            {/*image ? <img src={image} alt="Recipe Image" className='recipeimage'/>:null*/}
-            <p>{recipe.description}</p>
-            <p> Created By: {recipe.username} <br/> 
-                Creation date: {createdFormatted} <br/>
-                <i>Duration: {recipe.durationHours}h {recipe.durationMinutes}min</i>
-            </p>
-            <RecipeKeywords keywords={recipe.keywords}/> <br/>
+            <div className='image-container'>
+                Image here
+                {/*image ? <img src={image} alt="Recipe Image" className='recipeimage'/>:null*/}
+            </div>
         </div>
     );
 }
@@ -210,7 +218,7 @@ const RecipeReviews = (props) =>{
 
     //nappi ohjaa kirjautumaan, jos ei vielä ole
     return(
-        <table className='recipe-reviews'>
+        <table>
             <tbody>
                 {props.reviews.length > 0 ? reviews : <tr><td><i className='review-placeholder'>No reviews have been posted yet.</i></td></tr>}
                 <tr> 
