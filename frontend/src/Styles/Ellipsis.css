@@ -3,66 +3,65 @@
     Uudet värit: Primary: #6A704C, Accent: #412E27, Background: #EDE1D1, Secondary backgound: #e2d2bd
 */
 .ellipsis-menu {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    align-items: center;
-  }
-  
-  .ellipsis {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-  }
-  
-  .dot {
-    width: 6px;
-    height: 6px;
-    background-color: #506350;
-    border-radius: 50%;
-    position: absolute;
-  }
-  
-  .dot:nth-child(1) {
-    top: 0;
-    left: 0;
-  }
-  
-  .dot:nth-child(2) {
-    top: 0;
-    left: 7px;
-  }
-  
-  .dot:nth-child(3) {
-    top: 0;
-    left: 14px;
-  }
-  
-  .dropdown {
-    position: absolute;
-    top: 30px;
-    left: 0;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 5px;
-    width: 150px;
-  }
-  
-  .dropdown ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    color:#506350;
-  }
-  
-  .dropdown ul li {
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: medium;
-  }
-  
-  .dropdown ul li:hover {
-    background-color: #f0f0f0;
-  }
-  
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.ellipsis {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background-color: #506350;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.dot:nth-child(1) {
+  top: 0;
+  left: 0;
+}
+
+.dot:nth-child(2) {
+  top: 0;
+  left: 7px;
+}
+
+.dot:nth-child(3) {
+  top: 0;
+  left: 14px;
+}
+
+.dropdown {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: 150px;
+}
+
+.dropdown ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  color: #506350;
+}
+
+.dropdown ul li {
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: medium;
+}
+
+.dropdown ul li:hover {
+  background-color: #f0f0f0;
+}

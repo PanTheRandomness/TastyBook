@@ -12,6 +12,8 @@ button {
     cursor: pointer;
 }
 
+/*Add Recipe Page*/
+
 .recipeform {
     background-color: #EDE1D1;
     border-radius: 40px;
@@ -23,6 +25,10 @@ button {
     flex-direction: column;
     color: #412E27;
     background-color: #e2d2bd;
+}
+
+.recipeform-step {
+    color:#F1DBBF;
 }
 
 .recipeform-top {
@@ -108,37 +114,71 @@ button {
     color: #6A704C;
 }
 
+/*Recipe Page*/
+
+.recipe-border {
+    background-color: #e2d2bd;
+    display: flex;
+    justify-content: end;
+}
+
 .recipe-container {
     display: flex;
     flex-direction: column;
-    background-color: #B99B6B;
+    background-color: #EDE1D1;
     width: 45%;
     border-radius: 25px;
     margin: 30px;
+    flex: 2;
+}
+
+.reviews-container {
+    background-color: #412E27;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    flex: 1;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-right: 30px;
+    padding-left: 20px;
+    color: #EDE1D1;
 }
 
 .recipe-head {
-    background-color: #AA5656;
     border-radius: 20px;
     margin: 10px;
     position: relative;
+    padding-left: 20px;
+    display: flex;
+}
+
+.recipehead-container {
+    flex: 3;
 }
 
 .recipe-head > h1, div, p {
-    color:#F1DBBF;
+    color:#6A704C;
     margin: 10px;
 }
 
-.recipe-head > button {
-    background-color: #506350;
-    color:#F1DBBF;
+.recipe-head > button, .printbutton {
+    background-color: #6A704C;
+    color:#6A704C;
     border-style: none;
     border-radius: 5px;
     margin:10px;
+    color: #412E27;
+    font-family: 'CustomFont', sans-serif;
+    font-weight: bold;
+    font-size: medium;
+    border-radius: 10px;
 }
 
 .keywords > li {
-    background-color: #506350;
+    background-color: #6A704C;
+    color: #412E27;
+    font-weight: bold;
     border-radius: 10px;
     display: inline;
     padding: 2px;
@@ -146,44 +186,28 @@ button {
     cursor: pointer;
 }
 
-.recipe-foot {
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .recipe {
-    background-color: #F1DBBF;
     display: flex;
     flex-direction: column;
     margin: 10px;
     border-radius: 20px;
     flex-basis: 70%;
     align-items: start;
-    color: #3c493c;
+    color: #6A704C;
+    padding-left: 70px;
 }
 
 .recipe-steps {
-    color: #3c493c;
-}
-
-.recipe-reviews, .review-placeholder {
-    background-color: #AA5656;
-    border-radius: 20px;
-    margin: 10px;
-    color: #F1DBBF;
-    flex-basis: 25%;
+    color: #6A704C;
 }
 
 .review-button {
     border-style: none;
     border-radius: 10px;
-    background-color:#506350;
+    background-color:#6A704C;
     color:#F1DBBF;
 }
 
-.recipeform-step {
-    color:#F1DBBF;
-}
 
 .notfound {
     text-align: center;
@@ -200,4 +224,13 @@ button {
 .recipeimage {
     max-width: '100%';
     height: 'auto';
+}
+
+.image-container {
+    flex: 1;
+    margin-top:10%;
+}
+
+.separator {
+    border-bottom: 3px solid #6A704C;
 }
