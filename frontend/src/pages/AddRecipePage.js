@@ -412,25 +412,22 @@ const AddRecipe = (props) => {
                     <table className='recipeform-right'>
                         <tbody className='recipeform-container'>
                             <tr className='recipeform-item'>
-                                <th>Ingredients:</th>
+                                <th>Ingredients:</th><button data-testid="addIngredient" className='addbutton' onClick={openModalI}>+</button>
                                 <td>
                                     {ingredients.length < 1 ? null : <RecipeIngredients ingredients={ingredients} page="recipeform" onEdit={editIngredient} onRemove={removeIngredient} />}
                                 </td>
-                                <td><button data-testid="addIngredient" className='addbutton' onClick={openModalI}>+</button></td>
                             </tr>
                             <tr className='recipeform-item'>
-                                <th>Steps:</th>
+                                <th>Steps:</th><button data-testid="addStep" className='addbutton' onClick={openModalS}>+</button>
                                 <td>
                                     {steps.length < 1 ? null : <RecipeSteps steps={steps} onEdit={editStep} onRemove={removeStep} />}
                                 </td>
-                                <td><button data-testid="addStep" className='addbutton' onClick={openModalS}>+</button></td>
                             </tr>
                             <tr className='recipeform-item'>
-                                <th>Keywords:</th>
+                                <th>Keywords:</th><button data-testid="addKeyword" className='addbutton' onClick={openModalK}>+</button>
                                 <td>
                                     {keywords.length < 1 ? null : <RecipeKeywords keywords={keywords} onEdit={editKeyword} onRemove={removeKeyword} />}
                                 </td>
-                                <td><button data-testid="addKeyword" className='addbutton' onClick={openModalK}>+</button></td>
                             </tr>
                         </tbody>
                     </table>
