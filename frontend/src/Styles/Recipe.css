@@ -18,6 +18,7 @@ button {
     background-color: #EDE1D1;
     border-radius: 40px;
     margin: 1rem;
+    min-width: 1000px;
 }
 
 .recipeform-body {
@@ -25,6 +26,9 @@ button {
     flex-direction: column;
     color: #412E27;
     background-color: #e2d2bd;
+    width: 100%;
+    padding-bottom: 10%;
+    min-width: 90%;
 }
 
 .recipeform-top {
@@ -116,6 +120,9 @@ button {
     background-color: #e2d2bd;
     display: flex;
     justify-content: end;
+    width: 100%;
+    padding-bottom: 10%;
+    min-width: 90%;
 }
 
 .recipe-container {
@@ -126,6 +133,7 @@ button {
     border-radius: 25px;
     margin: 30px;
     flex: 2;
+    min-width: 2rem;
 }
 
 .reviews-container {
@@ -163,7 +171,7 @@ button {
     color:#6A704C;
     border-style: none;
     border-radius: 5px;
-    margin:10px;
+    margin-left: 1rem;
     color: #412E27;
     font-family: 'CustomFont', sans-serif;
     font-weight: bold;
@@ -214,7 +222,7 @@ button {
 .picbutton {
     width: 35px;
     height: 35px;
-    padding-left: 25px;
+    padding-left: 1em;
 }
 
 .recipeimage {

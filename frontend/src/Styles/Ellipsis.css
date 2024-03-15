@@ -3,11 +3,12 @@
     Uudet värit: Primary: #6A704C, Accent: #412E27, Background: #EDE1D1, Secondary backgound: #e2d2bd
 */
 .ellipsis-menu {
-  position: absolute;
-  top: 20px;
+  position: relative;
+  top: 10px;
   right: 20px;
   display: flex;
   align-items: center;
+  margin-left: 1rem;
 }
 
 .ellipsis {

@@ -4,64 +4,76 @@
 */
 
 .adminForm {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
 }
 
-  .adminForm body {
-    display: flex;
-    height: 100vh;
-    margin: 10px;
+.adminForm body {
+  display: flex;
+  height: 100vh;
+  margin: 10px;
 }
 
-  .adminContainer {
-    gap: 0.9rem; 
-    max-width: 1200px; 
-    margin: 30px auto 0;
-    background-color: #AA5656;
-    padding: 60px; 
-    border-radius: 15px;
-    border: 20px solid #B99B6B;
-    text-align: left;
+.adminContainer {
+  gap: 0.9rem;
+  max-width: 1200px;
+  margin: 30px auto 0;
+  background-color: #e2d2bd;
+  padding: 60px;
+  border-radius: 15px;
+  border: 10px solid #412E27;
+  text-align: left;
 }
-  .adminHead{
-    background-color: #AA5656;
-    border-radius: 20px;
-    margin: 10px;
-    max-width: 1200px; 
+
+.adminHead {
+  padding: 1rem;
+  background-color: #EDE1D1;
+  border-radius: 20px;
+  margin: 10px;
+  max-width: 1200px;
 }
 
 td.cell-one {
   width: 100px;
   text-align: left;
 }
+
 td.cell-two {
   width: 300px;
   text-align: left;
 }
+
 td.cell-three {
-  width: 300px; 
+  width: 300px;
   text-align: left;
 }
+
 td.cell-four {
-  width: 400px; 
+  width: 400px;
   text-align: left;
 }
+
 td.cell-five {
-  width: 200px; 
+  width: 200px;
   text-align: left;
 }
+
 td.cell-six {
-  width: 50px; 
+  width: 50px;
   text-align: left;
 }
-.adminButton {
-  width: 150px;
-  padding: 0.8rem;
 
+.adminButton {
+  border-radius: 20px;
+  border-style: hidden;
+  background-color: #6A704C;
+  font-family: 'CustomFont', sans-serif;
+  font-weight: bold;
+  font-size: medium;
+  color: #412E27;
 }
 
-  /*
+/*
     Värit: #698269, #B99B6B, #F1DBBF, #AA5656, #3c493c
 */

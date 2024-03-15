@@ -8,6 +8,8 @@
     flex-wrap: wrap;
     justify-content: center;
     background-color: #e2d2bd;
+    width: 100%;
+    padding-bottom: 30%;
 }
 
 .recipeViewContainer > * {

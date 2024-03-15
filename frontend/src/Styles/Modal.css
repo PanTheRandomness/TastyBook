@@ -42,7 +42,6 @@
 }
 
 .modal-content > button, .copy-button {
-    float:right;
     border-radius: 10px;
     border-style: hidden;
     background-color: #6A704C;

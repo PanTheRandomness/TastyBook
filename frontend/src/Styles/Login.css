@@ -59,5 +59,12 @@
     box-sizing: content-box;
     margin-top: 1rem;
     align-self: center;
+    border-radius: 20px;
+    border-style: hidden;
+    background-color: #6A704C;
+    font-family: 'CustomFont', sans-serif;
+    font-weight: bold;
+    font-size: large;
+    color: #412E27;
    
   }

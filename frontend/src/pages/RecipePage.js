@@ -149,7 +149,7 @@ const RecipeHead = (props) =>{
     return(
         <div className='recipe-head'>
             <div className='recipehead-container'>
-                <h1>
+                <h1 style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
                     {/*Ellipsin sijoittelu!*/}
                     {recipe.header}
                     <input type='image' src="/hearticon.ico" alt="Save to Favourites" onClick={saveToFavourites} className='picbutton' data-testid='saveToFavouritesButton' />

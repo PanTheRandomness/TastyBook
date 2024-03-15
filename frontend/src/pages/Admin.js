@@ -72,7 +72,7 @@ const Admin = () => {
                 <td className="cell-four">{user.email}</td>
                 <td className="cell-five">{user.admin ? 1 : null }</td> 
                 <td className="cell-six">
-                  <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
+                  <button onClick={() => handleDeleteUser(user.id)} className='adminButton'>Delete</button>
                 </td>
               </tr>
             ))}
