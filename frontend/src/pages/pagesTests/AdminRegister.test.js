@@ -10,21 +10,19 @@ jest.mock('../../api/userApi', () => ({
 }));
 
 describe('AdminRegister component', () => {
-  test('should call onLogin with token and navigate to "/" when registering succeeds', async () => {
+  test('should display success dialog when registering succeeds', async () => {
     // Arrange
-    const token = 'mockedToken';
-    const onLoginMock = jest.fn();
     const name = 'testname';
     const email = 'testemail';
     const username = 'testuser';
     const password = 'testpassword';
     const api_key = 'api_key';
-    adminregister.mockResolvedValueOnce({ token });
+    adminregister.mockResolvedValueOnce({ ok: true });
 
     // Act
-    const { getByPlaceholderText, getByTestId } = render(
+    const { getByPlaceholderText, getByTestId, queryByText } = render(
       <Router>
-        <AdminRegister onLogin={onLoginMock} />
+        <AdminRegister />
       </Router>
     );
     fireEvent.change(getByPlaceholderText('name'), {
@@ -46,8 +44,7 @@ describe('AdminRegister component', () => {
 
     // Assert
     await waitFor(() => {
-      expect(onLoginMock).toHaveBeenCalledWith(token);
-      expect(window.location.pathname).toBe('/');
+      expect(queryByText('You have received an email with a confirmation link.')).toBeInTheDocument();
     });
   });
 
@@ -65,7 +62,7 @@ describe('AdminRegister component', () => {
     // Act
     render(
       <Router>
-        <AdminRegister onLogin={onLoginMock} />
+        <AdminRegister />
       </Router>
     );
 
@@ -88,7 +85,7 @@ describe('AdminRegister component', () => {
 
     // Assert
     await waitFor(async () => {
-      const errorElement = await screen.findByText("Registering failed.");
+      const errorElement = await screen.findByText(errorMessage);
       expect(errorElement).toBeInTheDocument();
     });
   });

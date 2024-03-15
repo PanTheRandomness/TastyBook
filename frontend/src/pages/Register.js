@@ -5,7 +5,7 @@ import '../Styles/RegistrationDialog.css';
 import { useNavigate } from "react-router-dom";
 
 
-const Register = ({ onLogin }) => {
+const Register = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
