@@ -7,31 +7,21 @@ import { useToken } from '../customHooks/useToken';
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
 const searchRecipes = async (keyword, ingredient, loggedIn) => {
-  console.log("Search term:", keyword);
-  console.log("Ingredient:", ingredient);
-  console.log("Logged in:", loggedIn);
-
   let url = `${BASE_URL}?`;
 
   if (keyword) {
-    url += `name=${encodeURIComponent(keyword)}`;
+    url += `q=${keyword}`; // Käytetään q-parametria sekä avainsanaan että ainesosaan
   }
 
   if (ingredient) {
-    if (url.includes('?')) {
-      url += `&ingredient=${encodeURIComponent(ingredient)}`;
-    } else {
-      url += `ingredient=${encodeURIComponent(ingredient)}`;
-    }
+    url += `&q=${ingredient}`; // Lisätään ainesosa samaan q-parametriin
   }
 
   if (!loggedIn) {
-    if (url.includes('?')) {
-      url += `&visibleToAll=true`;
-    } else {
-      url += `visibleToAll=true`;
-    }
+    url += '&visibleToAll=true';
   }
+
+  console.log('Search URL:', url);
 
   try {
     const response = await fetch(url);
@@ -39,12 +29,12 @@ const searchRecipes = async (keyword, ingredient, loggedIn) => {
       throw new Error('Failed to fetch recipes');
     }
     const data = await response.json();
+    console.log('Search results:', data);
     return data.recipes;
   } catch (error) {
     throw new Error('Error searching recipes: ' + error.message);
   }
 };
-
 
 
 

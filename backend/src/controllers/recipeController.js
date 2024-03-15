@@ -8,7 +8,7 @@ const getAllRecipes = async (req, res) => {
     try {
         // Tähän tarkastus että keyword ja ingredient pitää olla vähintään tietyn pituisia?
         const { keyword, ingredient } = req.query;
-        const recipes = await sql.getRecipes(null, req.loggedIn, keyword, ingredient);
+        const recipes = await sql.getRecipes(null, req.loggedIn, ingredient, keyword);
         if (req.loggedIn) return res.status(200).json({ loggedIn: true, recipes });
         res.status(200).json({ recipes });
     } catch (error) {
