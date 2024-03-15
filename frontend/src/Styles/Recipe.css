@@ -27,21 +27,13 @@ button {
     background-color: #e2d2bd;
 }
 
-.recipeform-step {
-    color:#F1DBBF;
-}
-
 .recipeform-top {
     color: #6A704C;
-    margin: 2rem;
-    padding-left: 13%;
 }
 
 .recipeform-mid {
     display: flex;
     flex-direction: row;
-    margin: 2rem;
-    padding-left: 10%;
 }
 
 .recipeform-bottom {
@@ -49,7 +41,7 @@ button {
 }
 
 .recipeform-left, .recipeform-right {
-    margin: 2rem;
+    flex: 1;
 }
 
 .recipeform-container {
@@ -83,6 +75,7 @@ button {
     font-size: large;
     padding-left: 10px;
     padding-right: 10px;
+    height: 5%;
 }
 
 .editremovebutton {
@@ -110,7 +103,10 @@ button {
     font-size: medium;
 }
 
-.recipeform-keyword, .recipeform-steps > ol > li {
+.recipeform-ingredient > td, .recipeform-step, .recipeform-keywords {
+    word-wrap: break-word;
+    word-break: break-all;
+    width: 40rem;
     color: #6A704C;
 }
 

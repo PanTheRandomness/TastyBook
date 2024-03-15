@@ -54,6 +54,7 @@
 .modalInput {
     border-style:hidden;
     border-radius: 3px;
+    width: 80%;
 }
 
 .modal-text {
