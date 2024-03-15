@@ -8,7 +8,7 @@
   justify-content: center;
   height: 100vh;
   margin: 0;
-  background-color: #506350;
+  background-color: #EDE1D1;
   margin-top:25px;
 }
 
@@ -20,21 +20,21 @@
     max-width: 400px; 
     margin: auto;
     align-self: center;
-    background-color: #AA5656;
+    background-color: #e2d2bd;
     padding: 60px; 
     border-radius: 15px;
-    border: 15px solid #B99B6B;
+    border: 15px solid #6A704C;
     text-align: center;
   }
   .registerForm h1 {
     text-align: center;
     margin-bottom: 1rem;
-    color:#F1DBBF;
+    color: #412E27;
   }
   .registerForm h3 {
     text-align: center;
     margin-bottom: 1rem;
-    color:#F1DBBF;
+    color:#412E27;
   }
 
   .registerForm input {
