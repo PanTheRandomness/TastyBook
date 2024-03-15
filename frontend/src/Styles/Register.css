@@ -13,6 +13,8 @@
 }
 
 .registerForm {
+    position: relative; 
+    top: -180px;
     display: flex;
     flex-direction: column;
     align-items:center;
@@ -38,7 +40,7 @@
   }
 
   .registerForm input {
-    width: 80%; /* Muutettu 120% -> 100% */
+    width: 80%; 
     padding: 1rem; 
     margin-bottom: 1rem;
   }
