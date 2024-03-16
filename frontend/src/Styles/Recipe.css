@@ -145,8 +145,45 @@ button {
     margin-top: 30px;
     margin-bottom: 30px;
     margin-right: 30px;
-    padding-left: 20px;
     color: #EDE1D1;
+}
+
+.reviews-container > h1 {
+    padding-left: 1rem;
+}
+
+.reviews {
+    flex: 4;
+}
+
+.reviewinput {
+    margin: 0.8em;
+    border-radius: 7px;
+    width: 95%;
+}
+
+.leave_review {
+    flex: 1;
+    background-color: #6A704C;
+    border-radius: 20px;
+}
+
+.postreviewbtn {
+    color: #EDE1D1;
+    background-color: #412E27;
+    border-radius: 10px;
+    border-style: none;
+    font-family: 'CustomFont', sans-serif;
+    font-weight: bold;
+    font-size: large;
+    margin-right: 2em;
+    margin-left: 2em;
+    max-width: 20%;
+}
+
+.review {
+    background-color: #6A704C;
+    
 }
 
 .recipe-head {

@@ -112,6 +112,7 @@ const App = () => {
         <Route path='/search' element={<Search />} />
         <Route path='/recipeList' element={<RecipeList />} />
         <Route path='/*' element={<NotFound />} />
+        {/*MyList? */}
 
       </Routes>
     </Router>
