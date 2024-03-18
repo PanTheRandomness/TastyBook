@@ -1,6 +1,9 @@
 var express = require("express");
 var router = express.Router();
 
+const multer = require("multer");
+const upload = multer();
+
 let ctrl = require("../controllers/recipeController");
 let userMiddleware = require("../middleware/verifyUser");
 let adminMiddleware = require("../middleware/verifyAdmin");
@@ -131,7 +134,7 @@ router.route("/api/recipe/:hash").get(userMiddleware.isUserLoggedIn, ctrl.getRec
     Jos onnistuu, palauttaa statuskoodin 201 ja hashin, joka on reitti luodulle reseptille
 */
 
-router.route("/api/recipe").post(userMiddleware.verifyJWT, ctrl.addRecipe);
+router.route("/api/recipe").post(userMiddleware.verifyJWT, upload.single("image"), ctrl.addRecipe);
 
 /*  /api/recipe/:hash DELETE
 
@@ -171,5 +174,7 @@ router.route("/api/recipe/:hash").delete(userMiddleware.verifyJWT, ctrl.deleteRe
 router.route("/api/recipe/:hash").put(userMiddleware.verifyJWT, ctrl.editRecipe);
 
 router.route("/api/recipe/:hash/admin").delete(userMiddleware.verifyJWT, adminMiddleware.verifyAdmin, ctrl.deleteRecipeAdmin);
+
+router.route("/api/recipe/image/:hash").get(ctrl.getImage);
 
 module.exports = router;

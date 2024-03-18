@@ -1,4 +1,4 @@
-const { addRecipe, addStep, getAllRecipeHashes, getSteps, getRecipes, deleteRecipe, deleteSteps, editRecipe } = require("../recipeSQL");
+const { addRecipe, addStep, getAllRecipeHashes, getSteps, getRecipes, deleteRecipe, deleteSteps, editRecipe, getImage } = require("../recipeSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
@@ -88,6 +88,18 @@ describe("getRecipes", () => {
     });
 });
 
+describe("getImage", () => {
+    it("should get image from database", async () => {
+        const hash = "123";
+        executeSQL.mockReturnValueOnce([{ image: 1 }]);
+
+        const result = await getImage(hash);
+        
+        expect(executeSQL).toHaveBeenCalledWith("SELECT image FROM recipe WHERE hash=?", [hash]);
+        expect(result).toEqual([{ image: 1 }]);
+    });
+});
+
 describe("addRecipe", () => {
     it("should insert a recipe into the database", async () => {
         const userId = 1;
@@ -97,14 +109,15 @@ describe("addRecipe", () => {
         const visibleToAll = 1;
         const durationHours = 1;
         const durationMinutes = 0;
+        const image = [0];
 
         executeSQL.mockReturnValueOnce({ insertedId: 1 });
 
-        const result = await addRecipe(userId, header, hash, description, visibleToAll, durationHours, durationMinutes);
+        const result = await addRecipe(userId, header, hash, description, visibleToAll, durationHours, durationMinutes, image);
 
         expect(executeSQL).toHaveBeenCalledWith(
-            "INSERT INTO recipe (User_id, header, hash, description, visibleToAll, durationHours, durationMinutes, created) VALUES (?,?,?,?,?,?,?,NOW())",
-            [userId, header, hash, description, visibleToAll, durationHours, durationMinutes]
+            "INSERT INTO recipe (User_id, header, hash, description, visibleToAll, durationHours, durationMinutes, created, image) VALUES (?,?,?,?,?,?,?,NOW(),?)",
+            [userId, header, hash, description, visibleToAll, durationHours, durationMinutes, image]
         );
         expect(result).toEqual({ insertedId: 1 });
     });
