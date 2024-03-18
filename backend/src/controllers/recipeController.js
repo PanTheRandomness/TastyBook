@@ -113,6 +113,7 @@ const addRecipe = async (req, res) => {
 
         res.status(201).json({ hash });
     } catch (error) {
+        if (error.code === "ER_DATA_TOO_LONG") return res.status(400).send("Image too big");
         res.status(500).send();
     }
 }

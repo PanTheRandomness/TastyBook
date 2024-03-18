@@ -16,6 +16,10 @@ var cors = (req, res, next) => {
 
 app.use(cors);
 
+// initialize database
+const init = require("./initializeDB");
+init.initialize();
+
 const recipeRoutes = require("./src/routes/recipeRoutes");
 app.use(recipeRoutes);
 

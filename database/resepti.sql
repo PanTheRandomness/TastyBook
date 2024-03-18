@@ -20,7 +20,7 @@ USE `recipedb` ;
 CREATE TABLE IF NOT EXISTS `recipedb`.`Email` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(255) NOT NULL,
-  `verificationString` VARCHAR(255) NOT NULL,
+  `verificationString` VARCHAR(255) NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
@@ -81,7 +81,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `recipedb`.`Ingredient` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `recipedb`.`Review` (
   `Recipe_id` INT NOT NULL,
   `User_id` INT NULL,
   `rating` INT NOT NULL,
-  `text` VARCHAR(2000) NOT NULL,
+  `text` VARCHAR(255) NULL,
   PRIMARY KEY (`id`, `Recipe_id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_Review_Recipe1_idx` (`Recipe_id` ASC) VISIBLE,
@@ -204,7 +204,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `recipedb`.`RecipeSteps` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `Recipe_id` INT NOT NULL,
-  `step` VARCHAR(255) NOT NULL,
+  `step` VARCHAR(500) NOT NULL,
   `number` INT NOT NULL,
   PRIMARY KEY (`id`, `Recipe_id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
