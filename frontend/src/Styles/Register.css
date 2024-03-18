@@ -2,13 +2,20 @@
     Vanhat värit: #698269, #B99B6B, #F1DBBF, #AA5656, #3c493c
     Uudet värit: Primary: #6A704C, Accent: #412E27, Background: #EDE1D1, Secondary backgound: #e2d2bd
 */
+html,
+body {
+  overflow: hidden;
+}
+
+
 .registerFormbody {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: auto;
+  margin: 100px 0;
   width: 100%;
-  margin-top:25px;
+  margin-top:30px;
   
 }
 
@@ -20,13 +27,12 @@
   width: 100%;
   max-height: 50%;
   min-width: 90%;
-  margin-bottom: 10%;
+  overflow-y: hidden;  
     
 }
 
 .registerForm {
-    position: relative; 
-    top: -180px;
+ 
     display: flex;
     flex-direction: column;
     align-items:center;
@@ -39,6 +45,7 @@
     border-radius: 15px;
     border: 15px solid #6A704C;
     text-align: center;
+    flex: 1;
   }
   .registerForm h1 {
     text-align: center;
