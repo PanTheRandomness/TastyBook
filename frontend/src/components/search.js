@@ -1,24 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../Styles/Search.css'; 
-import { useToken } from '../customHooks/useToken';
-
+import '../Styles/Search.css';
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
-const searchRecipes = async (keyword, ingredient, loggedIn) => {
+const searchKeyword = async (keyword) => {
   let url = `${BASE_URL}?`;
 
   if (keyword) {
-    url += `q=${keyword}`; // Käytetään q-parametria sekä avainsanaan että ainesosaan
+    url += `keyword=${keyword}`;
+  } 
+
+  console.log('Search URL:', url);
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch recipes');
+    }
+    const data = await response.json();
+    console.log('Search results:', data);
+    return data.recipes || [];
+  } catch (error) {
+    throw new Error('Error searching recipes: ' + error.message);
   }
+};
+
+const searchIngredient = async (ingredient) => {
+  let url = `${BASE_URL}?`;
 
   if (ingredient) {
-    url += `&q=${ingredient}`; // Lisätään ainesosa samaan q-parametriin
-  }
-
-  if (!loggedIn) {
-    url += '&visibleToAll=true';
+    url += `&ingredient=${ingredient}`;
   }
 
   console.log('Search URL:', url);
@@ -30,12 +42,11 @@ const searchRecipes = async (keyword, ingredient, loggedIn) => {
     }
     const data = await response.json();
     console.log('Search results:', data);
-    return data.recipes;
+    return data.recipes || [];
   } catch (error) {
     throw new Error('Error searching recipes: ' + error.message);
   }
 };
-
 
 
 const Search = () => {
@@ -43,47 +54,15 @@ const Search = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [token] = useToken();
-
-
-  useEffect(() => {
-    if (token) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  }, [token]);
-
-  useEffect(() => {
-    const getRecipes = async () => {
-      setLoading(true);
-      try {
-        const recipes = await searchRecipes(searchTerm, '', loggedIn);
-        setSearchResults(recipes);
-        if (recipes.length === 0 && searchTerm !== '') {
-          setError('No recipes found.');
-        } else {
-          setError('');
-        }
-      } catch (error) {
-        setError('Error searching recipes. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (searchTerm) {
-      getRecipes();
-    }
-  }, [searchTerm, loggedIn]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
     setSearchResults([]);
     setLoading(true);
     try {
-      const recipes = await searchRecipes(searchTerm, '', loggedIn);
+      const keywordRecipes = await searchKeyword(searchTerm);
+      const ingredientRecipes = await searchIngredient(searchTerm);
+      const recipes = [...keywordRecipes, ...ingredientRecipes];
       setSearchResults(recipes);
       if (recipes.length === 0 && searchTerm !== '') {
         setError('No recipes found.');
@@ -96,11 +75,11 @@ const Search = () => {
       setLoading(false);
     }
   };
-  
+
   return (
-    <div> 
+    <div>
       <h2>Recipe Search</h2>
-      <label htmlFor="searchInput">Search by name or ingredient:</label>
+      <label htmlFor="searchInput">Search by keyword or ingredient:</label>
       <input
         id="searchInput"
         type="text"
