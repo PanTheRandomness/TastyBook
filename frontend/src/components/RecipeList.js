@@ -8,16 +8,22 @@ const RecipeList = () => {
   const user = useUser(); 
   const [userRecipes, setUserRecipes] = useState([]);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true); // Lisätty loading-tila
 
   const fetchUserRecipes = async () => {
     try {
-      console.log(user); // Tulosta käyttäjäobjekti konsoliin tarkistukseksi alkuun
       if (user && user.loggedIn) { 
-        const response = await fetch(`${BASE_URL}?username=recipe.${user.username}`);
+        console.log('Fetching user recipes...');
+        const response = await fetch(`${BASE_URL}?username=${user.username}`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch user recipes');
         }
         const data = await response.json();
+        console.log('Fetched recipes:', data.recipes);
         setUserRecipes(data.recipes);
         setError('');
       } else {
@@ -25,14 +31,19 @@ const RecipeList = () => {
         setUserRecipes([]);
       }
     } catch (error) {
+      console.error('Error fetching recipes:', error);
       setError('Error fetching recipes.');
       setUserRecipes([]);
+    } finally {
+      setLoading(false); // Merkitään lataus valmiiksi, kun haku on suoritettu
     }
   };
 
   useEffect(() => {
-    fetchUserRecipes();
-  }, [user]); 
+    if (user && user.loggedIn) {
+      fetchUserRecipes();
+    }
+  }, [user]);
 
   const handleSortByName = () => {
     const sorted = [...userRecipes].sort((a, b) => {
@@ -44,6 +55,10 @@ const RecipeList = () => {
     });
     setUserRecipes(sorted);
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Näytä latausviesti, kun käyttäjäobjektia haetaan
+  }
 
   return (
     <div>
