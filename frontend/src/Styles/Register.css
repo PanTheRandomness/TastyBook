@@ -8,11 +8,13 @@
   justify-content: center;
   height: 100vh;
   margin: 0;
-  background-color: #506350;
+  background-color: #EDE1D1;
   margin-top:25px;
 }
 
 .registerForm {
+    position: relative; 
+    top: -180px;
     display: flex;
     flex-direction: column;
     align-items:center;
@@ -20,25 +22,25 @@
     max-width: 400px; 
     margin: auto;
     align-self: center;
-    background-color: #AA5656;
+    background-color: #e2d2bd;
     padding: 60px; 
     border-radius: 15px;
-    border: 15px solid #B99B6B;
+    border: 15px solid #6A704C;
     text-align: center;
   }
   .registerForm h1 {
     text-align: center;
     margin-bottom: 1rem;
-    color:#F1DBBF;
+    color: #412E27;
   }
   .registerForm h3 {
     text-align: center;
     margin-bottom: 1rem;
-    color:#F1DBBF;
+    color:#412E27;
   }
 
   .registerForm input {
-    width: 80%; /* Muutettu 120% -> 100% */
+    width: 80%; 
     padding: 1rem; 
     margin-bottom: 1rem;
   }
@@ -49,6 +51,14 @@
     box-sizing: content-box;
     margin-top: 1rem;
     align-self: center;
+    border-radius: 20px;
+    border-style: hidden;
+    background-color: #6A704C;
+    font-family: 'CustomFont', sans-serif;
+    font-weight: bold;
+    font-size: x-large;
+    color: #412E27;
+    padding: 7px;
    
   }
 

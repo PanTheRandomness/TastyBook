@@ -101,7 +101,6 @@ const Recipe = (props) =>{
             openErrorModal();
         }
     }
-    
 
     return(
         <div>
@@ -116,7 +115,22 @@ const Recipe = (props) =>{
                 </div>
                 <div className='reviews-container'>
                     <h1>Reviews</h1>
-                    {/*<RecipeReviews reviews={recipe.reviews}/>*/}
+                    <div className='reviews'>
+                        {/*<RecipeReviews reviews={recipe.reviews}/>*/}
+                    </div>
+                    <div className='leave_review'>
+                        {/*Huom maksimipituus!*/}
+                        <textarea data-testid="reviewInput" className="reviewinput" rows={7} placeholder='Type review...' style={{resize: 'none'}}/>
+                        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                            <img src='/rating_star.png' alt="Star Rating"/>
+                            <select data-testid='ratingselect' style={{marginLeft:'1em', maxWidth: '10%', borderRadius: '5px', borderStyle: 'none'}}>
+                                {/*Tähän vaihtoehdot*/}
+                            </select>
+                            {/*Asettelua tarkemmaksi */}
+                            {/*nappi ohjaa kirjautumaan, jos ei vielä ole */}
+                            <button className='postreviewbtn'>Post</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             {isDeleteModalOpen ? <DeleteDialog isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={deleteRecipe}/>:null}
@@ -132,7 +146,7 @@ const RecipeHead = (props) =>{
     const createdFormatted = new Date(props.recipe.created).toLocaleDateString('fi-FI');
     
     const calculateAvgRating = () =>{
-        //TODO: keskiarvon laskeminen
+        //TODO: keskiarvon laskeminen, tuleeko tähän vai muualle?
     }
 
     const saveToFavourites = () => {
@@ -149,7 +163,7 @@ const RecipeHead = (props) =>{
     return(
         <div className='recipe-head'>
             <div className='recipehead-container'>
-                <h1>
+                <h1 style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
                     {/*Ellipsin sijoittelu!*/}
                     {recipe.header}
                     <input type='image' src="/hearticon.ico" alt="Save to Favourites" onClick={saveToFavourites} className='picbutton' data-testid='saveToFavouritesButton' />
@@ -212,23 +226,18 @@ const RecipeSteps = (props) =>{
 /*
 const RecipeReviews = (props) =>{
     //HUOM! Ei vielä käytössä
-    const reviews = props.reviews.map((r, i) =>{
-        return <tr key={i}><th>{r.rating}</th><td>{r.username}:</td><td><i>{r.text}</i></td></tr>
+    const reviewdata = props.reviews.map((r, i) =>{
+        return <div key={i} className='review'>
+            //tähtikuva + arvosana
+            {r}
+        </div>
     });
 
-    //nappi ohjaa kirjautumaan, jos ei vielä ole
+    
     return(
-        <table>
-            <tbody>
-                {props.reviews.length > 0 ? reviews : <tr><td><i className='review-placeholder'>No reviews have been posted yet.</i></td></tr>}
-                <tr> 
-                    <td>
-                        jos ei kirjautunut: <a>log in</a> to leave a review
-                        <button className='review-button'>Add review</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div>
+            {reviewdata}
+        </div>
     );
 }
 */
