@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../Styles/Search.css';
+import RecipeView from "../components/recipeView";
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
@@ -62,9 +63,14 @@ const Search = () => {
     try {
       const keywordRecipes = await searchKeyword(searchTerm);
       const ingredientRecipes = await searchIngredient(searchTerm);
-      const recipes = [...keywordRecipes, ...ingredientRecipes];
-      setSearchResults(recipes);
-      if (recipes.length === 0 && searchTerm !== '') {
+      
+      const combinedRecipes = [...keywordRecipes, ...ingredientRecipes];
+      const uniqueRecipes = Array.from(new Set(combinedRecipes.map(recipe => recipe.id)))
+        .map(id => combinedRecipes.find(recipe => recipe.id === id));
+  
+      setSearchResults(uniqueRecipes);
+  
+      if (uniqueRecipes.length === 0 && searchTerm !== '') {
         setError('No recipes found.');
       } else {
         setError('');
@@ -75,6 +81,7 @@ const Search = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div>
@@ -97,7 +104,7 @@ const Search = () => {
             {searchResults.map((recipe, index) => (
               <li key={index}>
                 <Link to={`/recipe/${recipe.hash}`}>
-                  <p>id: {recipe.id}, header: "{recipe.header}", username: "{recipe.username}", hash: "{recipe.hash}", average_rating: {recipe.average_rating}</p>
+                  <p><RecipeView key={recipe.id} recipe={recipe} /></p>
                 </Link>
               </li>
             ))}
