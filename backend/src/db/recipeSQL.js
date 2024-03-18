@@ -29,9 +29,14 @@ const getRecipes = (hash, loggedIn, ingredient, keyword) => {
     return executeSQL(query, params);
 }
 
-const addRecipe = (userId, header, hash, description, visibleToAll, durationHours, durationMinutes) => {
-    const query = "INSERT INTO recipe (User_id, header, hash, description, visibleToAll, durationHours, durationMinutes, created) VALUES (?,?,?,?,?,?,?,NOW())";
-    return executeSQL(query, [userId, header, hash, description, visibleToAll, durationHours, durationMinutes]);
+const getImage = (hash) => {
+    const query = "SELECT image FROM recipe WHERE hash=?";
+    return executeSQL(query, [hash]);
+}
+
+const addRecipe = (userId, header, hash, description, visibleToAll, durationHours, durationMinutes, image) => {
+    const query = "INSERT INTO recipe (User_id, header, hash, description, visibleToAll, durationHours, durationMinutes, created, image) VALUES (?,?,?,?,?,?,?,NOW(),?)";
+    return executeSQL(query, [userId, header, hash, description, visibleToAll, durationHours, durationMinutes, image]);
 }
 
 const addStep = (step, number, recipeId) => {
@@ -67,4 +72,4 @@ const deleteSteps = (id) => {
     return executeSQL(query, [id]);
 }
 
-module.exports = { getAllRecipeHashes, getRecipes, addRecipe, addStep, getSteps, deleteRecipe, editRecipe, deleteSteps };
+module.exports = { getAllRecipeHashes, getRecipes, addRecipe, addStep, getSteps, deleteRecipe, editRecipe, deleteSteps, getImage };

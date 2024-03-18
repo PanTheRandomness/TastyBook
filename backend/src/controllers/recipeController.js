@@ -51,10 +51,39 @@ const getRecipe = async (req, res) => {
     }
 }
 
+const getImage = async (req, res) => {
+    try {
+        const { hash } = req.params;
+
+        const result = await sql.getImage(hash);
+        if (result.length === 0) return res.status(404).send();
+
+        const image = result[0]["image"];
+
+        const imageType = getImageType(image.slice(0, 8));
+
+        if (imageType === "png") {
+            res.setHeader("Content-Type", "image/png");
+        } else if (imageType === "jpeg") {
+            res.setHeader("Content-Type", "image/jpeg");
+        } else return res.status(404).send();
+
+        res.end(image);
+    } catch (error) {
+        res.status(500).send();
+    }
+}
+
 const addRecipe = async (req, res) => {
     try {
-        const { header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients } = req.body;
+        let { header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients } = req.body;
         try {
+            visibleToAll = parseInt(visibleToAll);
+            durationHours = parseInt(durationHours);
+            durationMinutes = parseInt(durationMinutes);
+            steps = JSON.parse(steps);
+            keywords = JSON.parse(keywords);
+            ingredients = JSON.parse(ingredients);
             checkRecipeBody(header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients);
         } catch (error) {
             return res.status(400).send();
@@ -64,7 +93,11 @@ const addRecipe = async (req, res) => {
 
         const hash = crypto.createHash("sha256").update(`${header}:${Date.now()}`).digest("hex");
 
-        const result = await sql.addRecipe(userId, header, hash, description, visibleToAll, durationHours, durationMinutes);
+        let image = null;
+
+        if (req.file) image = req.file.buffer;
+
+        const result = await sql.addRecipe(userId, header, hash, description, visibleToAll, durationHours, durationMinutes, image);
 
         keywords.map(async (word) => (
             await addRecipesKeyword(word, result.insertId)
@@ -164,4 +197,29 @@ const checkRecipeBody = (header, description, visibleToAll, durationHours, durat
         throw new Error();
 }
 
-module.exports = { getAllRecipes, getAllRecipeHashes, getRecipe, addRecipe, deleteRecipe, editRecipe, deleteRecipeAdmin };
+const getImageType = (imageData) => {
+    // Check if the first few bytes match the PNG magic bytes
+    if (imageData.length >= 8 &&
+        imageData[0] === 0x89 &&
+        imageData[1] === 0x50 &&
+        imageData[2] === 0x4E &&
+        imageData[3] === 0x47 &&
+        imageData[4] === 0x0D &&
+        imageData[5] === 0x0A &&
+        imageData[6] === 0x1A &&
+        imageData[7] === 0x0A) {
+        return "png";
+    }
+    // Check if the first few bytes match the JPEG magic bytes
+    if (imageData.length >= 3 &&
+        imageData[0] === 0xFF &&
+        imageData[1] === 0xD8 &&
+        imageData[2] === 0xFF) {
+        return "jpeg";
+    }
+    
+    // If no match is found, return null
+    return null;
+}
+
+module.exports = { getAllRecipes, getAllRecipeHashes, getRecipe, addRecipe, deleteRecipe, editRecipe, deleteRecipeAdmin, getImage };

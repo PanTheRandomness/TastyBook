@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `recipedb`.`Recipe` (
   `modified` DATETIME NULL,
   `durationHours` INT NULL,
   `durationMinutes` INT NULL,
+  `image` MEDIUMBLOB NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_Recipe_User1_idx` (`User_id` ASC) VISIBLE,
@@ -193,24 +194,6 @@ CREATE TABLE IF NOT EXISTS `recipedb`.`RecipesKeyword` (
     FOREIGN KEY (`Keyword_id`)
     REFERENCES `recipedb`.`Keyword` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `recipedb`.`Image`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `recipedb`.`Image` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `Recipe_id` INT NOT NULL,
-  `filename` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`, `Recipe_id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_Image_Recipe1_idx` (`Recipe_id` ASC) VISIBLE,
-  CONSTRAINT `fk_Image_Recipe1`
-    FOREIGN KEY (`Recipe_id`)
-    REFERENCES `recipedb`.`Recipe` (`id`)
-    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 

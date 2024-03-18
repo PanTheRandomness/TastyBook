@@ -1,4 +1,4 @@
-const { addRecipe, getAllRecipeHashes, getRecipe, deleteRecipe, editRecipe, getAllRecipes, deleteRecipeAdmin } = require("../recipeController");
+const { addRecipe, getAllRecipeHashes, getRecipe, deleteRecipe, editRecipe, getAllRecipes, deleteRecipeAdmin, getImage } = require("../recipeController");
 const sql = require("../../db/recipeSQL");
 const { addRecipesKeyword, getRecipesKeywords, deleteRecipesKeywords } = require("../keywordController");
 const { addRecipesIngredient, getRecipesIngredients, deleteRecipesIngredients } = require("../ingredientController");
@@ -184,6 +184,72 @@ describe("getRecipe", () => {
     });
 });
 
+describe("getImage", () => {
+    let req, res;
+
+    beforeEach(() => {
+        req = {
+            params: { hash: "123" }
+        }
+        res = {
+            status: jest.fn(() => res),
+            json: jest.fn(),
+            send: jest.fn(),
+            end: jest.fn(),
+            setHeader: jest.fn()
+        };
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should return 404 if no image was found", async () => {
+        sql.getImage.mockResolvedValue([]);
+
+        await getImage(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should return png if png image was found", async () => {
+        sql.getImage.mockResolvedValue([{ image: [ 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A ]}]);
+
+        await getImage(req, res);
+
+        expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+        expect(res.end).toHaveBeenCalled();
+    });
+
+    it("should return jpeg if jpeg image was found", async () => {
+        sql.getImage.mockResolvedValue([{ image: [ 0xFF, 0xD8, 0xFF ]}]);
+
+        await getImage(req, res);
+
+        expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/jpeg");
+        expect(res.end).toHaveBeenCalled();
+    });
+
+    it("should return 404 if not png or jpeg", async () => {
+        sql.getImage.mockResolvedValue([{ image: [ 0x47, 0x0D ]}]);
+
+        await getImage(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should handle internal server error", async () => {
+        sql.getImage.mockRejectedValue(new Error("Database error"));
+
+        await getImage(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalled();
+    });
+});
+
 describe("addRecipe", () => {
     let req, res;
 
@@ -192,12 +258,12 @@ describe("addRecipe", () => {
             body: {
                 header: "makaronilaatikko",
                 description: "hyvää",
-                visibleToAll: 1,
-                durationHours: 1,
-                durationMinutes: 30,
-                steps: ["eka", "toka"],
-                keywords: ["avain", "sana"],
-                ingredients: [{ quantity: "100 g", name: "potato" }, { quantity: "5 kg", name: "tomato" }]
+                visibleToAll: "1",
+                durationHours: "1",
+                durationMinutes: "30",
+                steps: '["eka", "toka"]',
+                keywords: '["avain", "sana"]',
+                ingredients: '[{ "quantity": "100 g", "name": "potato" }, { "quantity": "5 kg", "name": "tomato" }]'
             },
             user: { id: 123 }
         };
