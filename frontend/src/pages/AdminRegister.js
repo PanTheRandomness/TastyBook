@@ -30,6 +30,7 @@ const AdminRegister = ({ onLogin }) => {
           };
       
     return (
+        <div className = "register-border">
         <div className="registerFormbody">
             <div className="registerForm">
             <form onSubmit={onRegisterClicked}>
@@ -51,6 +52,7 @@ const AdminRegister = ({ onLogin }) => {
                     </div>
                 </div>
             )}
+        </div>
         </div>
     );
 }

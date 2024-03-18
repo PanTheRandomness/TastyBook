@@ -30,6 +30,7 @@ const onRegisterClicked = async (event) => {
       };
        
     return (
+        <div className = "register-border">
         <div className="registerFormbody">
             <div className="registerForm">
                 <form onSubmit={onRegisterClicked}>
@@ -54,6 +55,7 @@ const onRegisterClicked = async (event) => {
                     </div>
                 </div>
             )}
+        </div>
         </div>
     );
 }

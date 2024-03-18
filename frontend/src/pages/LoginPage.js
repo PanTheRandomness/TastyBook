@@ -22,6 +22,7 @@ const Login = ({onLogin}) => {
     }
 
     return(
+    <div className="login-border"> 
     <div className="loginFormbody">
         <div className="loginForm">
             <form  onSubmit={onLoginClicked}>
@@ -37,6 +38,7 @@ const Login = ({onLogin}) => {
         </div>
         </div>
     </div>
+    </div> 
 );}
 
 export {Login}
