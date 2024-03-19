@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../Styles/Search.css';
 import '../Styles/RecipeView.css';
 import RecipeView from "../components/recipeView";
+import { useToken } from "../customHooks/useToken";
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
-const searchRecipes = async (params) => {
+const searchRecipes = async (params, token) => {
   let url = `${BASE_URL}?`;
 
   Object.keys(params).forEach(key => {
@@ -18,7 +18,11 @@ const searchRecipes = async (params) => {
   console.log('Search URL:', url);
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch recipes');
     }
@@ -40,12 +44,13 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [activeTabs, setActiveTabs] = useState([]);
+  const [token] = useToken();
 
   const handleSearch = async () => {
     setSearchResults([]);
     setLoading(true);
     try {
-      const recipes = await searchRecipes(searchParams);
+      const recipes = await searchRecipes(searchParams, token);
       setSearchResults(recipes);
       setError(recipes.length === 0 ? 'No recipes found.' : '');
     } catch (error) {
