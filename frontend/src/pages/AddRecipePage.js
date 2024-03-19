@@ -71,6 +71,12 @@ const AddRecipe = (props) => {
                     setEditing(true);
                     setName(r.header);
                     setVisibleToAll(r.visibleToAll);
+                    console.log(r.visibleToAll);
+                    /* Tämän jos laittaa pois kommenteista reseptiä muokatessa tallennus aiheuttaa 400 Bad Request, muuten ei tuo oikeaa näkyvyysarvoa 
+                    (jos olisi false, konsoliin tulostuu null? jos true konsoliin tulostuu 1)
+                    if(r.visibleToAll == null){
+                        setVisibleToAll(false);
+                    }*/
                     setDescription(r.description);
                     setDurationH(r.durationHours);
                     setDurationMin(r.durationMinutes);
@@ -203,6 +209,10 @@ const AddRecipe = (props) => {
             quantity: newQuantity,
             name: ing
         };
+        /*Tämän ongelma: 
+        Jos ei ole määrää tai yksikköä, quantity on undefined, jota ei taas arvona hyväksytä API-kutsussa. 
+        Jos se taas korvataan konkreettisemmalla, kuten 0:lla, määräksi tulee 0. 
+        Kokeiltu myös välilyönnillä, mutta ei toimi silläkään */
         const updatedIngredients = [...ingredients];
         updatedIngredients[eIngIndex] = editedIngredient;
         setIngredients(updatedIngredients);
@@ -370,7 +380,7 @@ const AddRecipe = (props) => {
                                 <th>Visibility:</th>
                                 <td>
                                     <label>
-                                        <input data-testid="visibleInput" className="recipeinput" type='checkbox' defaultChecked={true} onChange={(e) => e.target.checked ? setVisibleToAll(1) : setVisibleToAll(0)} />
+                                        <input data-testid="visibleInput" className="recipeinput" type='checkbox' checked={visibleToAll} onChange={(e) => e.target.checked ? setVisibleToAll(1) : setVisibleToAll(0)} />
                                         Public
                                         {visibleToAll ? null : <div style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage'>Recipe will only be visible to registered users</div>}
                                     </label>
