@@ -50,6 +50,7 @@ const AddRecipe = (props) => {
     const navigate = useNavigate();
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState(null);
+    const [wrongImage, setWrongImage] = useState(false);
     const [imageChanged, setImageChanged] = useState(false);
 
     const [isErrorModalOpen, setErrorModalOpen] = useState(false);
@@ -360,7 +361,18 @@ const AddRecipe = (props) => {
     }
 
     const handleImageChange = (e) => {
-        setImage(e.target.files[0]);
+        const file = e.target.files[0];
+        if (file) {
+            const fileSize = file.size / 1024 / 1024;
+            if ((file.type === 'image/jpeg' || file.type === 'image/png') && fileSize <= 16) {
+                setImage(file);
+                setWrongImage(false);
+            } else {
+                setWrongImage(true);
+                setImage(null);
+                e.target.value = null;
+            }
+        }
         if (editing) setImageChanged(true);
     }
 
@@ -405,7 +417,9 @@ const AddRecipe = (props) => {
                             <tr className='recipeform-item'>
                                 <th>Image:</th>
                                 <td>
-                                    <input data-testid="recipeImageInput" className="recipeinput" type='file' accept="image/*" onChange={(e) => handleImageChange(e)} />
+                                    <input data-testid="recipeImageInput" className="recipeinput" type='file' accept=".jpeg, .jpg, .png*" onChange={(e) => handleImageChange(e)} />
+                                    { wrongImage ? <div  style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage'>Valitse JPEG- tai PNG-tiedosto, jonka koko on enintään 16MB.</div> : null}
+                                    {/*Ei vielä testattu?*/}
                                 </td>
                             </tr>
                         </tbody>
