@@ -215,9 +215,11 @@ const AddRecipe = (props) => {
         const index = ingredients.indexOf(ingredient);
         if (index !== -1) {
             setEIngIndex(index);
-            const [quantity, unit] = ingredient.quantity.split(' ');
-            setQt(parseFloat(quantity));
-            setUnit(unit);
+            if(ingredient.quantity){
+                const [quantity, unit] = ingredient.quantity.split(' ');
+                setQt(parseFloat(quantity));
+                setUnit(unit);
+            }
             setIng(ingredient.name);
             setEditingIngredient(true);
             openModalI();
@@ -228,7 +230,8 @@ const AddRecipe = (props) => {
     }
 
     const saveEditedIngredient = () => {
-        const newQuantity = qt + " " + unit;
+        let newQuantity = qt + " " + unit;
+        if(qt == 0) newQuantity = unit;
         const editedIngredient = {
             quantity: newQuantity,
             name: ing
@@ -418,7 +421,7 @@ const AddRecipe = (props) => {
                                 <th>Image:</th>
                                 <td>
                                     <input data-testid="recipeImageInput" className="recipeinput" type='file' accept=".jpeg, .jpg, .png*" onChange={(e) => handleImageChange(e)} />
-                                    { wrongImage ? <div  style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage'>Valitse JPEG- tai PNG-tiedosto, jonka koko on enintään 16MB.</div> : null}
+                                    { wrongImage ? <div  style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage'>Please choose either a -jpeg- or .png-file. Maximum filesize is 16MB</div> : null}
                                     {/*Ei vielä testattu?*/}
                                 </td>
                             </tr>
