@@ -80,7 +80,8 @@ const AddRecipe = (props) => {
                     setId(r.id);
                     try {
                         const imgresponse = await fetch("http://localhost:3004/api/recipe/image/" + route, requestOptions);
-                        setImage(imgresponse);
+                        const blob = await imgresponse.blob();
+                        setImage(blob);
                     } catch (error) {
                         setErrorText("An error occurred while loading recipe's image: " + error);
                         openErrorModal();
@@ -130,24 +131,24 @@ const AddRecipe = (props) => {
     }
 
     const saveRecipe = async () => {
+        const formData = new FormData();
+        formData.append("id", id);
+        formData.append("header", name);
+        formData.append("description", description);
+        formData.append("visibleToAll", visibleToAll);
+        formData.append("durationHours", durationH);
+        formData.append("durationMinutes", durationMin);
+        formData.append("ingredients", JSON.stringify(ingredients));
+        formData.append("steps", JSON.stringify(steps));
+        formData.append("keywords", JSON.stringify(keywords));
+        formData.append('image', image);
+        
         const requestOptions = {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': "Bearer " + token
             },
-            body: JSON.stringify({
-                id: id,
-                header: name,
-                description: description,
-                visibleToAll: visibleToAll,
-                durationHours: durationH,
-                durationMinutes: durationMin,
-                steps: steps,
-                keywords: keywords,
-                ingredients: ingredients,
-                image: image
-            })
+            body: formData
         }
 
         try {
@@ -340,6 +341,10 @@ const AddRecipe = (props) => {
         }
     }
 
+    const removeImage = () =>{
+        setImage(null);
+    }
+
     return (
         <div className='recipeform-body'>
             <div className='recipeform'>
@@ -386,6 +391,11 @@ const AddRecipe = (props) => {
                                     {/*Ei vielä testattu?*/}
                                     {/*Reseptiä muokattaessa, jos reseptissä on kuva, miten näytetään? */}
                                 </td>
+                            </tr>
+                            <tr>
+                                <th>Current Image:</th>
+                                <td>{image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage'/>:null}</td>
+                                <td><button className='removebutton' onClick={removeImage}>Remove Image</button></td>
                             </tr>
                         </tbody>
                     </table>

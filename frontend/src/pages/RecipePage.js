@@ -188,7 +188,8 @@ const RecipeHead = (props) =>{
                 <RecipeKeywords keywords={recipe.keywords}/> <br/>
             </div>
             <div className='image-container'>
-                {image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage'/>:<div>This recipe does not contain an image.</div>}
+                {image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage'/>:null}
+                {/*Nyt näkyy vain alt, eikä null, jos ei ole kuvaa */}
             </div>
         </div>
     );

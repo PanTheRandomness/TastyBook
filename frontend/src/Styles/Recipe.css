@@ -70,7 +70,7 @@ button {
     border-radius: 3px;
 }
 
-.addbutton {
+.addbutton, .removebutton {
     border-radius: 15px;
     border-style: hidden;
     background-color: #6A704C;
@@ -249,7 +249,6 @@ button {
     background-color:#6A704C;
     color:#F1DBBF;
 }
-
 
 .notfound {
     text-align: center;
