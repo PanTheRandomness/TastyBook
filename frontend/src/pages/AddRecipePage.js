@@ -51,7 +51,6 @@ const AddRecipe = (props) => {
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState(null);
     const [wrongImage, setWrongImage] = useState(false);
-    const [imageChanged, setImageChanged] = useState(false);
 
     const [isErrorModalOpen, setErrorModalOpen] = useState(false);
     const [errorText, setErrorText] = useState('');
@@ -79,7 +78,13 @@ const AddRecipe = (props) => {
                     setSteps(r.steps.map(item => item.step));
                     setKeywords(r.keywords.map(item => item.word));
                     setId(r.id);
-                    //Jos ID:llä löytyy kuva => setImage
+                    try {
+                        const imgresponse = await fetch("http://localhost:3004/api/recipe/image/" + route, requestOptions);
+                        setImage(imgresponse);
+                    } catch (error) {
+                        setErrorText("An error occurred while loading recipe's image: " + error);
+                        openErrorModal();
+                    }
                 } else {
                     throw new Error('Recipe not found');
                 }
@@ -101,7 +106,7 @@ const AddRecipe = (props) => {
         formData.append("ingredients", JSON.stringify(ingredients));
         formData.append("steps", JSON.stringify(steps));
         formData.append("keywords", JSON.stringify(keywords));
-        formData.append("image", image);
+        formData.append('image', image);
 
         const requestOptions = {
             method: 'POST',
@@ -116,28 +121,6 @@ const AddRecipe = (props) => {
             if (response.ok) {
                 const data = await response.json();
                 addRecipeRoute(data.hash);
-                /*if(image){
-                    const finalImage = {
-                        Recipe_id : data.id,
-                        filename : image
-                    }
-                    try {
-                        const response = await fetch("http://localhost:3004/api/image", {
-                            method: 'POST',
-                            headers: {
-                                'Authorization' : "Bearer " + token
-                            },
-                            body: formData
-                        });
-
-                        if (response.ok) {
-                            // Kuva tallennettu onnistuneesti, ohjaa käyttäjä reseptisivulle
-                        }
-                    } catch (error) {
-                        setErrorText("Unable to post image: " + error);
-                        openErrorModal();
-                    }
-                }*/
                 navigate("/recipe/" + data.hash);
             }
         } catch (error) {
@@ -147,52 +130,30 @@ const AddRecipe = (props) => {
     }
 
     const saveRecipe = async () => {
-        const formData = new FormData();
-        formData.append("id", id);
-        formData.append("header", name);
-        formData.append("description", description);
-        formData.append("visibleToAll", visibleToAll);
-        formData.append("durationHours", durationH);
-        formData.append("durationMinutes", durationMin);
-        formData.append("ingredients", JSON.stringify(ingredients));
-        formData.append("steps", JSON.stringify(steps));
-        formData.append("keywords", JSON.stringify(keywords));
-        formData.append("image", image);
-
         const requestOptions = {
             method: 'PUT',
             headers: {
+                'Content-Type': 'application/json',
                 'Authorization': "Bearer " + token
             },
-            body: formData
+            body: JSON.stringify({
+                id: id,
+                header: name,
+                description: description,
+                visibleToAll: visibleToAll,
+                durationHours: durationH,
+                durationMinutes: durationMin,
+                steps: steps,
+                keywords: keywords,
+                ingredients: ingredients,
+                image: image
+            })
         }
 
         try {
             console.log("Save modified called...");
             const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
             if (response.ok) {
-                /*if(imageChanged){
-                    const finalImage = {
-                        Recipe_id : data.id,
-                        filename : image
-                    }
-                    try {
-                        const response = await fetch("http://localhost:3004/api/image", {
-                            method: 'PUT',
-                            headers: {
-                                'Authorization' : "Bearer " + token
-                            },
-                            body: formData
-                        });
-
-                        if (response.ok) {
-                            // Kuva tallennettu onnistuneesti, ohjaa käyttäjä reseptisivulle
-                        }
-                    } catch (error) {
-                        setErrorText("Unable to save modified image: " + error);
-                        openErrorModal();
-                    }
-                }*/
                 navigate("/recipe/" + route);
                 setEditing(false);
             }
@@ -377,7 +338,6 @@ const AddRecipe = (props) => {
                 e.target.value = null;
             }
         }
-        if (editing) setImageChanged(true);
     }
 
     return (
@@ -424,6 +384,7 @@ const AddRecipe = (props) => {
                                     <input data-testid="recipeImageInput" className="recipeinput" type='file' accept=".jpeg, .jpg, .png*" onChange={(e) => handleImageChange(e)} />
                                     { wrongImage ? <div  style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage'>Please choose either a -jpeg- or .png-file. Maximum filesize is 16MB</div> : null}
                                     {/*Ei vielä testattu?*/}
+                                    {/*Reseptiä muokattaessa, jos reseptissä on kuva, miten näytetään? */}
                                 </td>
                             </tr>
                         </tbody>

@@ -54,7 +54,14 @@ const Recipe = (props) =>{
             try {
                 const response = await fetchRecipe(token, route);
                 setRecipe(response);
-                // Onko reseptin id:llä kuvaa? jos on => setImage
+                try {
+                    const imgresponse = await fetch("http://localhost:3004/api/recipe/image/" + route);
+                    const blob = await imgresponse.blob();
+                    setImage(blob);
+                } catch (error) {
+                    setErrorText("An error occurred while loading recipe's image: " + error);
+                    openErrorModal();
+                }
 
             } catch (error) {
                 setErrorText("An error occurred while loading recipe: " + error);
@@ -107,7 +114,7 @@ const Recipe = (props) =>{
         <div>
             <div className='recipe-border'>
                 <div className='recipe-container'>
-                    <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} isShareModalOpen={isShareModalOpen} onShare={openShareModal} /*image={image}*/ />
+                    <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} isShareModalOpen={isShareModalOpen} onShare={openShareModal} image={image} />
                     <div className="separator"></div>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={recipe.ingredients} page="recipepage"/>
@@ -181,8 +188,7 @@ const RecipeHead = (props) =>{
                 <RecipeKeywords keywords={recipe.keywords}/> <br/>
             </div>
             <div className='image-container'>
-                Image here
-                {/*image ? <img src={image} alt="Recipe Image" className='recipeimage'/>:null*/}
+                {image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage'/>:<div>This recipe does not contain an image.</div>}
             </div>
         </div>
     );

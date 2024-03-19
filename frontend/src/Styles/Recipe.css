@@ -264,21 +264,22 @@ button {
 }
 
 .recipeimage {
-    max-width: '100%';
-    height: 'auto';
+    max-width: 500px;
+    max-height: 500px;
+    object-fit: contain;
 }
 
 .image-container {
     flex: 1;
-    margin-top:10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
 .separator {
     border-bottom: 3px solid #6A704C;
 }
-
-
-  
-
-
-
