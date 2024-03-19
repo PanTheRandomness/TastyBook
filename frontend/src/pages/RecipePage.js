@@ -56,8 +56,12 @@ const Recipe = (props) =>{
                 setRecipe(response);
                 try {
                     const imgresponse = await fetch("http://localhost:3004/api/recipe/image/" + route);
-                    const blob = await imgresponse.blob();
-                    setImage(blob);
+                    if (imgresponse.ok) {
+                        const blob = await imgresponse.blob();
+                        setImage(blob);
+                    } else {
+                        setImage(null);
+                    }
                 } catch (error) {
                     setErrorText("An error occurred while loading recipe's image: " + error);
                     openErrorModal();
