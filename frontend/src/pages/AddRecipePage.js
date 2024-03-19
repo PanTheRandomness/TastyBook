@@ -421,7 +421,7 @@ const AddRecipe = (props) => {
                                 <th>Image:</th>
                                 <td>
                                     <input data-testid="recipeImageInput" className="recipeinput" type='file' accept=".jpeg, .jpg, .png*" onChange={(e) => handleImageChange(e)} />
-                                    { wrongImage ? <div  style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage'>Valitse JPEG- tai PNG-tiedosto, jonka koko on enintään 16MB.</div> : null}
+                                    { wrongImage ? <div  style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage'>Please choose either a -jpeg- or .png-file. Maximum filesize is 16MB</div> : null}
                                     {/*Ei vielä testattu?*/}
                                 </td>
                             </tr>
