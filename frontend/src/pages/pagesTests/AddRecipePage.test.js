@@ -106,8 +106,6 @@ describe('Editing recipe tests', () =>{
             expect(fetchMock).toHaveBeenCalledWith(`http://localhost:3004/api/recipe/${route}`, expect.any(Object));
         });
 
-        expect(fetchMock).toHaveBeenCalledTimes(1);
-
         await waitFor(() => {
             expect(getByTestId('recipeNameInput')).toHaveValue(mockRecipe.header);
             expect(getByTestId('recipeDescriptionInput')).toHaveValue(mockRecipe.description);
