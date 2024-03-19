@@ -78,6 +78,7 @@ const addRecipe = async (req, res) => {
     try {
         let { header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients } = req.body;
         try {
+            if (visibleToAll === "null") visibleToAll = "0";
             visibleToAll = parseInt(visibleToAll);
             durationHours = parseInt(durationHours);
             durationMinutes = parseInt(durationMinutes);
@@ -149,6 +150,7 @@ const editRecipe = async (req, res) => {
         const userId = req.user.id;
         let { header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients, id } = req.body;
         try {
+            if (visibleToAll === "null") visibleToAll = "0";
             visibleToAll = parseInt(visibleToAll);
             durationHours = parseInt(durationHours);
             durationMinutes = parseInt(durationMinutes);
