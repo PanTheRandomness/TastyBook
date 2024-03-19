@@ -215,9 +215,11 @@ const AddRecipe = (props) => {
         const index = ingredients.indexOf(ingredient);
         if (index !== -1) {
             setEIngIndex(index);
-            const [quantity, unit] = ingredient.quantity.split(' ');
-            setQt(parseFloat(quantity));
-            setUnit(unit);
+            if(ingredient.quantity){
+                const [quantity, unit] = ingredient.quantity.split(' ');
+                setQt(parseFloat(quantity));
+                setUnit(unit);
+            }
             setIng(ingredient.name);
             setEditingIngredient(true);
             openModalI();
@@ -228,7 +230,8 @@ const AddRecipe = (props) => {
     }
 
     const saveEditedIngredient = () => {
-        const newQuantity = qt + " " + unit;
+        let newQuantity = qt + " " + unit;
+        if(qt == 0) newQuantity = unit;
         const editedIngredient = {
             quantity: newQuantity,
             name: ing
