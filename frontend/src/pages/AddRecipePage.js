@@ -101,7 +101,7 @@ const AddRecipe = (props) => {
         formData.append("ingredients", JSON.stringify(ingredients));
         formData.append("steps", JSON.stringify(steps));
         formData.append("keywords", JSON.stringify(keywords));
-        formData.append('image', image);
+        formData.append("image", image);
 
         const requestOptions = {
             method: 'POST',
@@ -147,23 +147,24 @@ const AddRecipe = (props) => {
     }
 
     const saveRecipe = async () => {
+        const formData = new FormData();
+        formData.append("id", id);
+        formData.append("header", name);
+        formData.append("description", description);
+        formData.append("visibleToAll", visibleToAll);
+        formData.append("durationHours", durationH);
+        formData.append("durationMinutes", durationMin);
+        formData.append("ingredients", JSON.stringify(ingredients));
+        formData.append("steps", JSON.stringify(steps));
+        formData.append("keywords", JSON.stringify(keywords));
+        formData.append("image", image);
+
         const requestOptions = {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': "Bearer " + token
             },
-            body: JSON.stringify({
-                id: id,
-                header: name,
-                description: description,
-                visibleToAll: visibleToAll,
-                durationHours: durationH,
-                durationMinutes: durationMin,
-                steps: steps,
-                keywords: keywords,
-                ingredients: ingredients
-            })
+            body: formData
         }
 
         try {

@@ -376,15 +376,15 @@ describe("editRecipe", () => {
     beforeEach(() => {
         req = {
             body: {
-                id: 1,
+                id: "1",
                 header: "makaronilaatikko",
                 description: "hyvää",
-                visibleToAll: 1,
-                durationHours: 1,
-                durationMinutes: 30,
-                steps: ["eka", "toka"],
-                keywords: ["avain", "sana"],
-                ingredients: [{ quantity: "100 g", name: "potato" }, { quantity: "5 kg", name: "tomato" }]
+                visibleToAll: "1",
+                durationHours: "1",
+                durationMinutes: "30",
+                steps: '["eka", "toka"]',
+                keywords: '["avain", "sana"]',
+                ingredients: '[{ "quantity": "100 g", "name": "potato" }, { "quantity": "5 kg", "name": "tomato" }]'
             },
             user: { id: 123 },
             params: {
@@ -416,7 +416,7 @@ describe("editRecipe", () => {
 
         await editRecipe(req, res);
 
-        expect(sql.editRecipe).toHaveBeenCalledWith(req.body.header, req.body.description, req.body.visibleToAll, req.body.durationHours, req.body.durationMinutes, req.params.hash, req.user.id);
+        expect(sql.editRecipe).toHaveBeenCalledWith(req.body.header, req.body.description, 1, 1, 30, null, req.params.hash, req.user.id);
         expect(deleteRecipesKeywords).toHaveBeenCalledWith(req.body.id);
         expect(addRecipesKeyword).toHaveBeenCalledWith("avain", req.body.id);
         expect(sql.deleteSteps).toHaveBeenCalledWith(req.body.id);

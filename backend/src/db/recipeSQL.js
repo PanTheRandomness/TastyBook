@@ -6,7 +6,7 @@ const getAllRecipeHashes = (loggedIn) => {
     return executeSQL(query, []);
 }
 
-const getRecipes = (hash, loggedIn, ingredient, keyword) => {
+const getRecipes = (hash, loggedIn, ingredient, keyword, username) => {
     let params = [];
     let query = "SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id";
     if (ingredient) query += " LEFT JOIN recipesingredient ri ON ri.Recipe_id = r.id LEFT JOIN ingredient i ON ri.Ingredient_id = i.id";
@@ -24,6 +24,10 @@ const getRecipes = (hash, loggedIn, ingredient, keyword) => {
     if (keyword) {
         query += " AND k.word LIKE ?";
         params.push(`%${keyword}%`);
+    }
+    if (username) {
+        query += " AND u.username LIKE ?";
+        params.push(`%${username}%`);
     }
     query += " GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes";
     return executeSQL(query, params);
@@ -62,9 +66,9 @@ const deleteRecipe = (hash, userId) => {
     return executeSQL(query, params);
 }
 
-const editRecipe = (header, description, visibleToAll, durationHours, durationMinutes, hash, userId) => {
-    const query = "UPDATE recipe SET header=?, description=?, visibleToAll=?, durationHours=?, durationMinutes=?, modified=NOW() WHERE hash=? AND User_id=?";
-    return executeSQL(query, [header, description, visibleToAll, durationHours, durationMinutes, hash, userId]);
+const editRecipe = (header, description, visibleToAll, durationHours, durationMinutes, image, hash, userId) => {
+    const query = "UPDATE recipe SET header=?, description=?, visibleToAll=?, durationHours=?, durationMinutes=?, image=?, modified=NOW() WHERE hash=? AND User_id=?";
+    return executeSQL(query, [header, description, visibleToAll, durationHours, durationMinutes, image, hash, userId]);
 }
 
 const deleteSteps = (id) => {

@@ -86,6 +86,15 @@ describe("getRecipes", () => {
         expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id LEFT JOIN recipesingredient ri ON ri.Recipe_id = r.id LEFT JOIN ingredient i ON ri.Ingredient_id = i.id LEFT JOIN recipeskeyword rk ON rk.Recipe_id = r.id LEFT JOIN keyword k ON rk.Keyword_id = k.id WHERE 1=1 AND r.visibleToAll=1 AND i.name LIKE ? AND k.word LIKE ? GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes", [`%${ingredient}%` ,`%${keyword}%`]);
         expect(result).toEqual([{ id: 1 }]);
     });
+
+    it("should add username to params if given", async () => {
+        executeSQL.mockReturnValueOnce([{ id: 1 }]);
+        const username = "testuser";
+
+        const result = await getRecipes(null, false, null, null, username);
+        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id WHERE 1=1 AND r.visibleToAll=1 AND u.username LIKE ? GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes", [`%${username}%`]);
+        expect(result).toEqual([{ id: 1 }]);
+    });
 });
 
 describe("getImage", () => {
@@ -175,12 +184,13 @@ describe("editRecipe", () => {
         const visibleToAll = 1;
         const durationHours = 1;
         const durationMinutes = 0;
+        const image = [0];
 
-        await editRecipe(header, description, visibleToAll, durationHours, durationMinutes, hash, userId)
+        await editRecipe(header, description, visibleToAll, durationHours, durationMinutes, image, hash, userId)
 
         expect(executeSQL).toHaveBeenCalledWith(
-            "UPDATE recipe SET header=?, description=?, visibleToAll=?, durationHours=?, durationMinutes=?, modified=NOW() WHERE hash=? AND User_id=?",
-            [header, description, visibleToAll, durationHours, durationMinutes, hash, userId]);
+            "UPDATE recipe SET header=?, description=?, visibleToAll=?, durationHours=?, durationMinutes=?, image=?, modified=NOW() WHERE hash=? AND User_id=?",
+            [header, description, visibleToAll, durationHours, durationMinutes, image, hash, userId]);
     });
 });
 

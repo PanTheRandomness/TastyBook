@@ -7,8 +7,8 @@ const { getReviews } = require("../db/reviewSQL");
 const getAllRecipes = async (req, res) => {
     try {
         // Tähän tarkastus että keyword ja ingredient pitää olla vähintään tietyn pituisia?
-        const { keyword, ingredient } = req.query;
-        const recipes = await sql.getRecipes(null, req.loggedIn, ingredient, keyword);
+        const { keyword, ingredient, username } = req.query;
+        const recipes = await sql.getRecipes(null, req.loggedIn, ingredient, keyword, username);
         if (req.loggedIn) return res.status(200).json({ loggedIn: true, recipes });
         res.status(200).json({ recipes });
     } catch (error) {
@@ -147,15 +147,24 @@ const editRecipe = async (req, res) => {
     try {
         const hash = req.params.hash;
         const userId = req.user.id;
-        const { header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients, id } = req.body;
-        if (!id) return res.status(400).send();
+        let { header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients, id } = req.body;
         try {
+            visibleToAll = parseInt(visibleToAll);
+            durationHours = parseInt(durationHours);
+            durationMinutes = parseInt(durationMinutes);
+            steps = JSON.parse(steps);
+            keywords = JSON.parse(keywords);
+            ingredients = JSON.parse(ingredients);
             checkRecipeBody(header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients);
         } catch (error) {
             return res.status(400).send();
         }
 
-        const result = await sql.editRecipe(header, description, visibleToAll, durationHours, durationMinutes, hash, userId);
+        let image = null;
+
+        if (req.file) image = req.file.buffer;
+
+        const result = await sql.editRecipe(header, description, visibleToAll, durationHours, durationMinutes, image, hash, userId);
         if (result.changedRows === 0) return res.status(404).send();
 
         await sql.deleteSteps(id);
@@ -187,14 +196,14 @@ const checkRecipeBody = (header, description, visibleToAll, durationHours, durat
         typeof durationMinutes !== "number" || durationMinutes < 0 || durationMinutes > 59)
         throw new Error();
 
-    if (!Array.isArray(steps) || !steps.every(step => typeof step === "string" && step.length <= 255)) throw new Error();
+    if (!Array.isArray(steps) || !steps.every(step => typeof step === "string" && step.length <= 500)) throw new Error();
 
     if (!Array.isArray(keywords) || !keywords.every(word => typeof word === "string" && word.length <= 45)) throw new Error();
 
     if (!Array.isArray(ingredients) || !ingredients.every(ingredient =>
         typeof ingredient === "object" &&
-        typeof ingredient.name === "string" && ingredient.name.length <= 45 &&
-        typeof ingredient.quantity === "string" && ingredient.quantity.length <= 45))
+        typeof ingredient.name === "string" && ingredient.name.length <= 255 &&
+        (typeof ingredient.quantity === null || (typeof ingredient.quantity === "string" && ingredient.quantity.length <= 45))))
         throw new Error();
 }
 

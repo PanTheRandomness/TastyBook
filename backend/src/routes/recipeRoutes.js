@@ -171,7 +171,7 @@ router.route("/api/recipe/:hash").delete(userMiddleware.verifyJWT, ctrl.deleteRe
     Jos ei muusta syystä onnistu, palauttaa stauskoodin 500
 */
 
-router.route("/api/recipe/:hash").put(userMiddleware.verifyJWT, ctrl.editRecipe);
+router.route("/api/recipe/:hash").put(userMiddleware.verifyJWT, upload.single("image"), ctrl.editRecipe);
 
 router.route("/api/recipe/:hash/admin").delete(userMiddleware.verifyJWT, adminMiddleware.verifyAdmin, ctrl.deleteRecipeAdmin);
 
