@@ -203,7 +203,7 @@ const checkRecipeBody = (header, description, visibleToAll, durationHours, durat
     if (!Array.isArray(ingredients) || !ingredients.every(ingredient =>
         typeof ingredient === "object" &&
         typeof ingredient.name === "string" && ingredient.name.length <= 255 &&
-        (typeof ingredient.quantity === null || (typeof ingredient.quantity === "string" && ingredient.quantity.length <= 45))))
+        (typeof ingredient.quantity !== null || (typeof ingredient.quantity === "string" && ingredient.quantity.length <= 45))))
         throw new Error();
 }
 
