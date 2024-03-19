@@ -18,6 +18,7 @@ const ForgotPassword = () => {
     if (errorMessage) return <div>{errorMessage}</div>
 
     return (
+        <div className="forgotPasswordForm-border">
         <div className="forgotPasswordFormbody">
             <div className="forgotPasswordForm">
                 <h1>Forgot Password</h1>
@@ -26,6 +27,7 @@ const ForgotPassword = () => {
                 <button className="forgotPasswordFormbutton" disabled={!email} onClick={onSubmitClicked}>Send reset link</button>
             </div> 
         </div> 
+        </div>
     );
 }
 

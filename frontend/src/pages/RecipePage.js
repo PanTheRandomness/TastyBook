@@ -4,6 +4,7 @@ import { useUser } from '../customHooks/useUser';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 import '../Styles/Ellipsis.css';
+import '../Styles/Print.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
 import ErrorModal  from '../components/ErrorModal';

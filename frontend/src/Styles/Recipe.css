@@ -29,6 +29,7 @@ button {
     width: 100%;
     padding-bottom: 10%;
     min-width: 90%;
+    overflow-y: hidden;
 }
 
 .recipeform-top {
@@ -275,3 +276,9 @@ button {
 .separator {
     border-bottom: 3px solid #6A704C;
 }
+
+
+  
+
+
+
