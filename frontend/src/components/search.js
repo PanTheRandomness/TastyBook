@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import '../Styles/RecipeView.css';
 import RecipeView from "../components/recipeView";
 import { useToken } from "../customHooks/useToken";
+import { NavLink } from "react-router-dom";
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
@@ -130,9 +131,9 @@ const Search = () => {
           <ul className='recipeViewContainer'>
             {searchResults.map((recipe, index) => (
               <div  key={index}>
-                <Link to={`/recipe/${recipe.hash}`}>
-                  <RecipeView key={recipe.id} recipe={recipe} />
-                </Link>
+                 <NavLink className={"recipeView"} to={`/recipe/${recipe.hash}`}>                  
+                 <RecipeView key={recipe.id} recipe={recipe} />
+                 </NavLink>
               </div>
             ))}
           </ul>
