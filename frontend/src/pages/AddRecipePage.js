@@ -80,8 +80,12 @@ const AddRecipe = (props) => {
                     setId(r.id);
                     try {
                         const imgresponse = await fetch("http://localhost:3004/api/recipe/image/" + route, requestOptions);
-                        const blob = await imgresponse.blob();
-                        setImage(blob);
+                        if (imgresponse.ok) {
+                            const blob = await imgresponse.blob();
+                            setImage(blob);
+                        } else {
+                            setImage(null);
+                        }
                     } catch (error) {
                         setErrorText("An error occurred while loading recipe's image: " + error);
                         openErrorModal();
@@ -389,7 +393,6 @@ const AddRecipe = (props) => {
                                     <input data-testid="recipeImageInput" className="recipeinput" type='file' accept=".jpeg, .jpg, .png*" onChange={(e) => handleImageChange(e)} />
                                     { wrongImage ? <div  style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage'>Please choose either a -jpeg- or .png-file. Maximum filesize is 16MB</div> : null}
                                     {/*Ei vielä testattu?*/}
-                                    {/*Reseptiä muokattaessa, jos reseptissä on kuva, miten näytetään? */}
                                 </td>
                             </tr>
                             <tr>
