@@ -5,7 +5,7 @@ import RecipeView from "../components/recipeView";
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
-const searchKeyword = async (keyword) => {
+const searchByKeyword = async (keyword) => {
   let url = `${BASE_URL}?`;
 
   if (keyword) {
@@ -27,11 +27,11 @@ const searchKeyword = async (keyword) => {
   }
 };
 
-const searchIngredient = async (ingredient) => {
+const searchByIngredient = async (ingredient) => {
   let url = `${BASE_URL}?`;
 
   if (ingredient) {
-    url += `&ingredient=${ingredient}`;
+    url += `ingredient=${ingredient}`;
   }
 
   console.log('Search URL:', url);
@@ -53,7 +53,7 @@ const searchByUsername = async (username) => {
   let url = `${BASE_URL}?`;
 
   if (username) {
-    url += `&username=${username}`;
+    url += `username=${username}`;
   }
 
   console.log('Search URL:', url);
@@ -72,31 +72,29 @@ const searchByUsername = async (username) => {
 }; 
 
 const Search = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [keyword, setKeyword] = useState('');
+  const [ingredient, setIngredient] = useState('');
+  const [username, setUsername] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState(null);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
+  const handleSearch = async () => {
     setSearchResults([]);
     setLoading(true);
     try {
-      const keywordRecipes = await searchKeyword(searchTerm);
-      const ingredientRecipes = await searchIngredient(searchTerm);
-      const usernameRecipes = await searchByUsername(searchTerm);
-      
-      const combinedRecipes = [...keywordRecipes, ...ingredientRecipes, ...usernameRecipes];
-      const uniqueRecipes = Array.from(new Set(combinedRecipes.map(recipe => recipe.id)))
-        .map(id => combinedRecipes.find(recipe => recipe.id === id));
-  
-      setSearchResults(uniqueRecipes);
-  
-      if (uniqueRecipes.length === 0 && searchTerm !== '') {
-        setError('No recipes found.');
-      } else {
-        setError('');
+      let recipes = [];
+      if (activeTab === 'keyword') {
+        recipes = await searchByKeyword(keyword);
+      } else if (activeTab === 'ingredient') {
+        recipes = await searchByIngredient(ingredient);
+      } else if (activeTab === 'username') {
+        recipes = await searchByUsername(username);
       }
+
+      setSearchResults(recipes);
+      setError(recipes.length === 0 && activeTab ? 'No recipes found.' : '');
     } catch (error) {
       setError('Error searching recipes. Please try again later.');
     } finally {
@@ -107,16 +105,29 @@ const Search = () => {
   return (
     <div>
       <h2>Recipe Search</h2>
-      <label htmlFor="searchInput">Search by keyword, ingredient, or username:</label>
-      <input
-        id="searchInput"
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <button onClick={handleSearch} disabled={loading}>
-        {loading ? 'Searching...' : 'Search'}
-      </button>
+      <div>
+        <button onClick={() => setActiveTab('keyword')}>Search by keyword</button>
+        <button onClick={() => setActiveTab('ingredient')}>Search by ingredient</button>
+        <button onClick={() => setActiveTab('username')}>Search by username</button>
+      </div>
+      {activeTab && (
+        <div>
+          <label htmlFor="searchInput">Enter {activeTab === 'keyword' ? 'keyword' : activeTab === 'ingredient' ? 'ingredient' : 'username'}:</label>
+          <input
+            id="searchInput"
+            type="text"
+            value={activeTab === 'keyword' ? keyword : activeTab === 'ingredient' ? ingredient : username}
+            onChange={(e) => {
+              if (activeTab === 'keyword') setKeyword(e.target.value);
+              else if (activeTab === 'ingredient') setIngredient(e.target.value);
+              else setUsername(e.target.value);
+            }}
+          />
+          <button onClick={handleSearch} disabled={loading}>
+            {loading ? 'Searching...' : 'Search'}
+          </button>
+        </div>
+      )}
       {error && <div className="error-message">{error}</div>}
       {searchResults.length > 0 && (
         <div>
