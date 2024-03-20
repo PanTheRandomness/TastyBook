@@ -398,13 +398,13 @@ const AddRecipe = (props) => {
                                 <th>Image:</th>
                                 <td>
                                     <input data-testid="recipeImageInput" className="recipeinput" type='file' accept=".jpeg, .jpg, .png*" onChange={(e) => handleImageChange(e)} />
-                                    { wrongImage ? <div  style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage'>Please choose either a -jpeg- or .png-file. Maximum filesize is 16MB</div> : null}
+                                    { wrongImage ? <div  style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage' data-testid='wrongimageerror'>Please choose either a -jpeg- or .png-file. Maximum filesize is 16MB</div> : null}
                                 </td>
                             </tr>
                             <tr>
                                 <th>Current Image:</th>
-                                <td>{image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage'/>:null}</td>
-                                <td><button className='removebutton' onClick={removeImage}>Remove Image</button></td>
+                                <td>{image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage' data-testid='currentimage' />:null}</td>
+                                <td><button className='removebutton' onClick={removeImage} data-testid='removeimagebutton'>Remove Image</button></td>
                             </tr>
                         </tbody>
                     </table>
