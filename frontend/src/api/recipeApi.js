@@ -104,3 +104,32 @@ export const removeRecipeAdmin = async (token, route) =>{
         throw error;
     }
 }
+
+//Tämä tehty arvioinnin lisäämiseksi:
+
+export const addReview = async (token, reviewData) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/review`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(reviewData)
+        });
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error('Recipe not found');
+            } else {
+                throw new Error('Failed to add review');
+            }
+        }
+
+        // Successful addition, return response
+        const responseData = await response.json();
+        return responseData;
+    } catch (error) {
+        throw error;
+    }
+};

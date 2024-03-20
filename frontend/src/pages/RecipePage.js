@@ -8,7 +8,8 @@ import '../Styles/Print.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
 import ErrorModal  from '../components/ErrorModal';
-import { fetchRecipe, removeRecipe, removeRecipeAdmin } from '../api/recipeApi';
+import { fetchRecipe, removeRecipe, removeRecipeAdmin} from '../api/recipeApi'; 
+import {Reviews} from '../components/Reviews'; //tämä lisätty
 
 const Recipe = (props) =>{
     const { route } = props;
@@ -102,7 +103,7 @@ const Recipe = (props) =>{
             openErrorModal();
         }
     }
-
+    
     return(
         <div>
             <div className='recipe-border'>
@@ -114,25 +115,7 @@ const Recipe = (props) =>{
                         <RecipeSteps steps={recipe.steps}/>
                     </div>
                 </div>
-                <div className='reviews-container'>
-                    <h1>Reviews</h1>
-                    <div className='reviews'>
-                        {/*<RecipeReviews reviews={recipe.reviews}/>*/}
-                    </div>
-                    <div className='leave_review'>
-                        {/*Huom maksimipituus!*/}
-                        <textarea data-testid="reviewInput" className="reviewinput" rows={7} placeholder='Type review...' style={{resize: 'none'}}/>
-                        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-                            <img src='/rating_star.png' alt="Star Rating"/>
-                            <select data-testid='ratingselect' style={{marginLeft:'1em', maxWidth: '10%', borderRadius: '5px', borderStyle: 'none'}}>
-                                {/*Tähän vaihtoehdot*/}
-                            </select>
-                            {/*Asettelua tarkemmaksi */}
-                            {/*nappi ohjaa kirjautumaan, jos ei vielä ole */}
-                            <button className='postreviewbtn'>Post</button>
-                        </div>
-                    </div>
-                </div>
+                <Reviews reviews={recipe.reviews}/>    {/*Review container should be seen here*/}
             </div>
             {isDeleteModalOpen ? <DeleteDialog isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={deleteRecipe}/>:null}
             {isErrorModalOpen ? <ErrorModal isOpen={isErrorModalOpen} onClose={closeErrorModal} errortext={errorText} /> : null}

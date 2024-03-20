@@ -12,3 +12,4 @@ export const useToken = () => {
 
     return [token, setToken];
 }
+
