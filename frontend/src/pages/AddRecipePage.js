@@ -162,9 +162,6 @@ const AddRecipe = (props) => {
             body: formData
         }
 
-        //Huom: Jos admin, muokkaus toisten resepteihin toista kautta
-        //Ei kai tarvitse erilaista http?
-
         try {
             console.log("Save modified called...");
             const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);

@@ -7,10 +7,10 @@ import '../Styles/Ellipsis.css';
 import '../Styles/Print.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
-import ErrorModal  from '../components/ErrorModal';
-import { fetchRecipe, removeRecipe, removeRecipeAdmin, fetchRecipeImage } from '../api/recipeApi';
+import ErrorModal from '../components/ErrorModal';
+import { fetchRecipe, removeRecipe } from '../api/recipeApi';
 
-const Recipe = (props) =>{
+const Recipe = (props) => {
     const { route } = props;
     const [currentUrl, setCurrentUrl] = useState('');
     const user = useUser();
@@ -24,33 +24,33 @@ const Recipe = (props) =>{
     const [isErrorModalOpen, setErrorModalOpen] = useState(false);
     const [errorText, setErrorText] = useState('');
     const openErrorModal = () => setErrorModalOpen(true);
-    const closeErrorModal = () => {setErrorModalOpen(false); setErrorText('');}
+    const closeErrorModal = () => { setErrorModalOpen(false); setErrorText(''); }
 
     const [isShareModalOpen, setShareModalOpen] = useState(false);
     const openShareModal = () => setShareModalOpen(true);
     const closeShareModal = () => setShareModalOpen(false);
     const [copied, setCopied] = useState(false);
-    
+
     const [recipe, setRecipe] = useState({
-        "header" : "",
-        "description" : "",
-        "visibleToAll" : true,
-        "creator" : "",
-        "rating" : 0,
-        "durationHours" : 0,
-        "durationMinutes" : 0,
-        "ingredients" : [],
-        "steps" : [],
-        "keywords" : [], 
-        "reviews" : []
+        "header": "",
+        "description": "",
+        "visibleToAll": true,
+        "creator": "",
+        "rating": 0,
+        "durationHours": 0,
+        "durationMinutes": 0,
+        "ingredients": [],
+        "steps": [],
+        "keywords": [],
+        "reviews": []
     });
 
     useEffect(() => {
         setCurrentUrl(window.location.href);
     }, []);
 
-    useEffect(()=>{
-        const getRecipe = async () =>{
+    useEffect(() => {
+        const getRecipe = async () => {
             try {
                 const response = await fetchRecipe(token, route);
                 setRecipe(response);
@@ -73,40 +73,30 @@ const Recipe = (props) =>{
             }
         }
         getRecipe();
-    },[route]);
+    }, [route]);
 
     const copyUrlToClipboard = () => {
         navigator.clipboard.writeText(currentUrl)
-          .then(() => {
-            setCopied(true);
-            setTimeout(() => {
-                setCopied(false);
-            }, 5000);
-          })
-          .catch((error) => {
-            setErrorText("An error occurred while loading recipe: " + error);
-            openErrorModal();
-        });
+            .then(() => {
+                setCopied(true);
+                setTimeout(() => {
+                    setCopied(false);
+                }, 5000);
+            })
+            .catch((error) => {
+                setErrorText("An error occurred while loading recipe: " + error);
+                openErrorModal();
+            });
     };
 
-    const deleteRecipe = async () =>{
+    const deleteRecipe = async () => {
         try {
             console.log("Starting deletion...");
             closeDeleteModal();
-            //Ei välttis tarvii tätä?
-            if(user.role === 'admin'){
-                const response = await removeRecipeAdmin(token, route);
-                if(response.ok){
-                    console.log("Recipe deleted successfully.");
-                    navigate("/");
-                }
-            }
-            else{
-                const response = await removeRecipe(token, route);
-                if(response.ok){
-                    console.log("Recipe deleted successfully.");
-                    navigate("/");
-                }
+            const response = await removeRecipe(token, route);
+            if (response.ok) {
+                console.log("Recipe deleted successfully.");
+                navigate("/");
             }
 
         } catch (error) {
@@ -115,15 +105,15 @@ const Recipe = (props) =>{
         }
     }
 
-    return(
+    return (
         <div>
             <div className='recipe-border'>
                 <div className='recipe-container'>
                     <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} isShareModalOpen={isShareModalOpen} onShare={openShareModal} image={image} />
                     <div className="separator"></div>
                     <div className='recipe'>
-                        <RecipeIngredients ingredients={recipe.ingredients} page="recipepage"/>
-                        <RecipeSteps steps={recipe.steps}/>
+                        <RecipeIngredients ingredients={recipe.ingredients} page="recipepage" />
+                        <RecipeSteps steps={recipe.steps} />
                     </div>
                 </div>
                 <div className='reviews-container'>
@@ -133,10 +123,10 @@ const Recipe = (props) =>{
                     </div>
                     <div className='leave_review'>
                         {/*Huom maksimipituus!*/}
-                        <textarea data-testid="reviewInput" className="reviewinput" rows={7} placeholder='Type review...' style={{resize: 'none'}}/>
+                        <textarea data-testid="reviewInput" className="reviewinput" rows={7} placeholder='Type review...' style={{ resize: 'none' }} />
                         <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-                            <img src='/rating_star.png' alt="Star Rating"/>
-                            <select data-testid='ratingselect' style={{marginLeft:'1em', maxWidth: '10%', borderRadius: '5px', borderStyle: 'none'}}>
+                            <img src='/rating_star.png' alt="Star Rating" />
+                            <select data-testid='ratingselect' style={{ marginLeft: '1em', maxWidth: '10%', borderRadius: '5px', borderStyle: 'none' }}>
                                 {/*Tähän vaihtoehdot*/}
                             </select>
                             {/*Asettelua tarkemmaksi */}
@@ -146,19 +136,19 @@ const Recipe = (props) =>{
                     </div>
                 </div>
             </div>
-            {isDeleteModalOpen ? <DeleteDialog isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={deleteRecipe}/>:null}
+            {isDeleteModalOpen ? <DeleteDialog isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={deleteRecipe} /> : null}
             {isErrorModalOpen ? <ErrorModal isOpen={isErrorModalOpen} onClose={closeErrorModal} errortext={errorText} /> : null}
             {isShareModalOpen ? <ShareModal isOpen={isShareModalOpen} onClose={closeShareModal} url={currentUrl} onCopy={copyUrlToClipboard} copied={copied} /> : null}
         </div>
     );
 }
 
-const RecipeHead = (props) =>{
+const RecipeHead = (props) => {
     const recipe = props.recipe;
     const image = props.image;
     const createdFormatted = new Date(props.recipe.created).toLocaleDateString('fi-FI');
-    
-    const calculateAvgRating = () =>{
+
+    const calculateAvgRating = () => {
         //TODO: keskiarvon laskeminen, tuleeko tähän vai muualle?
     }
 
@@ -173,7 +163,7 @@ const RecipeHead = (props) =>{
         window.print();
     }
 
-    return(
+    return (
         <div className='recipe-head'>
             <div className='recipehead-container'>
                 <h1 style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -186,49 +176,49 @@ const RecipeHead = (props) =>{
                 </h1>
                 {/*<img src='/rating_star.png' alt="Star Rating"/>{recipe.rating}*/}
                 <p>{recipe.description}</p>
-                <p> Created By: {recipe.username} <br/> 
-                    Creation date: {createdFormatted} <br/>
+                <p> Created By: {recipe.username} <br />
+                    Creation date: {createdFormatted} <br />
                     <i>Duration: {recipe.durationHours}h {recipe.durationMinutes}min</i>
                 </p>
-                <RecipeKeywords keywords={recipe.keywords}/> <br/>
+                <RecipeKeywords keywords={recipe.keywords} /> <br />
             </div>
             <div className='image-container'>
-                {image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage'/>:null}
+                {image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage' /> : null}
             </div>
         </div>
     );
 }
 
-const RecipeKeywords = (props) =>{
-    const words = props.keywords.map((w, i)=>{
+const RecipeKeywords = (props) => {
+    const words = props.keywords.map((w, i) => {
         return <li key={i}><a>{w.word}</a></li>
     });
 
-    return(
+    return (
         <ul className='keywords'>
             {words}
         </ul>
     );
 }
 
-const RecipeIngredients = (props)=>{
-    const ingredientList = props.ingredients.map((ing,i) =>{
+const RecipeIngredients = (props) => {
+    const ingredientList = props.ingredients.map((ing, i) => {
         return <tr key={i}><th>{ing.quantity} {ing.unit}</th><td>{ing.name}</td></tr>
     });
 
-    return(
+    return (
         <table className='recipe-ingredients'>
             <tbody>{ingredientList}</tbody>
         </table>
     );
 }
 
-const RecipeSteps = (props) =>{
-    const steps = props.steps.map((step, i) =>{
+const RecipeSteps = (props) => {
+    const steps = props.steps.map((step, i) => {
         return <li key={i}>{step.step} </li>
     });
 
-    return(
+    return (
         <div className='recipe-steps'>
             <ol className="recipepage-step">{steps}</ol>
         </div>
@@ -254,7 +244,7 @@ const RecipeReviews = (props) =>{
 }
 */
 
-const DeleteDialog = ({ isOpen, onClose, onConfirm}) =>{
+const DeleteDialog = ({ isOpen, onClose, onConfirm }) => {
     return (
         <div className={`modal ${isOpen ? 'open' : ''}`} data-testid={"delete-dialog"}>
             <div className="modal-content">
@@ -268,8 +258,8 @@ const DeleteDialog = ({ isOpen, onClose, onConfirm}) =>{
     );
 }
 
-const ShareModal = ({ isOpen, onClose, url, onCopy, copied}) =>{
-    
+const ShareModal = ({ isOpen, onClose, url, onCopy, copied }) => {
+
     return (
         <div className={`modal ${isOpen ? 'open' : ''}`} data-testid={"share-dialog"}>
             <div className="modal-content">
@@ -280,7 +270,7 @@ const ShareModal = ({ isOpen, onClose, url, onCopy, copied}) =>{
                     <input type='text' className='url' value={url} readonly />
                     <button onClick={() => onCopy()} className='copy-button' data-testid='copy-button'>Copy</button>
                 </div>
-                {copied ? <p className="copied-message"><i>Link has been successfully coped to clipboard!</i></p>:null}
+                {copied ? <p className="copied-message"><i>Link has been successfully coped to clipboard!</i></p> : null}
                 {/*Tähän myös voi lisätä some-jakamispainikkeita, jos haluaa ja aikaa jää! */}
             </div>
         </div>
