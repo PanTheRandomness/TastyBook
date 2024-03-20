@@ -70,13 +70,12 @@ const AddRecipe = (props) => {
                     const r = await response.json();
                     setEditing(true);
                     setName(r.header);
-                    setVisibleToAll(r.visibleToAll);
-                    console.log(r.visibleToAll);
-                    /* Tämän jos laittaa pois kommenteista reseptiä muokatessa tallennus aiheuttaa 400 Bad Request, muuten ei tuo oikeaa näkyvyysarvoa 
-                    (jos olisi false, konsoliin tulostuu null? jos true konsoliin tulostuu 1)
-                    if(r.visibleToAll == null){
-                        setVisibleToAll(false);
-                    }*/
+                    if(!r.visibleToAll){
+                        setVisibleToAll(0);
+                    }
+                    else{
+                        setVisibleToAll(1);
+                    }
                     setDescription(r.description);
                     setDurationH(r.durationHours);
                     setDurationMin(r.durationMinutes);
@@ -161,6 +160,8 @@ const AddRecipe = (props) => {
             body: formData
         }
 
+        //Huom: Jos admin, muokkaus toisten resepteihin toista kautta
+
         try {
             console.log("Save modified called...");
             const response = await fetch("http://localhost:3004/api/recipe/" + route, requestOptions);
@@ -204,15 +205,11 @@ const AddRecipe = (props) => {
 
     const saveEditedIngredient = () => {
         let newQuantity = qt + " " + unit;
-        if(qt == 0) newQuantity = unit;
+        if(qt == 0 || !qt) newQuantity = unit;
         const editedIngredient = {
             quantity: newQuantity,
             name: ing
         };
-        /*Tämän ongelma: 
-        Jos ei ole määrää tai yksikköä, quantity on undefined, jota ei taas arvona hyväksytä API-kutsussa. 
-        Jos se taas korvataan konkreettisemmalla, kuten 0:lla, määräksi tulee 0. 
-        Kokeiltu myös välilyönnillä, mutta ei toimi silläkään */
         const updatedIngredients = [...ingredients];
         updatedIngredients[eIngIndex] = editedIngredient;
         setIngredients(updatedIngredients);
@@ -402,7 +399,6 @@ const AddRecipe = (props) => {
                                 <td>
                                     <input data-testid="recipeImageInput" className="recipeinput" type='file' accept=".jpeg, .jpg, .png*" onChange={(e) => handleImageChange(e)} />
                                     { wrongImage ? <div  style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage'>Please choose either a -jpeg- or .png-file. Maximum filesize is 16MB</div> : null}
-                                    {/*Ei vielä testattu?*/}
                                 </td>
                             </tr>
                             <tr>
