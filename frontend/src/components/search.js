@@ -16,8 +16,6 @@ const searchRecipes = async (params, token) => {
     }
   });
 
-  console.log('Search URL:', url);
-
   try {
     const response = await fetch(url, {
       headers: {
@@ -28,7 +26,6 @@ const searchRecipes = async (params, token) => {
       throw new Error('Failed to fetch recipes');
     }
     const data = await response.json();
-    console.log('Search results:', data);
     return data.recipes || [];
   } catch (error) {
     throw new Error('Error searching recipes: ' + error.message);
