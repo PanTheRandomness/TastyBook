@@ -173,6 +173,6 @@ router.route("/api/recipe/:hash").delete(userMiddleware.verifyJWT, ctrl.deleteRe
 
 router.route("/api/recipe/:hash").put(userMiddleware.verifyJWT, upload.single("image"), ctrl.editRecipe);
 
-router.route("/api/recipe/image/:hash").get(ctrl.getImage);
+router.route("/api/recipe/image/:hash").get(userMiddleware.isUserLoggedIn, ctrl.getImage);
 
 module.exports = router;

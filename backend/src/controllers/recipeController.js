@@ -55,7 +55,7 @@ const getImage = async (req, res) => {
     try {
         const { hash } = req.params;
 
-        const result = await sql.getImage(hash);
+        const result = await sql.getImage(hash, req.loggedIn);
         if (result.length === 0) return res.status(404).send();
 
         const image = result[0]["image"];

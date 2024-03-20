@@ -24,5 +24,9 @@ export const useUser = () => {
         }
     }, [token]);
 
-    return user;
+    const login = (token) => {
+        setUser(getPayloadFromToken(token));
+    }
+
+    return { user, login };
 }

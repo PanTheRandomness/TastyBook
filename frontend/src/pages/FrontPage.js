@@ -26,7 +26,9 @@ const FrontPage = ({ onLogout }) => {
         }
         
         fetchData();
-    }, []);
+    }, [token, onLogout]);
+
+    if (loading) return <p>Loading...</p>
 
     if (!loading && errorMessage) return <p>{errorMessage}</p>
 

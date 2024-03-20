@@ -33,8 +33,9 @@ const getRecipes = (hash, loggedIn, ingredient, keyword, username) => {
     return executeSQL(query, params);
 }
 
-const getImage = (hash) => {
-    const query = "SELECT image FROM recipe WHERE hash=?";
+const getImage = (hash, loggedIn) => {
+    let query = "SELECT image FROM recipe WHERE hash=?";
+    if (!loggedIn) query += " AND visibleToAll=1";
     return executeSQL(query, [hash]);
 }
 

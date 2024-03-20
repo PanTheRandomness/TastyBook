@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useToken } from '../customHooks/useToken';
-import { useUser } from '../customHooks/useUser';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 import '../Styles/Ellipsis.css';
@@ -13,7 +12,6 @@ import { fetchRecipe, removeRecipe } from '../api/recipeApi';
 const Recipe = (props) => {
     const { route } = props;
     const [currentUrl, setCurrentUrl] = useState('');
-    const user = useUser();
     const [token] = useToken();
     const navigate = useNavigate();
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);

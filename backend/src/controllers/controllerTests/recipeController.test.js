@@ -218,15 +218,18 @@ describe("getImage", () => {
 
         await getImage(req, res);
 
+        expect(sql.getImage).toHaveBeenCalledWith(req.params.hash, req.loggedIn);
         expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
         expect(res.end).toHaveBeenCalled();
     });
 
-    it("should return jpeg if jpeg image was found", async () => {
+    it("should return jpeg if jpeg image was found (with loggedIn)", async () => {
+        req.loggedIn = true;
         sql.getImage.mockResolvedValue([{ image: [ 0xFF, 0xD8, 0xFF ]}]);
 
         await getImage(req, res);
 
+        expect(sql.getImage).toHaveBeenCalledWith(req.params.hash, req.loggedIn);
         expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/jpeg");
         expect(res.end).toHaveBeenCalled();
     });

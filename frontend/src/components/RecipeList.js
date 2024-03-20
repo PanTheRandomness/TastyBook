@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
 const RecipeList = () => {
-  const user = useUser(); // Hae käyttäjän tiedot, mukaan lukien käyttäjän ID
+  const { user } = useUser(); // Hae käyttäjän tiedot, mukaan lukien käyttäjän ID
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

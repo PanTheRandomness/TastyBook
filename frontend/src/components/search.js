@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import '../Styles/RecipeView.css';
 import RecipeView from "../components/recipeView";
 import { useToken } from "../customHooks/useToken";
-import { NavLink } from "react-router-dom";
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 

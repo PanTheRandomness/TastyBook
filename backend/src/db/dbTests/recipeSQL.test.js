@@ -98,11 +98,21 @@ describe("getRecipes", () => {
 });
 
 describe("getImage", () => {
+    it("should get image from database if not loggedIn", async () => {
+        const hash = "123";
+        executeSQL.mockReturnValueOnce([{ image: 1 }]);
+
+        const result = await getImage(hash, null);
+        
+        expect(executeSQL).toHaveBeenCalledWith("SELECT image FROM recipe WHERE hash=? AND visibleToAll=1", [hash]);
+        expect(result).toEqual([{ image: 1 }]);
+    });
+
     it("should get image from database", async () => {
         const hash = "123";
         executeSQL.mockReturnValueOnce([{ image: 1 }]);
 
-        const result = await getImage(hash);
+        const result = await getImage(hash, true);
         
         expect(executeSQL).toHaveBeenCalledWith("SELECT image FROM recipe WHERE hash=?", [hash]);
         expect(result).toEqual([{ image: 1 }]);
