@@ -8,7 +8,7 @@ import '../Styles/Print.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
 import ErrorModal  from '../components/ErrorModal';
-import { fetchRecipe, removeRecipe, removeRecipeAdmin } from '../api/recipeApi';
+import { fetchRecipe, removeRecipe, removeRecipeAdmin, fetchRecipeImage } from '../api/recipeApi';
 
 const Recipe = (props) =>{
     const { route } = props;
@@ -93,6 +93,7 @@ const Recipe = (props) =>{
         try {
             console.log("Starting deletion...");
             closeDeleteModal();
+            //Ei välttis tarvii tätä?
             if(user.role === 'admin'){
                 const response = await removeRecipeAdmin(token, route);
                 if(response.ok){
@@ -193,7 +194,6 @@ const RecipeHead = (props) =>{
             </div>
             <div className='image-container'>
                 {image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage'/>:null}
-                {/*Nyt näkyy vain alt, eikä null, jos ei ole kuvaa */}
             </div>
         </div>
     );

@@ -3,6 +3,7 @@ import '../Styles/Modal.css';
 import '../Styles/Recipe.css';
 import { useToken } from '../customHooks/useToken';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../customHooks/useUser';
 import { RecipeKeywords, KeywordDialog } from '../components/addRecipeComponents/RecipeKeywords';
 import { RecipeSteps, StepDialog } from '../components/addRecipeComponents/RecipeSteps';
 import { RecipeIngredients, IngredientDialog } from '../components/addRecipeComponents/RecipeIngredients';
@@ -20,6 +21,7 @@ const AddRecipe = (props) => {
     const [ingredients, setIngredients] = useState([]);
     const [steps, setSteps] = useState([]);
     const [visibleToAll, setVisibleToAll] = useState(1);
+    const user = useUser();
 
     const [isModalIOpen, setModalIOpen] = useState(false);
     const [isModalSOpen, setModalSOpen] = useState(false);
@@ -161,6 +163,7 @@ const AddRecipe = (props) => {
         }
 
         //Huom: Jos admin, muokkaus toisten resepteihin toista kautta
+        //Ei kai tarvitse erilaista http?
 
         try {
             console.log("Save modified called...");
