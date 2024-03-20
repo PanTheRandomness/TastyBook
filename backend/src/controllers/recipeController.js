@@ -122,7 +122,8 @@ const addRecipe = async (req, res) => {
 const deleteRecipe = async (req, res) => {
     try {
         const hash = req.params.hash;
-        const userId = req.user.id;
+        let userId = req.user.id;
+        if (req.user.role === "admin") userId = null;
 
         const result = await sql.deleteRecipe(hash, userId);
 
@@ -133,21 +134,11 @@ const deleteRecipe = async (req, res) => {
     }
 }
 
-const deleteRecipeAdmin = async (req, res) => {
-    try {
-        const hash = req.params.hash;
-        const result = await sql.deleteRecipe(hash);
-        if (result.affectedRows === 0) return res.status(404).send();
-        res.status(200).send();
-    } catch (error) {
-        res.status(500).send();
-    }
-}
-
 const editRecipe = async (req, res) => {
     try {
         const hash = req.params.hash;
-        const userId = req.user.id;
+        let userId = req.user.id;
+        if (req.user.role === "admin") userId = null;
         let { header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients, id } = req.body;
         try {
             if (visibleToAll === "null") visibleToAll = "0";
@@ -234,4 +225,4 @@ const getImageType = (imageData) => {
     return null;
 }
 
-module.exports = { getAllRecipes, getAllRecipeHashes, getRecipe, addRecipe, deleteRecipe, editRecipe, deleteRecipeAdmin, getImage };
+module.exports = { getAllRecipes, getAllRecipeHashes, getRecipe, addRecipe, deleteRecipe, editRecipe, getImage };

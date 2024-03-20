@@ -104,3 +104,20 @@ export const removeRecipeAdmin = async (token, route) =>{
         throw error;
     }
 }
+
+export const fetchRecipeImage = async (token, route) => {
+    try {
+        let response;
+        if (token) {
+            response = await fetch(`${BASE_URL}/api/recipe/image/${route}`, {
+                headers: {
+                    'Authorization' : "Bearer " + token
+                }
+            })
+        } else response = await fetch(`${BASE_URL}/api/recipe/image/${route}`);
+
+        return response.blob();
+    } catch (error) {
+        throw error;
+    }
+}

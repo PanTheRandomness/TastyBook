@@ -192,6 +192,22 @@ describe("editRecipe", () => {
             "UPDATE recipe SET header=?, description=?, visibleToAll=?, durationHours=?, durationMinutes=?, image=?, modified=NOW() WHERE hash=? AND User_id=?",
             [header, description, visibleToAll, durationHours, durationMinutes, image, hash, userId]);
     });
+
+    it("should update recipe in the database without userId", async () => {
+        const header = "Header";
+        const hash = "123456";
+        const description = "Tasty food";
+        const visibleToAll = 1;
+        const durationHours = 1;
+        const durationMinutes = 0;
+        const image = [0];
+
+        await editRecipe(header, description, visibleToAll, durationHours, durationMinutes, image, hash)
+
+        expect(executeSQL).toHaveBeenCalledWith(
+            "UPDATE recipe SET header=?, description=?, visibleToAll=?, durationHours=?, durationMinutes=?, image=?, modified=NOW() WHERE hash=?",
+            [header, description, visibleToAll, durationHours, durationMinutes, image, hash]);
+    });
 });
 
 describe("deleteSteps", () => {

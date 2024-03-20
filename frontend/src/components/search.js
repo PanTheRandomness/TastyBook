@@ -126,12 +126,8 @@ const Search = () => {
         <div>
           <h3>Search Results:</h3>
           <ul className='recipeViewContainer'>
-            {searchResults.map((recipe, index) => (
-              <div  key={index}>
-                 <NavLink className={"recipeView"} to={`/recipe/${recipe.hash}`}>                  
-                 <RecipeView key={recipe.id} recipe={recipe} />
-                 </NavLink>
-              </div>
+            {searchResults.map((recipe) => (               
+              <RecipeView key={recipe.id} recipe={recipe} />
             ))}
           </ul>
         </div>

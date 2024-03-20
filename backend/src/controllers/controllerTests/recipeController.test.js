@@ -348,6 +348,19 @@ describe("deleteRecipe", () => {
         sql.deleteRecipe.mockReturnValue({ affectedRows: 1 });
         await deleteRecipe(req, res);
 
+        expect(sql.deleteRecipe).toHaveBeenCalledWith(req.params.hash, req.user.id);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should handle deleting any recipe if admin", async () => {
+        req.user.role = "admin";
+        sql.deleteRecipe.mockReturnValue({ affectedRows: 1 });
+        await deleteRecipe(req, res);
+
+        expect(sql.deleteRecipe).toHaveBeenCalledWith(req.params.hash, null);
+
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.send).toHaveBeenCalled();
     });
@@ -428,6 +441,24 @@ describe("editRecipe", () => {
         expect(res.send).toHaveBeenCalled();
     });
 
+    it("should handle editing any recipe if admin", async () => {
+        req.user.role = "admin";
+        sql.editRecipe.mockReturnValue({ changedRows: 1 });
+
+        await editRecipe(req, res);
+
+        expect(sql.editRecipe).toHaveBeenCalledWith(req.body.header, req.body.description, 1, 1, 30, null, req.params.hash, null);
+        expect(deleteRecipesKeywords).toHaveBeenCalledWith(req.body.id);
+        expect(addRecipesKeyword).toHaveBeenCalledWith("avain", req.body.id);
+        expect(sql.deleteSteps).toHaveBeenCalledWith(req.body.id);
+        expect(sql.addStep).toHaveBeenCalledWith("toka", 2, req.body.id);
+        expect(deleteRecipesIngredients).toHaveBeenCalledWith(req.body.id);
+        expect(addRecipesIngredient).toHaveBeenCalledWith({ quantity: "5 kg", name: "tomato" }, req.body.id);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalled();
+    });
+
     it("should return 404 if no recipe was edited", async () => {
         sql.editRecipe.mockReturnValue({ changedRows: 0 });
 
@@ -441,50 +472,6 @@ describe("editRecipe", () => {
         sql.editRecipe.mockRejectedValue(new Error("Database error"));
 
         await editRecipe(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.send).toHaveBeenCalled();
-    });
-});
-
-describe("deleteRecipeAdmin", () => {
-    let req, res;
-
-    beforeEach(() => {
-        req = {
-            params: { hash: "123" },
-        }
-        res = {
-            status: jest.fn(() => res),
-            json: jest.fn(),
-            send: jest.fn(),
-        };
-    });
-
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
-    it("should handle deleting recipe and sending statuscode 200", async () => {
-        sql.deleteRecipe.mockReturnValue({ affectedRows: 1 });
-        await deleteRecipeAdmin(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.send).toHaveBeenCalled();
-    });
-
-    it("should return 404 if no recipe was found", async () => {
-        sql.deleteRecipe.mockReturnValue({ affectedRows: 0 });
-        await deleteRecipeAdmin(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(404);
-        expect(res.send).toHaveBeenCalled();
-    });
-
-    it("should handle internal server error", async () => {
-        sql.deleteRecipe.mockRejectedValue(new Error("Database error"));
-
-        await deleteRecipeAdmin(req, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.send).toHaveBeenCalled();
