@@ -9,6 +9,8 @@ import EllipsisMenu from '../components/EllipsisMenu';
 import ErrorModal  from '../components/ErrorModal';
 import { fetchRecipe, removeRecipe, removeRecipeAdmin, addReview} from '../api/recipeApi'; 
 import {Reviews} from '../components/Reviews'; 
+import {RecipeList} from '../components/RecipeList';
+import { addToFavorites } from '../api/favoriteApi';
 
 const Recipe = (props) => {
     const { route } = props;
@@ -159,6 +161,7 @@ const Recipe = (props) => {
     }
     
     
+    
     return(
         <div>
             <div className='recipe-border'>
@@ -188,10 +191,15 @@ const RecipeHead = (props) => {
         //TODO: keskiarvon laskeminen, tuleeko tähän vai muualle?
     }
 
-    const saveToFavourites = () => {
-        //TODO: tallentaminen suosikkeihin
+    const saveToFavourites = async (recipeId, userToken) => {
+        try {
+            const response = await addToFavorites(recipeId, userToken);
+            console.log('Recipe added to favorites:', response);
+        } catch (error) {
+            console.error(error.message);
+        }
     }
-
+    
     const share = () => {
         props.onShare(true);
     }

@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
+
 const RecipeList = () => {
   const user = useUser();
   const [myRecipes, setMyRecipes] = useState([]);
@@ -39,34 +40,6 @@ const RecipeList = () => {
     }
   }, [user]);
 
-  const addToFavorites = async (recipeId) => {
-    try {
-      const response = await fetch('http://localhost:3004/api/favourite', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}` 
-        },
-        body: JSON.stringify({ recipeId })
-      });
-      if (!response.ok) {
-        throw new Error('Failed to add recipe to favorites');
-      }
-      // Päivitä suosikkireseptien tila uudella reseptin tunnuksella
-      setMyRecipes(prevRecipes => {
-        const updatedRecipes = prevRecipes.map(recipe => {
-          if (recipe.id === recipeId) {
-            return { ...recipe, isFavorite: true };
-          }
-          return recipe;
-        });
-        return updatedRecipes;
-      });
-    } catch (error) {
-      console.error('Error adding recipe to favorites:', error.message);
-    }
-  };
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -85,8 +58,6 @@ const RecipeList = () => {
               <NavLink className={"recipeView"} to={`/recipe/${recipe.hash}`}>
                 <RecipeView key={recipe.id} recipe={recipe} />
               </NavLink>
-              {/* Renderöi lisää suosikiksi -painike vain, jos reseptiä ei ole jo lisätty suosikkeihin */}
-              {!recipe.isFavorite && <button onClick={() => addToFavorites(recipe.id)}>Add to Favorites</button>}
             </div>
           ))}
         </ul>
