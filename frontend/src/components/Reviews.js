@@ -1,60 +1,22 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { addReview} from '../api/recipeApi';
 import '../Styles/Modal.css';
 import '../Styles/Recipe.css'; 
 
-const Reviews = () => {
-    const [reviews, setReviews] = useState([]); 
-    const [newReview, setNewReview] = useState({
-        rating: 0,
-        text: ''
-    });
+const Reviews = (props) => {
+    const {reviews, postReview} = props; 
+    const [rating, setRating] = useState(0);
+    const [text, setText] = useState("");
 
-    useEffect(() => {
-        fetchReviews();
-    }, []);
-
-    const fetchReviews = async () => {
-        try {
-            // Fetch reviews from the server
-            const response = await fetch('http://localhost:3004/api/review');
-            if (!response.ok) {
-                throw new Error('Failed to fetch reviews');
-            }
-            const data = await response.json();
-            setReviews(data.reviews); // Assuming data contains a "reviews" array
-        } catch (error) {
-            console.error('Error fetching reviews:', error.message);
-        }
-    };
 
     const handleAddReview = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('User token not found');
-            }
-
-            // Tässä lähetetään HTTP POST pyyntö jotta voidaan lisätä uusi arvio
-            const response = await addReview(token, newReview);
-
-            // Päivitetään arviot uudella
-            setReviews([...reviews, response]);
-
-            // Nollataan uusi arvio
-            setNewReview({
-                rating: 0,
-                text: ''
-            });
-        } catch (error) {
-            console.error('Error adding review:', error.message);
-        }
+    console.log('Text:', text);
+    console.log('Rating:', rating);
+    postReview(text, rating);
     };
     
-
-    const reviewItems = reviews.map((review, index) => (
-        <div key={index} className="review">
+    const reviewItems = reviews.map((review, id) => (
+        <div key={id} className="review">
             <p><strong>Rating:</strong> {review.rating}</p>
             <p><strong>Comment:</strong> {review.text}</p> 
         </div>
@@ -71,19 +33,20 @@ const Reviews = () => {
                 )}
             </div>
                     <div className='leave_review'>
-                        {/*Huom maksimipituus!*/}
-                        <textarea data-testid="reviewInput" className="reviewinput" rows={7} placeholder='Type review...' style={{resize: 'none'}}/>
+                        {/*Arvio tekstinä*/}
+                        <textarea data-testid="reviewInput" className="reviewinput" rows={7} placeholder='Type review...' style={{resize: 'none'}}
+                        value={text} onChange={(event) => setText(event.target.value)}/>
                         <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                            {/* Tähtiluokitus */}
                             <img src='/rating_star.png' alt="Star Rating"/>
-                            <select data-testid='ratingselect' style={{marginLeft:'1em', maxWidth: '10%', borderRadius: '5px', borderStyle: 'none'}}>
+                            <select data-testid='ratingselect' style={{marginLeft:'1em', maxWidth: '10%', borderRadius: '5px', borderStyle: 'none'}}
+                            value={rating} onChange={(event) => setRating(parseInt(event.target.value))}  >  
                                 {/*Tähän vaihtoehdot*/}
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
+                                {[1, 2, 3, 4, 5].map((value) => (
+                            <option key={value} value={value}>{value}</option>
+                        ))}
                             </select>
-                            {/*Asettelua tarkemmaksi */}
+                            
                             {/*nappi ohjaa kirjautumaan, jos ei vielä ole */}
                             <button className='postreviewbtn' onClick={handleAddReview}>Post</button>
                         </div>

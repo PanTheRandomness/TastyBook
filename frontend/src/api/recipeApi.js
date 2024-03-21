@@ -107,7 +107,7 @@ export const removeRecipeAdmin = async (token, route) =>{
 
 //Tämä tehty arvioinnin lisäämiseksi:
 
-export const addReview = async (token, reviewData) => {
+export const addReview = async (token, review) => {
     try {
         const response = await fetch(`${BASE_URL}/api/review`, {
             method: 'POST',
@@ -115,7 +115,7 @@ export const addReview = async (token, reviewData) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(reviewData)
+            body: JSON.stringify(review)
         });
 
         if (!response.ok) {
@@ -128,7 +128,8 @@ export const addReview = async (token, reviewData) => {
 
         // Successful addition, return response
         const responseData = await response.json();
-        return responseData;
+       return responseData;
+       
     } catch (error) {
         throw error;
     }

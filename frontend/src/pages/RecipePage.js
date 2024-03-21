@@ -8,8 +8,8 @@ import '../Styles/Print.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
 import ErrorModal  from '../components/ErrorModal';
-import { fetchRecipe, removeRecipe, removeRecipeAdmin} from '../api/recipeApi'; 
-import {Reviews} from '../components/Reviews'; //tämä lisätty
+import { fetchRecipe, removeRecipe, removeRecipeAdmin, addReview} from '../api/recipeApi'; 
+import {Reviews} from '../components/Reviews'; 
 
 const Recipe = (props) =>{
     const { route } = props;
@@ -33,6 +33,7 @@ const Recipe = (props) =>{
     const [copied, setCopied] = useState(false);
     
     const [recipe, setRecipe] = useState({
+        "id" : 0,
         "header" : "",
         "description" : "",
         "visibleToAll" : true,
@@ -43,8 +44,9 @@ const Recipe = (props) =>{
         "ingredients" : [],
         "steps" : [],
         "keywords" : [], 
-        "reviews" : []
-    });
+        "reviews" : [],
+       "average_rating": 0
+        });
 
     useEffect(() => {
         setCurrentUrl(window.location.href);
@@ -103,6 +105,35 @@ const Recipe = (props) =>{
             openErrorModal();
         }
     }
+    const postReview = async (text,rating) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('User token not found');
+            }
+    
+            // Lähetetään HTTP POST -pyyntö uuden arvion lisäämiseksi
+            const response = await addReview(token, {text:text, rating:rating, recipeId:recipe.id});
+            
+            // Tulostetaan vastaus konsoliin
+            console.log('Response from adding review:', response);
+    
+            // Päivitetään arviot uudella arviolla
+            console.log('Old reviews:', recipe.reviews);
+            console.log('New review:', response);
+            // Huomaa, että tässä oletetaan, että 'recipe' on saatavilla, joten muista tarvittaessa muuttaa tämän kohdan logiikkaa
+            setRecipe({
+                ...recipe,
+                reviews: [...recipe.reviews, response]
+            });
+    
+            // Mahdollista nollata uusi arvio tässä, jos tarpeen
+           
+        } catch (error) {
+            console.error('Error adding review:', error.message);
+        }
+    }
+    
     
     return(
         <div>
@@ -115,7 +146,7 @@ const Recipe = (props) =>{
                         <RecipeSteps steps={recipe.steps}/>
                     </div>
                 </div>
-                <Reviews reviews={recipe.reviews}/>    {/*Review container should be seen here*/}
+                <Reviews reviews={recipe.reviews} postReview={postReview}/>    
             </div>
             {isDeleteModalOpen ? <DeleteDialog isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={deleteRecipe}/>:null}
             {isErrorModalOpen ? <ErrorModal isOpen={isErrorModalOpen} onClose={closeErrorModal} errortext={errorText} /> : null}
