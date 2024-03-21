@@ -3,6 +3,7 @@ const sql = require("../db/favouriteSQL");
 const addFavourite = async (req, res) => {
     try {
         const { recipeId } = req.body;
+        if (!recipeId) return res.status(400).send();
         const userId = req.user.id;
 
         const result = await sql.addFavourite(recipeId, userId);
