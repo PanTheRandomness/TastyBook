@@ -136,21 +136,7 @@ const Recipe = (props) => {
             }
     
             // Lähetetään HTTP POST -pyyntö uuden arvion lisäämiseksi
-            const response = await addReview(token, {text:text, rating:rating, recipeId:recipe.id});
-            
-            // Tulostetaan vastaus konsoliin
-            console.log('Response from adding review:', response);
-    
-            // Päivitetään arviot uudella arviolla
-            console.log('Old reviews:', recipe.reviews);
-            console.log('New review:', response);
-            // Huomaa, että tässä oletetaan, että 'recipe' on saatavilla, joten muista tarvittaessa muuttaa tämän kohdan logiikkaa
-            setRecipe({
-                ...recipe,
-                reviews: [...recipe.reviews, response]
-            });
-    
-            // Mahdollista nollata uusi arvio tässä, jos tarpeen
+            await addReview(token, {text:text, rating:rating, recipeId:recipe.id});       
            
         } catch (error) {
             console.error('Error adding review:', error.message);

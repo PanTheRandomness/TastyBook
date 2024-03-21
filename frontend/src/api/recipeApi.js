@@ -120,10 +120,6 @@ export const addReview = async (token, review) => {
                 throw new Error('Failed to add review');
             }
         }
-
-        // Successful addition, return response
-        const responseData = await response.json();
-       return responseData;
        
     } catch (error) {
         throw error;
