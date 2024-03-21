@@ -52,19 +52,38 @@ const Recipe = (props) => {
             try {
                 const response = await fetchRecipe(token, route);
                 setRecipe(response);
-                try {
-                    const imgresponse = await fetch("http://localhost:3004/api/recipe/image/" + route);
-                    if (imgresponse.ok) {
-                        const blob = await imgresponse.blob();
-                        setImage(blob);
-                    } else {
-                        setImage(null);
+                if(token){
+                    try {
+                        const imgresponse = await fetch("http://localhost:3004/api/recipe/image/" + route, {
+                            headers: {
+                                "Authorization": `Bearer ${token}`
+                            }
+                        });
+                        if (imgresponse.ok) {
+                            const blob = await imgresponse.blob();
+                            setImage(blob);
+                        } else {
+                            setImage(null);
+                        }
+                    } catch (error) {
+                        setErrorText("An error occurred while loading recipe's image: " + error);
+                        openErrorModal();
                     }
-                } catch (error) {
-                    setErrorText("An error occurred while loading recipe's image: " + error);
-                    openErrorModal();
                 }
-
+                else {
+                    try {
+                        const imgresponse = await fetch("http://localhost:3004/api/recipe/image/" + route);
+                        if (imgresponse.ok) {
+                            const blob = await imgresponse.blob();
+                            setImage(blob);
+                        } else {
+                            setImage(null);
+                        }
+                    } catch (error) {
+                        setErrorText("An error occurred while loading recipe's image: " + error);
+                        openErrorModal();
+                    }
+                }
             } catch (error) {
                 setErrorText("An error occurred while loading recipe: " + error);
                 openErrorModal();
