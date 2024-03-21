@@ -7,7 +7,7 @@ import '../Styles/Print.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
 import ErrorModal  from '../components/ErrorModal';
-import { fetchRecipe, removeRecipe, removeRecipeAdmin, addReview} from '../api/recipeApi'; 
+import { fetchRecipe, removeRecipe, addReview} from '../api/recipeApi'; 
 import {Reviews} from '../components/Reviews'; 
 
 const Recipe = (props) => {
@@ -212,7 +212,7 @@ const RecipeHead = (props) => {
     return (
         <div className='recipe-head'>
             <div className='recipehead-container'>
-                <h1 style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                <h1 style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }} data-testid="recipeheader">
                     {/*Ellipsin sijoittelu!*/}
                     {recipe.header}
                     <input type='image' src="/hearticon.ico" alt="Save to Favourites" onClick={saveToFavourites} className='picbutton' data-testid='saveToFavouritesButton' />
@@ -271,25 +271,6 @@ const RecipeSteps = (props) => {
         </div>
     );
 }
-
-/*
-const RecipeReviews = (props) =>{
-    //HUOM! Ei vielä käytössä
-    const reviewdata = props.reviews.map((r, i) =>{
-        return <div key={i} className='review'>
-            //tähtikuva + arvosana
-            {r}
-        </div>
-    });
-
-    
-    return(
-        <div>
-            {reviewdata}
-        </div>
-    );
-}
-*/
 
 const DeleteDialog = ({ isOpen, onClose, onConfirm }) => {
     return (
