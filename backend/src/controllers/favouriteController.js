@@ -29,4 +29,18 @@ const deleteFavourite = async (req, res) => {
     }
 }
 
-module.exports = { addFavourite, deleteFavourite };
+const getFavourites = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const result = await sql.getFavourites(userId);
+
+        if (result.length === 0) return res.status(404).send();
+
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).send();
+    }
+}
+
+module.exports = { addFavourite, deleteFavourite, getFavourites };

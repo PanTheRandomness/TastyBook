@@ -11,7 +11,7 @@ const signup = async (req, res) => {
     try {
         const { username, name, email, password, api_key } = req.body;
         if (!username || !name || !email || !password) return res.status(400).send();
-        if (typeof username !== "string" || typeof name !== "string" || typeof email !== "string" || typeof password !== "string") return res.status(400).send();
+        if (typeof username !== "string" || username.length > 45 || typeof name !== "string" || name.length > 45 || typeof email !== "string" || email.length > 255 || typeof password !== "string" || password.length > 255) return res.status(400).send();
         if (api_key && api_key !== process.env.ADMIN_REGISTRATION_API_KEY) return res.status(401).send();
 
         let result;
@@ -97,6 +97,7 @@ const deleteUser = async (req, res) => {
 const verifyEmail = async (req, res) => {
     try {
         const { verificationString } = req.body;
+        if (typeof verificationString !== "string" || verificationString.length > 255) return res.status(400).send();
 
         const result = await sql.verifyEmail(verificationString);
 
@@ -111,6 +112,7 @@ const verifyEmail = async (req, res) => {
 const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
+        if (typeof email !== "string" || email.length > 255) return res.status(400).send();
         const verificationString = uuidv4();
 
         const result = await sql.updateEmailVerification(verificationString, email);
@@ -132,6 +134,7 @@ const forgotPassword = async (req, res) => {
 const updatePassword = async (req, res) => {
     try {
         const { newPassword, verificationString } = req.body;
+        if (typeof verificationString !== "string" || verificationString.length > 255 || typeof newPassword !== "string" || newPassword.length > 255) return res.status(400).send();
 
         const passwordHash = await bcrypt.hash(newPassword, WORK_FACTOR);
 

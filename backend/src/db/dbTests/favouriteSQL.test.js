@@ -1,5 +1,5 @@
 const { executeSQL } = require("../executeSQL");
-const { addFavourite, deleteFavourite } = require("../favouriteSQL");
+const { addFavourite, deleteFavourite, getFavourites } = require("../favouriteSQL");
 
 jest.mock("../executeSQL");
 
@@ -15,12 +15,22 @@ describe("addFavourite", () => {
 });
 
 describe("deleteFavourite", () => {
-    it("should detele favourite from database", async () => {
+    it("should delete favourite from database", async () => {
         const recipeId = 1;
         const userId = 1;
 
         await deleteFavourite(recipeId, userId);
 
         expect(executeSQL).toHaveBeenCalledWith("DELETE FROM favourite WHERE Recipe_id=? AND User_id=?", [recipeId, userId]);
+    });
+});
+
+describe("getFavourites", () => {
+    it("should get favourites from database", async () => {
+        const userId = 1;
+
+        await getFavourites(userId);
+
+        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id LEFT JOIN favourite f ON f.Recipe_id=r.id WHERE f.User_id=? GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes", [userId]);
     });
 });

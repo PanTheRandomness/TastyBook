@@ -28,4 +28,13 @@ router.route("/api/favourite").post(userMiddleware.verifyJWT, ctrl.addFavourite)
 
 router.route("/api/favourite/:recipeId").delete(userMiddleware.verifyJWT, ctrl.deleteFavourite);
 
+/*  /api/favourite GET
+    Token pitää olla mukana
+    Palauttaa 404 jos ei löydy yhtään suosikkia
+
+    Palauttaa 200 ja kaikki suosikit jos löytyy
+*/
+
+router.route("/api/favourite").get(userMiddleware.verifyJWT, ctrl.getFavourites);
+
 module.exports = router;

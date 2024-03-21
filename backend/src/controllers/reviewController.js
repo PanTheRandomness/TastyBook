@@ -3,7 +3,7 @@ const sql = require("../db/reviewSQL");
 const addReview = async (req, res) => {
     try {
         const { rating, text, recipeId } = req.body;
-        if (typeof rating !== "number" || typeof text !== "string" || typeof recipeId !== "number") return res.status(400).send();
+        if (typeof rating !== "number" || typeof text !== "string" || text.length > 255 || typeof recipeId !== "number") return res.status(400).send();
         if (rating < 1 || rating > 5) return res.status(400).send();
 
         const userId = req.user.id;
