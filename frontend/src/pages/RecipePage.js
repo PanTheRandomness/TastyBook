@@ -124,7 +124,11 @@ const Recipe = (props) => {
             openErrorModal();
         }
     }
-    const postReview = async (text,rating) => {
+        const postReview = async (text,rating) => {
+    const toSearch = (keyword) => {
+        navigate(`/search/${keyword}`);
+    }
+
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -158,7 +162,7 @@ const Recipe = (props) => {
         <div>
             <div className='recipe-border'>
                 <div className='recipe-container'>
-                    <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} isShareModalOpen={isShareModalOpen} onShare={openShareModal} image={image} />
+                    <RecipeHead recipe={recipe} onDelete={openDeleteModal} route={route} isShareModalOpen={isShareModalOpen} onShare={openShareModal} image={image} onSearch={toSearch} />
                     <div className="separator"></div>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={recipe.ingredients} page="recipepage" />
@@ -211,7 +215,7 @@ const RecipeHead = (props) => {
                     Creation date: {createdFormatted} <br />
                     <i>Duration: {recipe.durationHours}h {recipe.durationMinutes}min</i>
                 </p>
-                <RecipeKeywords keywords={recipe.keywords} /> <br />
+                <RecipeKeywords keywords={recipe.keywords} onSearch={props.onSearch} /> <br />
             </div>
             <div className='image-container'>
                 {image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage' /> : null}
@@ -221,8 +225,9 @@ const RecipeHead = (props) => {
 }
 
 const RecipeKeywords = (props) => {
+
     const words = props.keywords.map((w, i) => {
-        return <li key={i}><a>{w.word}</a></li>
+        return <li key={i}><a onClick={() => props.onSearch(w.word)}>{w.word}</a></li>
     });
 
     return (
