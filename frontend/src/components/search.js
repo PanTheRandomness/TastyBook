@@ -3,6 +3,7 @@ import '../Styles/RecipeView.css';
 import '../Styles/Search.css';
 import RecipeView from "../components/recipeView";
 import { useToken } from "../customHooks/useToken";
+import { useParams } from 'react-router-dom';
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
@@ -42,6 +43,18 @@ const Search = () => {
   const [error, setError] = useState('');
   const [activeTabs, setActiveTabs] = useState([]);
   const [token] = useToken();
+  const { keyword } = useParams();
+
+  useEffect(() => {
+    if(keyword){
+      setActiveTabs(activeTabs.includes('keyword') ? activeTabs.filter(tab => tab !== 'keyword') : [...activeTabs, 'keyword']);
+      setSearchParams({
+        ...searchParams,
+        'keyword': keyword
+      });
+      handleSearch();
+    }
+  },[]);
 
   const handleSearch = async () => {
     setSearchResults([]);
@@ -88,7 +101,7 @@ const Search = () => {
             id="keywordInput"
             type="text"
             name="keyword"
-            value={searchParams.keyword}
+            value= {searchParams.keyword}
             onChange={handleInputChange}
           />
         </div>

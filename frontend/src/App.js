@@ -93,6 +93,7 @@ const App = () => {
         <Route path='/verify-email/:verificationString' element={<EmailVerification />}></Route>
         <Route path='/forgot-password' element={<ForgotPassword />}></Route>
         <Route path='/search' element={<Search />} />
+        <Route path="/search/:keyword" element={<Search />} />
         <Route path='/recipeList' element={<RecipeList />} />
         <Route path='/*' element={<NotFound />} />
         {/*MyList? */}
