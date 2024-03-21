@@ -52,7 +52,6 @@ const Search = () => {
         ...searchParams,
         'keyword': keyword
       });
-      handleSearch();
     }
   },[keyword]);
 

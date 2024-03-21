@@ -4,35 +4,16 @@ import '../Styles/RecipeView.css';
 import RecipeView from "../components/recipeView";
 import { NavLink } from "react-router-dom";
 
-
 const BASE_URL = 'http://localhost:3004/api/recipes';
+
 
 const RecipeList = () => {
   const user = useUser();
-  const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [myRecipes, setMyRecipes] = useState([]);
-  const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-  /*  const fetchFavoriteRecipes = async () => {
-      try {
-        if (!user || !user.id) {
-          throw new Error('User ID not available');
-        }
-
-        const response = await fetch(`${BASE_URL}/favorites/${user.id}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch favorite recipes');
-        }
-        const data = await response.json();
-        setFavoriteRecipes(data.recipes);
-      } catch (error) {
-        setError('Error fetching favorite recipes');
-      }
-    };
- */
     const fetchMyRecipes = async () => {
       try {
         if (!user || !user.username) {
@@ -52,13 +33,8 @@ const RecipeList = () => {
       }
     };
 
-    if (user && user.username) { // Lisätty tarkistus käyttäjänimen olemassaolosta
-      fetchMyRecipes(); // Muutettu hakemaan käyttäjän reseptejä käyttäjänimen perusteella
-      if (user.id) { // Lisätty tarkistus käyttäjä ID:n olemassaolosta
-      //  fetchFavoriteRecipes();
-      } else {
-        setLoading(false);
-      }
+    if (user && user.username) {
+      fetchMyRecipes();
     } else {
       setLoading(false);
     }
@@ -73,21 +49,21 @@ const RecipeList = () => {
   }
 
   return (
-      <div className="recipe-list-container">
-        <h2>My Recipes</h2>
-        {myRecipes.length > 0 ? (
-          <ul className='recipeViewContainer'>
-            {myRecipes.map((recipe, index) => (
-              <div key={index}>
-                <NavLink className={"recipeView"} to={`/recipe/${recipe.hash}`}>
-                  <RecipeView key={recipe.id} recipe={recipe} />
-                </NavLink>
-              </div>
-            ))}
-          </ul>
-        ) : (
-          <div>No recipes found.</div>
-        )}
+    <div className="recipe-list-container">
+      <h2>My Recipes</h2>
+      {myRecipes.length > 0 ? (
+        <ul className='recipeViewContainer'>
+          {myRecipes.map((recipe, index) => (
+            <div key={index}>
+              <NavLink className={"recipeView"} to={`/recipe/${recipe.hash}`}>
+                <RecipeView key={recipe.id} recipe={recipe} />
+              </NavLink>
+            </div>
+          ))}
+        </ul>
+      ) : (
+        <div>No recipes found.</div>
+      )}
     </div>
   );
 };

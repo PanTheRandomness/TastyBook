@@ -7,8 +7,10 @@ import '../Styles/Print.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
 import ErrorModal  from '../components/ErrorModal';
-import { fetchRecipe, removeRecipe, removeRecipeAdmin, addReview} from '../api/recipeApi'; 
+import { fetchRecipe, removeRecipe, addReview} from '../api/recipeApi'; 
 import {Reviews} from '../components/Reviews'; 
+import {RecipeList} from '../components/RecipeList';
+import { addToFavorites } from '../api/favoriteApi';
 
 const Recipe = (props) => {
     const { route } = props;
@@ -124,39 +126,36 @@ const Recipe = (props) => {
             openErrorModal();
         }
     }
-    
+
     const toSearch = (keyword) => {
         navigate(`/search/${keyword}`);
     }
 
     const postReview = async (text,rating) => { 
         try {
-            const token = localStorage.getItem('token');
             if (!token) {
                 throw new Error('User token not found');
             }
     
             // Lähetetään HTTP POST -pyyntö uuden arvion lisäämiseksi
-            const response = await addReview(token, {text:text, rating:rating, recipeId:recipe.id});
-            
-            // Tulostetaan vastaus konsoliin
-            console.log('Response from adding review:', response);
-    
-            // Päivitetään arviot uudella arviolla
-            console.log('Old reviews:', recipe.reviews);
-            console.log('New review:', response);
-            // Huomaa, että tässä oletetaan, että 'recipe' on saatavilla, joten muista tarvittaessa muuttaa tämän kohdan logiikkaa
-            setRecipe({
-                ...recipe,
-                reviews: [...recipe.reviews, response]
-            });
-    
-            // Mahdollista nollata uusi arvio tässä, jos tarpeen
+            await addReview(token, {text:text, rating:rating, recipeId:recipe.id});       
            
         } catch (error) {
             console.error('Error adding review:', error.message);
         }
+
+        try {
+            const response = await fetchRecipe(token, route);
+                setRecipe(response);
+
+        }
+        catch (error) {
+            setErrorText("An error occurred while deleting recipe: " + error);
+            openErrorModal();
+
+        }
     }
+    
     
     
     return(
@@ -188,10 +187,15 @@ const RecipeHead = (props) => {
         //TODO: keskiarvon laskeminen, tuleeko tähän vai muualle?
     }
 
-    const saveToFavourites = () => {
-        //TODO: tallentaminen suosikkeihin
+    const saveToFavourites = async (recipeId, userToken) => {
+        try {
+            const response = await addToFavorites(recipeId, userToken);
+            console.log('Recipe added to favorites:', response);
+        } catch (error) {
+            console.error(error.message);
+        }
     }
-
+    
     const share = () => {
         props.onShare(true);
     }
@@ -202,7 +206,7 @@ const RecipeHead = (props) => {
     return (
         <div className='recipe-head'>
             <div className='recipehead-container'>
-                <h1 style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                <h1 style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }} data-testid="recipeheader">
                     {/*Ellipsin sijoittelu!*/}
                     {recipe.header}
                     <input type='image' src="/hearticon.ico" alt="Save to Favourites" onClick={saveToFavourites} className='picbutton' data-testid='saveToFavouritesButton' />
@@ -261,25 +265,6 @@ const RecipeSteps = (props) => {
         </div>
     );
 }
-
-/*
-const RecipeReviews = (props) =>{
-    //HUOM! Ei vielä käytössä
-    const reviewdata = props.reviews.map((r, i) =>{
-        return <div key={i} className='review'>
-            //tähtikuva + arvosana
-            {r}
-        </div>
-    });
-
-    
-    return(
-        <div>
-            {reviewdata}
-        </div>
-    );
-}
-*/
 
 const DeleteDialog = ({ isOpen, onClose, onConfirm }) => {
     return (
