@@ -1,0 +1,21 @@
+.searchviewbtn {
+    border-radius: 10px;
+    border-style: hidden;
+    background-color: #6A704C;
+    color: #412E27;
+    font-family: 'CustomFont', sans-serif;
+    font-weight: bold;
+    font-size: medium;
+    margin-right: 1em;
+}
+
+.searchviewbtnactive {
+    border-radius: 10px;
+    border-style: hidden;
+    background-color: #412E27;
+    color: #e2d2bd;
+    font-family: 'CustomFont', sans-serif;
+    font-weight: bold;
+    font-size: medium;
+    margin-right: 1em;
+}

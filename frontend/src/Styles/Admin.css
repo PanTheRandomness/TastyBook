@@ -6,7 +6,6 @@
 .adminForm {
   display: flex;
   flex-direction: column;
-
 }
 
 .adminForm body {
@@ -73,7 +72,3 @@ td.cell-six {
   font-size: medium;
   color: #412E27;
 }
-
-/*
-    Värit: #698269, #B99B6B, #F1DBBF, #AA5656, #3c493c
-*/

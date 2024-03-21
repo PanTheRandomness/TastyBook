@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../Styles/RecipeView.css';
+import '../Styles/Search.css';
 import RecipeView from "../components/recipeView";
 import { useToken } from "../customHooks/useToken";
 
@@ -76,9 +77,9 @@ const Search = () => {
     <div>
       <h2>Recipe Search</h2>
       <div>
-        <button onClick={() => handleTabClick('keyword')}>Search by keyword</button>
-        <button onClick={() => handleTabClick('ingredient')}>Search by ingredient</button>
-        <button onClick={() => handleTabClick('username')}>Search by username</button>
+        <button className={activeTabs.includes('keyword') ? "searchviewbtnactive" : "searchviewbtn"} data-testid="searchByKeywordBtn" onClick={() => handleTabClick('keyword')}>Search by keyword</button>
+        <button className={activeTabs.includes('ingredient') ? "searchviewbtnactive" : "searchviewbtn"} data-testid="searchByIngredientBtn" onClick={() => handleTabClick('ingredient')}>Search by ingredient</button>
+        <button className={activeTabs.includes('username') ? "searchviewbtnactive" : "searchviewbtn"} data-testid="searchByUserBtn" onClick={() => handleTabClick('username')}>Search by username</button>
       </div>
       {activeTabs.includes('keyword') && (
         <div>
@@ -116,7 +117,7 @@ const Search = () => {
           />
         </div>
       )}
-      <button onClick={handleSearch} disabled={loading}>
+      <button className="searchviewbtn" onClick={handleSearch} disabled={loading}>
         {loading ? 'Searching...' : 'Search'}
       </button>
       {error && <div className="error-message">{error}</div>}
