@@ -1,59 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { useUser } from '../customHooks/useUser';
+import { useToken } from "../customHooks/useToken"; 
 import '../Styles/RecipeView.css';
 import RecipeView from "../components/recipeView";
 import { NavLink } from "react-router-dom";
+import { getFavourites } from '../api/favouriteApi'; 
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
-
 const RecipeList = () => {
-  const user = useUser();
-  const [myRecipes, setMyRecipes] = useState([]);
+  const [favouriteRecipes, setFavouriteRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [token] = useToken(); 
 
   useEffect(() => {
-    const fetchMyRecipes = async () => {
+    const fetchFavourites = async () => {
       try {
-        if (!user || !user.username) {
-          throw new Error('Username not available');
+        if (token) { 
+          console.log('Fetching favorites...');
+          const favourites = await getFavourites(token);
+          console.log('Favorites:', favourites);
+          setFavouriteRecipes(favourites);
         }
-
-        const response = await fetch(`${BASE_URL}?username=${user.username}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch user recipes');
-        }
-        const data = await response.json();
-        setMyRecipes(data.recipes);
       } catch (error) {
-        setError('Error fetching user recipes');
+        console.error('Error fetching favorites:', error.message);
+        setError('Error fetching favorites');
       } finally {
         setLoading(false);
       }
     };
-
-    if (user && user.username) {
-      fetchMyRecipes();
+  
+    if (token) {
+      console.log('User token:', token); 
+      fetchFavourites();
     } else {
       setLoading(false);
     }
-  }, [user]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  }, [token]); // Lisätään token riippuvuuslistaan
+  
 
   return (
     <div className="recipe-list-container">
-      <h2>My Recipes</h2>
-      {myRecipes.length > 0 ? (
+      <h2>My Favourite Recipes</h2>
+      {favouriteRecipes.length > 0 ? (
         <ul className='recipeViewContainer'>
-          {myRecipes.map((recipe, index) => (
+          {favouriteRecipes.map((recipe, index) => (
             <div key={index}>
               <NavLink className={"recipeView"} to={`/recipe/${recipe.hash}`}>
                 <RecipeView key={recipe.id} recipe={recipe} />
@@ -62,7 +53,7 @@ const RecipeList = () => {
           ))}
         </ul>
       ) : (
-        <div>No recipes found.</div>
+        <div>No favourite recipes found.</div>
       )}
     </div>
   );
