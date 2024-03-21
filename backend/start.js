@@ -32,6 +32,9 @@ app.use(adminRoutes);
 const reviewRoutes = require("./src/routes/reviewRoutes");
 app.use(reviewRoutes);
 
+const favouriteRoutes = require("./src/routes/favouriteRoutes");
+app.use(favouriteRoutes);
+
 const errorHandling = require("./src/middleware/errorHandling");
 app.use(errorHandling);
 

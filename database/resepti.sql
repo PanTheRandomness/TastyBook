@@ -161,6 +161,7 @@ CREATE TABLE IF NOT EXISTS `recipedb`.`Favourite` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   INDEX `fk_Favourites_Recipe1_idx` (`Recipe_id` ASC) VISIBLE,
   INDEX `fk_Favourite_User1_idx` (`User_id` ASC) VISIBLE,
+  UNIQUE INDEX `unique_recipe_and_user` (`Recipe_id` ASC, `User_id` ASC) VISIBLE,
   CONSTRAINT `fk_Favourites_Recipe1`
     FOREIGN KEY (`Recipe_id`)
     REFERENCES `recipedb`.`Recipe` (`id`)

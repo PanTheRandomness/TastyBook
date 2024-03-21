@@ -6,7 +6,6 @@ const upload = multer();
 
 let ctrl = require("../controllers/recipeController");
 let userMiddleware = require("../middleware/verifyUser");
-let adminMiddleware = require("../middleware/verifyAdmin");
 
 /*  /api/recipes GET
 
