@@ -10,8 +10,22 @@ const addFavourite = async (req, res) => {
 
         res.status(201).send();
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send();
     }
 }
 
-module.exports = { addFavourite };
+const deleteFavourite = async (req, res) => {
+    try {
+        const { recipeId } = req.params;
+        const userId = req.user.id;
+
+        const result = await sql.deleteFavourite(recipeId, userId);
+        if (result.affectedRows === 0) return res.status(404).send();
+
+        res.status(200).send();
+    } catch (error) {
+        res.status(500).send();
+    }
+}
+
+module.exports = { addFavourite, deleteFavourite };
