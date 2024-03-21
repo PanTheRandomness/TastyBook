@@ -124,14 +124,13 @@ const Recipe = (props) => {
             openErrorModal();
         }
     }
-    
+
     const toSearch = (keyword) => {
         navigate(`/search/${keyword}`);
     }
 
     const postReview = async (text,rating) => { 
         try {
-            const token = localStorage.getItem('token');
             if (!token) {
                 throw new Error('User token not found');
             }
@@ -155,6 +154,17 @@ const Recipe = (props) => {
            
         } catch (error) {
             console.error('Error adding review:', error.message);
+        }
+
+        try {
+            const response = await fetchRecipe(token, route);
+                setRecipe(response);
+
+        }
+        catch (error) {
+            setErrorText("An error occurred while deleting recipe: " + error);
+            openErrorModal();
+
         }
     }
     
