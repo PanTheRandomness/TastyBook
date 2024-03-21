@@ -1,7 +1,7 @@
 import React from 'react';
 import * as router from 'react-router';
-import { render, waitFor } from '@testing-library/react';
-import { Recipe } from '../RecipePage';
+import { render, waitFor, fireEvent } from '@testing-library/react';
+import { Recipe, RecipeHead } from '../RecipePage';
 import { fetchRecipe } from '../../api/recipeApi';
 
 jest.mock('../../api/recipeApi');
@@ -123,5 +123,32 @@ describe('RecipePage component', () => {
             const imageElement = queryByAltText('Recipe Image');
             expect(imageElement).not.toBeInTheDocument();
         });
+    });
+
+    test('Clicking on a keyword navigates to the correct search page', () => {
+        const recipe = {
+            id: 1,
+            header: 'Test Recipe',
+            description: 'This is a test recipe',
+            username: 'testuser',
+            keywords: [
+                { word: 'keyword1' },
+                { word: 'keyword2' },
+            ],
+        };
+
+        const mockToSearch = jest.fn();
+
+        const { getByText } = render(
+            <RecipeHead
+                recipe={recipe}
+                onSearch={mockToSearch}
+            />
+        );
+
+        const keywordElement = getByText('keyword1');
+        fireEvent.click(keywordElement);
+
+        expect(mockToSearch).toHaveBeenCalledWith('keyword1');
     });
 });
