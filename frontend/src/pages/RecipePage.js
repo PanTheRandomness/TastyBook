@@ -141,7 +141,9 @@ const Recipe = (props) => {
             await addReview(token, {text:text, rating:rating, recipeId:recipe.id});       
            
         } catch (error) {
-            console.error('Error adding review:', error.message);
+            //console.error('Error adding review:', error.message);
+            setErrorText('Login first' );
+            openErrorModal();
         }
 
         try {

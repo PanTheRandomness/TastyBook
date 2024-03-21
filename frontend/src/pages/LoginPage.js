@@ -32,7 +32,6 @@ const Login = ({onLogin}) => {
                 <input className="loginForminput" placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
                 <button className="loginFormbutton" disabled={!username || !password} data-testid="login-button">Login</button>
             </form>
-        {/*TODO: muotoilu */}
         <div className="loginFormLoginContainer">
         <button className="loginFormbutton"  onClick={() => navigate("/forgot-password")}>Forgot password?</button>
         </div>
