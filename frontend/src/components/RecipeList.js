@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../customHooks/useUser';
-import { Link } from 'react-router-dom';
+import '../Styles/RecipeView.css';
+import RecipeView from "../components/recipeView";
+import { NavLink } from "react-router-dom";
+
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
 const RecipeList = () => {
-  const user = useUser(); // Hae käyttäjän tiedot, mukaan lukien käyttäjän ID
-  const [recipes, setRecipes] = useState([]);
+  const user = useUser();
+  const [favoriteRecipes, setFavoriteRecipes] = useState([]);
+  const [myRecipes, setMyRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchFavoriteRecipes = async () => {
+  /*  const fetchFavoriteRecipes = async () => {
       try {
         if (!user || !user.id) {
           throw new Error('User ID not available');
@@ -22,16 +26,42 @@ const RecipeList = () => {
           throw new Error('Failed to fetch favorite recipes');
         }
         const data = await response.json();
-        setRecipes(data.recipes);
-        setLoading(false);
+        setFavoriteRecipes(data.recipes);
       } catch (error) {
         setError('Error fetching favorite recipes');
+      }
+    };
+ */
+    const fetchMyRecipes = async () => {
+      try {
+        if (!user || !user.username) {
+          throw new Error('Username not available');
+        }
+
+        const response = await fetch(`${BASE_URL}?username=${user.username}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch user recipes');
+        }
+        const data = await response.json();
+        setMyRecipes(data.recipes);
+      } catch (error) {
+        setError('Error fetching user recipes');
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchFavoriteRecipes();
-  }, [user]); // Ajetaan uudelleen aina kun käyttäjä muuttuu
+    if (user && user.username) { // Lisätty tarkistus käyttäjänimen olemassaolosta
+      fetchMyRecipes(); // Muutettu hakemaan käyttäjän reseptejä käyttäjänimen perusteella
+      if (user.id) { // Lisätty tarkistus käyttäjä ID:n olemassaolosta
+      //  fetchFavoriteRecipes();
+      } else {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -42,22 +72,21 @@ const RecipeList = () => {
   }
 
   return (
-    <div className="recipe-list-container">
-      <h2>Favorite Recipes</h2>
-      {recipes.length > 0 ? (
-        <ul className="recipe-list">
-          {recipes.map(recipe => (
-            <li key={recipe.id} className="recipe-item">
-              <Link to={`/recipes/${recipe.id}`}>
-                <div className="recipe-title">{recipe.title}</div>
-                <div className="recipe-description">{recipe.description}</div>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div>No favorite recipes found.</div>
-      )}
+      <div className="recipe-list-container">
+        <h2>My Recipes</h2>
+        {myRecipes.length > 0 ? (
+          <ul className='recipeViewContainer'>
+            {myRecipes.map((recipe, index) => (
+              <div key={index}>
+                <NavLink className={"recipeView"} to={`/recipe/${recipe.hash}`}>
+                  <RecipeView key={recipe.id} recipe={recipe} />
+                </NavLink>
+              </div>
+            ))}
+          </ul>
+        ) : (
+          <div>No recipes found.</div>
+        )}
     </div>
   );
 };
