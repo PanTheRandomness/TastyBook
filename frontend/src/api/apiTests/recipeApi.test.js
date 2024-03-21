@@ -1,4 +1,4 @@
-const { getRecipeRoutes } = require("../recipeApi");
+const { getRecipeRoutes, fetchRecipeImage } = require("../recipeApi");
 const { getRecipeViews } = require("../recipeApi");
 const { fetchRecipe } = require("../recipeApi");
 const { removeRecipe } = require("../recipeApi");
@@ -202,5 +202,53 @@ describe("removeRecipe", () => {
          await removeRecipe(undefined, route);
 
         expect(global.fetch).not.toHaveBeenCalled();
+    });
+});
+
+describe("fetchRecipeImage", () => {
+    const route = "mockRoute";
+    const token = "mockToken";
+    const mockBlob = new Blob(["test image data"], { type: "image/png" });
+
+    beforeEach(() => {
+        global.fetch = jest.fn();
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should fetch image without token", async () => {
+        const mockResponse = {
+            blob: jest.fn().mockResolvedValueOnce(mockBlob)
+        };
+        fetch.mockResolvedValueOnce(mockResponse);
+
+        const response = await fetchRecipeImage(null, route);
+
+        expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/recipe/image/${route}`);
+        expect(response).toEqual(mockBlob);
+    });
+
+    it("should fetch image with token", async () => {
+        const mockResponse = {
+            blob: jest.fn().mockResolvedValueOnce(mockBlob)
+        };
+        fetch.mockResolvedValueOnce(mockResponse);
+
+        const response = await fetchRecipeImage(token, route);
+
+        expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/recipe/image/${route}`, {
+            headers: {
+                "Authorization" : "Bearer " + token
+            }
+        });
+        expect(response).toEqual(mockBlob);
+    });
+
+    it("should throw an error if fetch fails", async () => {
+        fetch.mockImplementationOnce(() => Promise.reject(new Error("Fetch failed")));
+
+        await expect(fetchRecipeImage(null, route)).rejects.toThrow("Fetch failed");
     });
 });

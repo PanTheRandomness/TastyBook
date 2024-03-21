@@ -13,7 +13,7 @@ describe("useUser", () => {
         const { result } = renderHook(() => useUser());
 
         // Assert
-        expect(result.current).toBeNull();
+        expect(result.current.user).toBeNull();
     });
 
     it("should return user data if a valid token is present", () => {
@@ -30,7 +30,7 @@ describe("useUser", () => {
         const { result } = renderHook(() => useUser());
 
         // Assert
-        expect(result.current).toEqual(mockUser);
+        expect(result.current.user).toEqual(mockUser);
     });
 
     it("should return null if the token is invalid", () => {
@@ -48,6 +48,6 @@ describe("useUser", () => {
         const { result } = renderHook(() => useUser());
 
         // Assert
-        expect(result.current).toBeNull();
+        expect(result.current.user).toBeNull();
     });
 });

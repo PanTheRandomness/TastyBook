@@ -83,24 +83,19 @@ export const removeRecipe = async (token, route) =>{
     }
 }
 
-export const removeRecipeAdmin = async (token, route) =>{
-    try{
-        if(token){
-            let response = await fetch(`${BASE_URL}/api/recipe/${route}/admin`, {
-                method:'DELETE',
+export const fetchRecipeImage = async (token, route) => {
+    try {
+        let response;
+        if (token) {
+            response = await fetch(`${BASE_URL}/api/recipe/image/${route}`, {
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization' : "Bearer " + token
                 }
-            });
+            })
+        } else response = await fetch(`${BASE_URL}/api/recipe/image/${route}`);
 
-            if (!response.ok) {
-                throw new Error(`Deletion failed: ${response.statusText}`);
-            }
-
-            return response;
-        }
-    } catch(error){
+        return response.blob();
+    } catch (error) {
         throw error;
     }
 }

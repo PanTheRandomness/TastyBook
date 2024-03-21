@@ -1,3 +1,4 @@
+import React from 'react';
 import * as router from 'react-router';
 import { render, waitFor } from '@testing-library/react';
 import { Recipe } from '../RecipePage';
@@ -31,19 +32,19 @@ describe('RecipePage component', () => {
             steps: [{ step: 'Sekoita ainekset' }, { step: 'Paista' }],
             keywords: [{ word: 'Testi' }, { word: 'Ruoka' }]
         };
+
         fetchRecipe.mockResolvedValue(mockRecipe);
         const { getByText } = render(<Recipe route={'123'} />)
 
-        // Odotetaan, että resepti latautuu ja sen tiedot näkyvät
         await waitFor(() => {
             expect(getByText(mockRecipe.header)).toBeInTheDocument();
-        
+
             expect(getByText(mockRecipe.description)).toBeInTheDocument();
-        
+
             //expect(getByText('Testikokki')).toBeInTheDocument();
 
             expect(getByText(`Duration: ${mockRecipe.durationHours}h ${mockRecipe.durationMinutes}min`)).toBeInTheDocument();
-        
+
             expect(getByText('Maito')).toBeInTheDocument();
 
             expect(getByText('Sekoita ainekset')).toBeInTheDocument();
@@ -58,6 +59,69 @@ describe('RecipePage component', () => {
                 expect(getByText(ingredient.name)).toBeInTheDocument();
                 expect(getByText(ingredient.quantity)).toBeInTheDocument();
             });
+        });
+    });
+
+    test('fetches recipe data and image', async () => {
+        const mockRecipe = {
+            header: 'Testiresepti',
+            description: 'Maistuva testiruoka',
+            username: 'Testikokki',
+            created: Date.now(),
+            durationHours: 1,
+            durationMinutes: 30,
+            ingredients: [
+                { quantity: '1 dl', name: 'Maito' },
+                { quantity: '2 kpl', name: 'Munat' },
+            ],
+            steps: [{ step: 'Sekoita ainekset' }, { step: 'Paista' }],
+            keywords: [{ word: 'Testi' }, { word: 'Ruoka' }]
+        };
+
+        const mockImageBlob = new Blob();
+
+        fetchRecipe.mockResolvedValue(mockRecipe);
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                blob: () => Promise.resolve(mockImageBlob)
+            })
+        );
+
+        render(<Recipe route={'123'} />);
+
+        expect(fetchRecipe).toHaveBeenCalled();
+
+        await waitFor(() => {
+            global.fetch().then(response => {
+                expect(response.blob()).resolves.toEqual(mockImageBlob);
+            });
+        });
+    });
+
+    test('renders recipe page without image', async () => {
+        const mockRecipe = {
+            header: 'Testiresepti',
+            description: 'Maistuva testiruoka',
+            username: 'Testikokki',
+            created: Date.now(),
+            durationHours: 1,
+            durationMinutes: 30,
+            ingredients: [
+                { quantity: '1 dl', name: 'Maito' },
+                { quantity: '2 kpl', name: 'Munat' },
+            ],
+            steps: [{ step: 'Sekoita ainekset' }, { step: 'Paista' }],
+            keywords: [{ word: 'Testi' }, { word: 'Ruoka' }]
+        };
+
+        fetchRecipe.mockResolvedValue(mockRecipe);
+
+        const { queryByAltText } = render(<Recipe route={'123'} />);
+
+        await waitFor(() => {
+            const imageElement = queryByAltText('Recipe Image');
+            expect(imageElement).not.toBeInTheDocument();
         });
     });
 });

@@ -98,11 +98,21 @@ describe("getRecipes", () => {
 });
 
 describe("getImage", () => {
+    it("should get image from database if not loggedIn", async () => {
+        const hash = "123";
+        executeSQL.mockReturnValueOnce([{ image: 1 }]);
+
+        const result = await getImage(hash, null);
+        
+        expect(executeSQL).toHaveBeenCalledWith("SELECT image FROM recipe WHERE hash=? AND visibleToAll=1", [hash]);
+        expect(result).toEqual([{ image: 1 }]);
+    });
+
     it("should get image from database", async () => {
         const hash = "123";
         executeSQL.mockReturnValueOnce([{ image: 1 }]);
 
-        const result = await getImage(hash);
+        const result = await getImage(hash, true);
         
         expect(executeSQL).toHaveBeenCalledWith("SELECT image FROM recipe WHERE hash=?", [hash]);
         expect(result).toEqual([{ image: 1 }]);
@@ -191,6 +201,22 @@ describe("editRecipe", () => {
         expect(executeSQL).toHaveBeenCalledWith(
             "UPDATE recipe SET header=?, description=?, visibleToAll=?, durationHours=?, durationMinutes=?, image=?, modified=NOW() WHERE hash=? AND User_id=?",
             [header, description, visibleToAll, durationHours, durationMinutes, image, hash, userId]);
+    });
+
+    it("should update recipe in the database without userId", async () => {
+        const header = "Header";
+        const hash = "123456";
+        const description = "Tasty food";
+        const visibleToAll = 1;
+        const durationHours = 1;
+        const durationMinutes = 0;
+        const image = [0];
+
+        await editRecipe(header, description, visibleToAll, durationHours, durationMinutes, image, hash)
+
+        expect(executeSQL).toHaveBeenCalledWith(
+            "UPDATE recipe SET header=?, description=?, visibleToAll=?, durationHours=?, durationMinutes=?, image=?, modified=NOW() WHERE hash=?",
+            [header, description, visibleToAll, durationHours, durationMinutes, image, hash]);
     });
 });
 

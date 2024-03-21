@@ -21,8 +21,9 @@ describe('FrontPage component', () => {
             </BrowserRouter>
         );
 
-        expect(getByText('Tasty Book Recipes:')).toBeInTheDocument();
+        expect(getByText("Loading...")).toBeInTheDocument();
 
+        await waitFor(() => expect(getByText('Tasty Book Recipes:')).toBeInTheDocument());
         await waitFor(() => expect(getByText('Recipe 1')).toBeInTheDocument());
     });
 

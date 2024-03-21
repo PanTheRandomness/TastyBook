@@ -33,8 +33,9 @@ const getRecipes = (hash, loggedIn, ingredient, keyword, username) => {
     return executeSQL(query, params);
 }
 
-const getImage = (hash) => {
-    const query = "SELECT image FROM recipe WHERE hash=?";
+const getImage = (hash, loggedIn) => {
+    let query = "SELECT image FROM recipe WHERE hash=?";
+    if (!loggedIn) query += " AND visibleToAll=1";
     return executeSQL(query, [hash]);
 }
 
@@ -67,8 +68,13 @@ const deleteRecipe = (hash, userId) => {
 }
 
 const editRecipe = (header, description, visibleToAll, durationHours, durationMinutes, image, hash, userId) => {
-    const query = "UPDATE recipe SET header=?, description=?, visibleToAll=?, durationHours=?, durationMinutes=?, image=?, modified=NOW() WHERE hash=? AND User_id=?";
-    return executeSQL(query, [header, description, visibleToAll, durationHours, durationMinutes, image, hash, userId]);
+    let params = [header, description, visibleToAll, durationHours, durationMinutes, image, hash];
+    let query = "UPDATE recipe SET header=?, description=?, visibleToAll=?, durationHours=?, durationMinutes=?, image=?, modified=NOW() WHERE hash=?";
+    if (userId) {
+        query +=  " AND User_id=?";
+        params.push(userId);
+    }
+    return executeSQL(query, params);
 }
 
 const deleteSteps = (id) => {

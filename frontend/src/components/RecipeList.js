@@ -11,6 +11,8 @@ const RecipeList = () => {
   const user = useUser();
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [myRecipes, setMyRecipes] = useState([]);
+  const { user } = useUser(); // Hae käyttäjän tiedot, mukaan lukien käyttäjän ID
+  const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 

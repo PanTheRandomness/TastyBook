@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const EllipsisMenu = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const user = useUser();
+  const { user } = useUser();
   const creator = props.creator;
   const route = props.route;
   const navigate = useNavigate();

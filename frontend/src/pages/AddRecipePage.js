@@ -70,13 +70,12 @@ const AddRecipe = (props) => {
                     const r = await response.json();
                     setEditing(true);
                     setName(r.header);
-                    setVisibleToAll(r.visibleToAll);
-                    console.log(r.visibleToAll);
-                    /* Tämän jos laittaa pois kommenteista reseptiä muokatessa tallennus aiheuttaa 400 Bad Request, muuten ei tuo oikeaa näkyvyysarvoa 
-                    (jos olisi false, konsoliin tulostuu null? jos true konsoliin tulostuu 1)
-                    if(r.visibleToAll == null){
-                        setVisibleToAll(false);
-                    }*/
+                    if(!r.visibleToAll){
+                        setVisibleToAll(0);
+                    }
+                    else{
+                        setVisibleToAll(1);
+                    }
                     setDescription(r.description);
                     setDurationH(r.durationHours);
                     setDurationMin(r.durationMinutes);
@@ -204,15 +203,11 @@ const AddRecipe = (props) => {
 
     const saveEditedIngredient = () => {
         let newQuantity = qt + " " + unit;
-        if(qt == 0) newQuantity = unit;
+        if(qt == 0 || !qt) newQuantity = unit;
         const editedIngredient = {
             quantity: newQuantity,
             name: ing
         };
-        /*Tämän ongelma: 
-        Jos ei ole määrää tai yksikköä, quantity on undefined, jota ei taas arvona hyväksytä API-kutsussa. 
-        Jos se taas korvataan konkreettisemmalla, kuten 0:lla, määräksi tulee 0. 
-        Kokeiltu myös välilyönnillä, mutta ei toimi silläkään */
         const updatedIngredients = [...ingredients];
         updatedIngredients[eIngIndex] = editedIngredient;
         setIngredients(updatedIngredients);
@@ -401,14 +396,13 @@ const AddRecipe = (props) => {
                                 <th>Image:</th>
                                 <td>
                                     <input data-testid="recipeImageInput" className="recipeinput" type='file' accept=".jpeg, .jpg, .png*" onChange={(e) => handleImageChange(e)} />
-                                    { wrongImage ? <div  style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage'>Please choose either a -jpeg- or .png-file. Maximum filesize is 16MB</div> : null}
-                                    {/*Ei vielä testattu?*/}
+                                    { wrongImage ? <div  style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage' data-testid='wrongimageerror'>Please choose either a -jpeg- or .png-file. Maximum filesize is 16MB</div> : null}
                                 </td>
                             </tr>
                             <tr>
                                 <th>Current Image:</th>
-                                <td>{image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage'/>:null}</td>
-                                <td><button className='removebutton' onClick={removeImage}>Remove Image</button></td>
+                                <td>{image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage' data-testid='currentimage' />:null}</td>
+                                <td><button className='removebutton' onClick={removeImage} data-testid='removeimagebutton'>Remove Image</button></td>
                             </tr>
                         </tbody>
                     </table>

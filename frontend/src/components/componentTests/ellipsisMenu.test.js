@@ -20,7 +20,7 @@ describe('EllipsisMenu component', () => {
     };
 
     beforeEach(() => {
-        useUser.mockReturnValue(mockUser); // Mock the return value of useUser hook
+        useUser.mockReturnValue({ user: mockUser }); // Mock the return value of useUser hook
     });
 
     test('renders menu options for the creator', () => {
@@ -63,14 +63,14 @@ describe('EllipsisMenu component', () => {
     });
 
     test('does not render menu options for non-creator user', () => {
-        useUser.mockReturnValue({ username: 'anotheruser' }); // Mock a different user
+        useUser.mockReturnValue({ user: { username: 'anotheruser' } }); // Mock a different user
         const { queryByTestId } = render(<EllipsisMenu {...mockProps} />);
         
         expect(queryByTestId('ellipsis')).not.toBeInTheDocument();
     });
 
     test('does not render menu options for unauthenticated user', () => {
-        useUser.mockReturnValue(null); // Mock unauthenticated user
+        useUser.mockReturnValue({ user: null }); // Mock unauthenticated user
         const { queryByTestId } = render(<EllipsisMenu {...mockProps} />);
         
         expect(queryByTestId('ellipsis')).not.toBeInTheDocument();
@@ -78,7 +78,7 @@ describe('EllipsisMenu component', () => {
 
     test('opens delete dialog when delete is clicked for admin user', () => {
         const mockAdmin = { username: 'testadmin', role: 'admin' };
-        useUser.mockReturnValue(mockAdmin); // Mock admin user
+        useUser.mockReturnValue({ user: mockAdmin }); // Mock admin user
         const { getByTestId } = render(<EllipsisMenu {...mockProps} />);
         
         fireEvent.click(getByTestId('ellipsis'));
