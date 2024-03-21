@@ -6,7 +6,6 @@ const upload = multer();
 
 let ctrl = require("../controllers/recipeController");
 let userMiddleware = require("../middleware/verifyUser");
-let adminMiddleware = require("../middleware/verifyAdmin");
 
 /*  /api/recipes GET
 
@@ -171,10 +170,8 @@ router.route("/api/recipe/:hash").delete(userMiddleware.verifyJWT, ctrl.deleteRe
     Jos ei muusta syystä onnistu, palauttaa stauskoodin 500
 */
 
-router.route("/api/recipe/:hash").put(userMiddleware.verifyJWT, ctrl.editRecipe);
+router.route("/api/recipe/:hash").put(userMiddleware.verifyJWT, upload.single("image"), ctrl.editRecipe);
 
-router.route("/api/recipe/:hash/admin").delete(userMiddleware.verifyJWT, adminMiddleware.verifyAdmin, ctrl.deleteRecipeAdmin);
-
-router.route("/api/recipe/image/:hash").get(ctrl.getImage);
+router.route("/api/recipe/image/:hash").get(userMiddleware.isUserLoggedIn, ctrl.getImage);
 
 module.exports = router;

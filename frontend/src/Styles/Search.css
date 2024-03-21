@@ -1,18 +1,21 @@
-/*
-    Vanhat värit: #698269, #B99B6B, #F1DBBF, #AA5656, #3c493c
-    Uudet värit: Primary: #6A704C, Accent: #412E27, Background: #EDE1D1, Secondary backgound: #e2d2bd
-*/
-.searchContainer {
-    display: flex;
-    flex-wrap: wrap;
+.searchviewbtn {
+    border-radius: 10px;
+    border-style: hidden;
+    background-color: #6A704C;
+    color: #412E27;
+    font-family: 'CustomFont', sans-serif;
+    font-weight: bold;
+    font-size: medium;
+    margin-right: 1em;
 }
 
-.searchViewContainer > * {
-    flex: 1 1 25%;
-    max-width: 25%;
-    margin: 10px;
-    background-color: #EDE1D1;
-    border-radius: 20px;
-    border: 10px solid #6A704C;
-    color: #412E27;
+.searchviewbtnactive {
+    border-radius: 10px;
+    border-style: hidden;
+    background-color: #412E27;
+    color: #e2d2bd;
+    font-family: 'CustomFont', sans-serif;
+    font-weight: bold;
+    font-size: medium;
+    margin-right: 1em;
 }

@@ -1,112 +1,132 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import '../Styles/RecipeView.css';
 import '../Styles/Search.css';
 import RecipeView from "../components/recipeView";
+import { useToken } from "../customHooks/useToken";
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
-const searchKeyword = async (keyword) => {
+const searchRecipes = async (params, token) => {
   let url = `${BASE_URL}?`;
 
-  if (keyword) {
-    url += `keyword=${keyword}`;
-  } 
-
-  console.log('Search URL:', url);
+  Object.keys(params).forEach(key => {
+    if (params[key]) {
+      url += `${key}=${params[key]}&`;
+    }
+  });
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch recipes');
     }
     const data = await response.json();
-    console.log('Search results:', data);
     return data.recipes || [];
   } catch (error) {
     throw new Error('Error searching recipes: ' + error.message);
   }
 };
-
-const searchIngredient = async (ingredient) => {
-  let url = `${BASE_URL}?`;
-
-  if (ingredient) {
-    url += `&ingredient=${ingredient}`;
-  }
-
-  console.log('Search URL:', url);
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error('Failed to fetch recipes');
-    }
-    const data = await response.json();
-    console.log('Search results:', data);
-    return data.recipes || [];
-  } catch (error) {
-    throw new Error('Error searching recipes: ' + error.message);
-  }
-};
-
 
 const Search = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchParams, setSearchParams] = useState({
+    keyword: '',
+    ingredient: '',
+    username: ''
+  });
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [activeTabs, setActiveTabs] = useState([]);
+  const [token] = useToken();
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
+  const handleSearch = async () => {
     setSearchResults([]);
     setLoading(true);
     try {
-      const keywordRecipes = await searchKeyword(searchTerm);
-      const ingredientRecipes = await searchIngredient(searchTerm);
-      
-      const combinedRecipes = [...keywordRecipes, ...ingredientRecipes];
-      const uniqueRecipes = Array.from(new Set(combinedRecipes.map(recipe => recipe.id)))
-        .map(id => combinedRecipes.find(recipe => recipe.id === id));
-  
-      setSearchResults(uniqueRecipes);
-  
-      if (uniqueRecipes.length === 0 && searchTerm !== '') {
-        setError('No recipes found.');
-      } else {
-        setError('');
-      }
+      const recipes = await searchRecipes(searchParams, token);
+      setSearchResults(recipes);
+      setError(recipes.length === 0 ? 'No recipes found.' : '');
     } catch (error) {
       setError('Error searching recipes. Please try again later.');
     } finally {
       setLoading(false);
     }
   };
-  
+
+  const handleTabClick = (tabName) => {
+    setActiveTabs(activeTabs.includes(tabName) ? activeTabs.filter(tab => tab !== tabName) : [...activeTabs, tabName]);
+    setSearchParams({
+      ...searchParams,
+      [tabName]: ''
+    });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSearchParams({
+      ...searchParams,
+      [name]: value
+    });
+  };
 
   return (
     <div>
       <h2>Recipe Search</h2>
-      <label htmlFor="searchInput">Search by keyword or ingredient:</label>
-      <input
-        id="searchInput"
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <button onClick={handleSearch} disabled={loading}>
+      <div>
+        <button className={activeTabs.includes('keyword') ? "searchviewbtnactive" : "searchviewbtn"} data-testid="searchByKeywordBtn" onClick={() => handleTabClick('keyword')}>Search by keyword</button>
+        <button className={activeTabs.includes('ingredient') ? "searchviewbtnactive" : "searchviewbtn"} data-testid="searchByIngredientBtn" onClick={() => handleTabClick('ingredient')}>Search by ingredient</button>
+        <button className={activeTabs.includes('username') ? "searchviewbtnactive" : "searchviewbtn"} data-testid="searchByUserBtn" onClick={() => handleTabClick('username')}>Search by username</button>
+      </div>
+      {activeTabs.includes('keyword') && (
+        <div>
+          <label htmlFor="keywordInput">Keyword:  </label>
+          <input
+            id="keywordInput"
+            type="text"
+            name="keyword"
+            value={searchParams.keyword}
+            onChange={handleInputChange}
+          />
+        </div>
+      )}
+      {activeTabs.includes('ingredient') && (
+        <div>
+          <label htmlFor="ingredientInput">Ingredient:  </label>
+          <input
+            id="ingredientInput"
+            type="text"
+            name="ingredient"
+            value={searchParams.ingredient}
+            onChange={handleInputChange}
+          />
+        </div>
+      )}
+      {activeTabs.includes('username') && (
+        <div>
+          <label htmlFor="usernameInput">Username:  </label>
+          <input
+            id="usernameInput"
+            type="text"
+            name="username"
+            value={searchParams.username}
+            onChange={handleInputChange}
+          />
+        </div>
+      )}
+      <button className="searchviewbtn" onClick={handleSearch} disabled={loading}>
         {loading ? 'Searching...' : 'Search'}
       </button>
       {error && <div className="error-message">{error}</div>}
       {searchResults.length > 0 && (
         <div>
           <h3>Search Results:</h3>
-          <ul className="searchViewContainer">
-            {searchResults.map((recipe, index) => (
-              <li key={index}>
-                <Link to={`/recipe/${recipe.hash}`}>
-                  <p><RecipeView key={recipe.id} recipe={recipe} /></p>
-                </Link>
-              </li>
+          <ul className='recipeViewContainer'>
+            {searchResults.map((recipe) => (               
+              <RecipeView key={recipe.id} recipe={recipe} />
             ))}
           </ul>
         </div>

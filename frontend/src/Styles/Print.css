@@ -1,7 +1,6 @@
-/*Tulostusnäkymää varten lisätty*/
 @media print {
-    
-    .reviews-container {
-      display: none !important; /* tällä piilotetaan arvostelut tulostusnäkymästä */
-    }
+  .reviews-container {
+    display: none !important;
+    /* tällä piilotetaan arvostelut tulostusnäkymästä */
   }
+}

@@ -2,17 +2,14 @@ import { useState } from "react";
 import { adminregister } from "../api/userApi";
 import '../Styles/Register.css';
 import '../Styles/RegistrationDialog.css';
-import { useNavigate } from "react-router-dom";
 
-
-const AdminRegister = ({ onLogin }) => {
+const AdminRegister = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [api_key, setApi_key] = useState('');
     const [error, setError] = useState(null);
-    const navigate = useNavigate();
     const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
     const onRegisterClicked = async (event) => {

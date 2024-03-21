@@ -26,6 +26,6 @@ nav {
 
 @media print {
     nav {
-      display: none !important;
+        display: none !important;
     }
-  }
+}

@@ -1,79 +1,93 @@
-import { useEffect, useState } from 'react';
-import { useUser } from '../customHooks/useUser'; 
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useUser } from '../customHooks/useUser';
+import '../Styles/RecipeView.css';
+import RecipeView from "../components/recipeView";
+import { NavLink } from "react-router-dom";
+
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
 const RecipeList = () => {
-  const user = useUser(); 
-  const [userRecipes, setUserRecipes] = useState([]);
+  const user = useUser();
+  const [favoriteRecipes, setFavoriteRecipes] = useState([]);
+  const [myRecipes, setMyRecipes] = useState([]);
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true); // Lisätty loading-tila
 
-  const fetchUserRecipes = async () => {
-    try {
-      if (user && user.loggedIn) { 
-        console.log('Fetching user recipes...');
-        const response = await fetch(`${BASE_URL}?username=${user.username}`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        });
+  useEffect(() => {
+  /*  const fetchFavoriteRecipes = async () => {
+      try {
+        if (!user || !user.id) {
+          throw new Error('User ID not available');
+        }
+
+        const response = await fetch(`${BASE_URL}/favorites/${user.id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch favorite recipes');
+        }
+        const data = await response.json();
+        setFavoriteRecipes(data.recipes);
+      } catch (error) {
+        setError('Error fetching favorite recipes');
+      }
+    };
+ */
+    const fetchMyRecipes = async () => {
+      try {
+        if (!user || !user.username) {
+          throw new Error('Username not available');
+        }
+
+        const response = await fetch(`${BASE_URL}?username=${user.username}`);
         if (!response.ok) {
           throw new Error('Failed to fetch user recipes');
         }
         const data = await response.json();
-        console.log('Fetched recipes:', data.recipes);
-        setUserRecipes(data.recipes);
-        setError('');
-      } else {
-        setError('User not logged in.');
-        setUserRecipes([]);
+        setMyRecipes(data.recipes);
+      } catch (error) {
+        setError('Error fetching user recipes');
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error fetching recipes:', error);
-      setError('Error fetching recipes.');
-      setUserRecipes([]);
-    } finally {
-      setLoading(false); // Merkitään lataus valmiiksi, kun haku on suoritettu
-    }
-  };
+    };
 
-  useEffect(() => {
-    if (user && user.loggedIn) {
-      fetchUserRecipes();
+    if (user && user.username) { // Lisätty tarkistus käyttäjänimen olemassaolosta
+      fetchMyRecipes(); // Muutettu hakemaan käyttäjän reseptejä käyttäjänimen perusteella
+      if (user.id) { // Lisätty tarkistus käyttäjä ID:n olemassaolosta
+      //  fetchFavoriteRecipes();
+      } else {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
     }
   }, [user]);
 
-  const handleSortByName = () => {
-    const sorted = [...userRecipes].sort((a, b) => {
-      if (a.name && b.name) {
-        return a.name.localeCompare(b.name);
-      } else {
-        return 0;
-      }
-    });
-    setUserRecipes(sorted);
-  };
-
   if (loading) {
-    return <div>Loading...</div>; // Näytä latausviesti, kun käyttäjäobjektia haetaan
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   return (
-    <div>
-      <h2>Your Recipes</h2>
-      <button onClick={handleSortByName}>Sort by Name</button>
-      {error && <div className="error-message">{error}</div>}
-      <ul>
-        {userRecipes.map((recipe, index) => (
-          <li key={index}>
-            <Link to={`/recipe/${recipe.hash}`}>
-              <p>Header: "{recipe.header}"</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <div className="recipe-list-container">
+        <h2>My Recipes</h2>
+        {myRecipes.length > 0 ? (
+          <ul className='recipeViewContainer'>
+            {myRecipes.map((recipe, index) => (
+              <div key={index}>
+                <NavLink className={"recipeView"} to={`/recipe/${recipe.hash}`}>
+                  <RecipeView key={recipe.id} recipe={recipe} />
+                </NavLink>
+              </div>
+            ))}
+          </ul>
+        ) : (
+          <div>No recipes found.</div>
+        )}
     </div>
   );
 };

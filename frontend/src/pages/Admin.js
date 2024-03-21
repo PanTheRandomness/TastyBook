@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useToken } from '../customHooks/useToken';
 import { getAllUsers, deleteUser } from "../api/adminApi";
 import '../Styles/Admin.css';
+import { useUser } from '../customHooks/useUser';
+import NotFound from './NotFoundPage';
 
 const Admin = () => {
+  const { user } = useUser();
   const [users, setUsers] = useState([]);
   const [token] = useToken();
   const [userIdToDelete, setUserIdToDelete] = useState('');
@@ -46,6 +49,8 @@ const Admin = () => {
       setShowConfirmationModal(false);
     }
   };
+
+  if (user && user.role !== "admin") return <NotFound />
 
   return (
     <div className="adminContainer">

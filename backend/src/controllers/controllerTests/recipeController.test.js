@@ -218,15 +218,18 @@ describe("getImage", () => {
 
         await getImage(req, res);
 
+        expect(sql.getImage).toHaveBeenCalledWith(req.params.hash, req.loggedIn);
         expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
         expect(res.end).toHaveBeenCalled();
     });
 
-    it("should return jpeg if jpeg image was found", async () => {
+    it("should return jpeg if jpeg image was found (with loggedIn)", async () => {
+        req.loggedIn = true;
         sql.getImage.mockResolvedValue([{ image: [ 0xFF, 0xD8, 0xFF ]}]);
 
         await getImage(req, res);
 
+        expect(sql.getImage).toHaveBeenCalledWith(req.params.hash, req.loggedIn);
         expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/jpeg");
         expect(res.end).toHaveBeenCalled();
     });
@@ -348,6 +351,19 @@ describe("deleteRecipe", () => {
         sql.deleteRecipe.mockReturnValue({ affectedRows: 1 });
         await deleteRecipe(req, res);
 
+        expect(sql.deleteRecipe).toHaveBeenCalledWith(req.params.hash, req.user.id);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should handle deleting any recipe if admin", async () => {
+        req.user.role = "admin";
+        sql.deleteRecipe.mockReturnValue({ affectedRows: 1 });
+        await deleteRecipe(req, res);
+
+        expect(sql.deleteRecipe).toHaveBeenCalledWith(req.params.hash, null);
+
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.send).toHaveBeenCalled();
     });
@@ -376,15 +392,15 @@ describe("editRecipe", () => {
     beforeEach(() => {
         req = {
             body: {
-                id: 1,
+                id: "1",
                 header: "makaronilaatikko",
                 description: "hyvää",
-                visibleToAll: 1,
-                durationHours: 1,
-                durationMinutes: 30,
-                steps: ["eka", "toka"],
-                keywords: ["avain", "sana"],
-                ingredients: [{ quantity: "100 g", name: "potato" }, { quantity: "5 kg", name: "tomato" }]
+                visibleToAll: "1",
+                durationHours: "1",
+                durationMinutes: "30",
+                steps: '["eka", "toka"]',
+                keywords: '["avain", "sana"]',
+                ingredients: '[{ "quantity": "100 g", "name": "potato" }, { "quantity": "5 kg", "name": "tomato" }]'
             },
             user: { id: 123 },
             params: {
@@ -416,7 +432,25 @@ describe("editRecipe", () => {
 
         await editRecipe(req, res);
 
-        expect(sql.editRecipe).toHaveBeenCalledWith(req.body.header, req.body.description, req.body.visibleToAll, req.body.durationHours, req.body.durationMinutes, req.params.hash, req.user.id);
+        expect(sql.editRecipe).toHaveBeenCalledWith(req.body.header, req.body.description, 1, 1, 30, null, req.params.hash, req.user.id);
+        expect(deleteRecipesKeywords).toHaveBeenCalledWith(req.body.id);
+        expect(addRecipesKeyword).toHaveBeenCalledWith("avain", req.body.id);
+        expect(sql.deleteSteps).toHaveBeenCalledWith(req.body.id);
+        expect(sql.addStep).toHaveBeenCalledWith("toka", 2, req.body.id);
+        expect(deleteRecipesIngredients).toHaveBeenCalledWith(req.body.id);
+        expect(addRecipesIngredient).toHaveBeenCalledWith({ quantity: "5 kg", name: "tomato" }, req.body.id);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should handle editing any recipe if admin", async () => {
+        req.user.role = "admin";
+        sql.editRecipe.mockReturnValue({ changedRows: 1 });
+
+        await editRecipe(req, res);
+
+        expect(sql.editRecipe).toHaveBeenCalledWith(req.body.header, req.body.description, 1, 1, 30, null, req.params.hash, null);
         expect(deleteRecipesKeywords).toHaveBeenCalledWith(req.body.id);
         expect(addRecipesKeyword).toHaveBeenCalledWith("avain", req.body.id);
         expect(sql.deleteSteps).toHaveBeenCalledWith(req.body.id);
@@ -441,50 +475,6 @@ describe("editRecipe", () => {
         sql.editRecipe.mockRejectedValue(new Error("Database error"));
 
         await editRecipe(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.send).toHaveBeenCalled();
-    });
-});
-
-describe("deleteRecipeAdmin", () => {
-    let req, res;
-
-    beforeEach(() => {
-        req = {
-            params: { hash: "123" },
-        }
-        res = {
-            status: jest.fn(() => res),
-            json: jest.fn(),
-            send: jest.fn(),
-        };
-    });
-
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
-    it("should handle deleting recipe and sending statuscode 200", async () => {
-        sql.deleteRecipe.mockReturnValue({ affectedRows: 1 });
-        await deleteRecipeAdmin(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.send).toHaveBeenCalled();
-    });
-
-    it("should return 404 if no recipe was found", async () => {
-        sql.deleteRecipe.mockReturnValue({ affectedRows: 0 });
-        await deleteRecipeAdmin(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(404);
-        expect(res.send).toHaveBeenCalled();
-    });
-
-    it("should handle internal server error", async () => {
-        sql.deleteRecipe.mockRejectedValue(new Error("Database error"));
-
-        await deleteRecipeAdmin(req, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.send).toHaveBeenCalled();

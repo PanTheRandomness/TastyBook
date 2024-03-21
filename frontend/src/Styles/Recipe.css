@@ -70,7 +70,7 @@ button {
     border-radius: 3px;
 }
 
-.addbutton {
+.addbutton, .removebutton {
     border-radius: 15px;
     border-style: hidden;
     background-color: #6A704C;
@@ -250,7 +250,6 @@ button {
     color:#F1DBBF;
 }
 
-
 .notfound {
     text-align: center;
     font-style: italic;
@@ -264,21 +263,22 @@ button {
 }
 
 .recipeimage {
-    max-width: '100%';
-    height: 'auto';
+    width: 500px;
+    height: 500px;
+    object-fit: contain;
 }
 
 .image-container {
     flex: 1;
-    margin-top:10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
 .separator {
     border-bottom: 3px solid #6A704C;
 }
-
-
-  
-
-
-

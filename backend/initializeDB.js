@@ -1,6 +1,7 @@
 const { executeSQL } = require("./src/db/executeSQL");
 var bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const fs = require("fs");
 
 const { users, recipes } = require("./initialValues");
 
@@ -25,8 +26,9 @@ const initialize = async () => {
         }
 
         for (const recipe of recipes) {
+            const imageBuffer = fs.readFileSync("./initialRecipeImages/" + recipe.image);
             const hash = crypto.createHash("sha256").update(`${recipe.header}:${Date.now()}`).digest("hex");
-            const result = await addRecipe(recipe.header, hash, recipe.description, recipe.visibleToAll, recipe.durationHours, recipe.durationMinutes, null, recipe.creator);
+            const result = await addRecipe(recipe.header, hash, recipe.description, recipe.visibleToAll, recipe.durationHours, recipe.durationMinutes, imageBuffer, recipe.creator);
             if (Array.isArray(recipe.ingredients)) {
                 for (const ingredient of (recipe.ingredients)) {
                     await addIngredient(ingredient.name);

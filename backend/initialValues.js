@@ -13,6 +13,7 @@ const users = [
 const recipes = [
     {
         header: "Amazing Apple Pie",
+        image: "applepie.jpg",
         creator: "appleadam",
         description: "An amazingly tasty apple pie.",
         visibleToAll: 1,
@@ -64,6 +65,7 @@ const recipes = [
     },
     {
         header: "Fresh Cucumber & Avocado Salad",
+        image: "salad.jpg",
 	    creator: "bananabert",
 	    description: "A fresh cucumber & avocado salad.",
 	    durationHours: 0,
@@ -98,6 +100,7 @@ const recipes = [
     },
     {
         header:	"Quick Breakfast Omelette",
+        image: "omelette.jpg",
 	    creator: "appleadam",
 	    description: "A basic and quick omelette",
 	    visibleToAll: 1,
@@ -127,6 +130,7 @@ const recipes = [
     },
     {
         header: "Creamy Tomato Soup",
+        image: "tomatosoup.jpg",
 	    creator: "bananabert",
 	    description: "A nice tomato soup",
 	    visibleToAll: 1,
@@ -186,6 +190,7 @@ const recipes = [
     },
     {
         header: "Ham Sandwich",
+        image: "sandwich.jpg",
 	    creator: "cinnamonclaire",
 	    description: "THE BEST ham sandwich",
 	    visibleToAll: 1,
@@ -220,6 +225,7 @@ const recipes = [
     },
     {
         header: "Gluten-Free Crêpes",
+        image: "crepes.jpg",
 	    creator: "bananabert",
 	    description: "Crêpes, but Gluten Free",
 	    durationHours: 1,
@@ -252,6 +258,7 @@ const recipes = [
     },
     {
         header: "Breakfast Smoothie",
+        image: "smoothie.jpg",
 	    creator: "appleadam",
 	    description: "Meal-prep-friendly breakfast smoothie!",
 	    durationHours: 0,
@@ -285,6 +292,7 @@ const recipes = [
     },
     {
         header:	"Vendace Mayonnaise",
+        image: "mayonnaise.jpg",
 	    creator: "cinnamonclaire",
 	    description: "A tasty & fishy dip!",
 	    visibleToAll: 1,
@@ -311,6 +319,7 @@ const recipes = [
     },
     {
         header: "Delicious Sweet Potato Fries",
+        image: "fries.jpg",
 	    creator: "bananabert",
 	    description: "A fiber-full alternative to fries.",
 	    durationHours: 0,
@@ -336,6 +345,7 @@ const recipes = [
     },
     {
         header:	"Easy Ice Cream Dessert Bowl",
+        image: "icecream.jpg",
 	    creator: "cinnamonclaire",
 	    description: "An easy and customizable dessert for the whole family! Great for movie-nights ;)",
 	    visibleToAll: 1,

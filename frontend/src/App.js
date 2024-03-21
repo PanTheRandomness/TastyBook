@@ -1,4 +1,4 @@
-import { NavLink, Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import {Register} from './pages/Register';
 import {Login} from './pages/LoginPage';
 import {NewPassword} from './pages/NewPassword';
@@ -19,9 +19,10 @@ import EmailVerification from "./pages/EmailVerification";
 import ForgotPassword from "./pages/ForgotPassword";
 import RecipeList from "./components/RecipeList";
 import './Styles/fonts.css';
+import NavigationBar from "./components/NavigationBar";
 
 const App = () => {
-  const user = useUser();
+  const { user, login } = useUser();
   const [token, setToken] = useToken();
   const [recipeRoutes, setRecipeRoutes] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
@@ -53,47 +54,29 @@ const App = () => {
 
   const onLogin = (token) => {
     setToken(token);
+    login(token);
   }
 
   const onLogout = () => {
     setToken("");
+    login("");
   }
 
   if (!loading && errorMessage) return <p>{errorMessage}</p>
 
   return (
     <Router>
-      <nav>
-        <div>
-          <NavLink data-testid="logo" className={"navLink"} to={"/"}><img src='/book.png' alt="Logo" height={80} width={80}/><img src='/text.png' alt="Logo" height={60} width={300}/></NavLink>
-        </div>
-        {
-          (user && token) ?
-            <>
-              <div>
-                <NavLink className={"navLink"} to={"/newrecipe"}>Add Recipe</NavLink>
-              </div>
-              <div>
-                { user.role === "admin" && <NavLink className={"navLink"} to={"/admin"}>Admin</NavLink> }
-                <NavLink className={"navLink"} to={"/"} onClick={onLogout}>Logout</NavLink>
-              </div>
-            </> :
-            <div>
-              <NavLink className={"navLink"} to={"/register"}>Register</NavLink>
-              <NavLink className={"navLink"} to={"/login"}>Login</NavLink>
-            </div>
-        }
-      </nav>
+      <NavigationBar key={token} onLogout={onLogout} />
       <div className="separator"></div>
       
       <Routes>
-        <Route path='/' element={<FrontPage onLogout={onLogout} />}></Route>
-        <Route path='/register' element={<Register onLogin={onLogin} />}></Route>
+        <Route path='/' element={<FrontPage key={token} onLogout={onLogout} />}></Route>
+        <Route path='/register' element={<Register />}></Route>
         <Route path='/login' element={<Login onLogin={onLogin} />}></Route>
         <Route path='/newpassword/:verificationString' element={<NewPassword />}></Route>
         { user && user.role === 'admin' && <Route path='/admin' element={<Admin />}></Route> }
-        <Route path='/adminregister' element={<AdminRegister onLogin={onLogin} />}></Route>
-        { (user && token) && <Route path='/newrecipe' element={<AddRecipe addRecipeRoute={addRecipeRoute} />}></Route> }
+        <Route path='/adminregister' element={<AdminRegister />}></Route>
+        { user && <Route path='/newrecipe' element={<AddRecipe addRecipeRoute={addRecipeRoute} />}></Route> }
 
         {
           recipeRoutes.map((route) => (
