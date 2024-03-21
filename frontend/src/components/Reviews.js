@@ -15,8 +15,8 @@ const Reviews = (props) => {
     postReview(text, rating);
     };
     
-    const reviewItems = reviews.map((review, id) => (
-        <div key={id} className="review">
+    const reviewItems = reviews.map((review, index) => (
+        <div key={index} className="review">
             <p><strong>Rating:</strong> {review.rating}</p>
             <p><strong>Comment:</strong> {review.text}</p> 
         </div>

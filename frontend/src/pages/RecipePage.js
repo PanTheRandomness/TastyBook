@@ -124,11 +124,12 @@ const Recipe = (props) => {
             openErrorModal();
         }
     }
-        const postReview = async (text,rating) => {
+    
     const toSearch = (keyword) => {
         navigate(`/search/${keyword}`);
     }
 
+    const postReview = async (text,rating) => { 
         try {
             const token = localStorage.getItem('token');
             if (!token) {
