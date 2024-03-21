@@ -9,8 +9,7 @@ import EllipsisMenu from '../components/EllipsisMenu';
 import ErrorModal  from '../components/ErrorModal';
 import { fetchRecipe, removeRecipe, addReview} from '../api/recipeApi'; 
 import {Reviews} from '../components/Reviews'; 
-import {RecipeList} from '../components/RecipeList';
-import { addToFavourites } from '../api/favoriteApi';
+import { addToFavourites } from '../api/favouriteApi';
 
 const Recipe = (props) => {
     const { route } = props;
