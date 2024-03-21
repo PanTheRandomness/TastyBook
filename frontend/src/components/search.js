@@ -54,7 +54,7 @@ const Search = () => {
       });
       handleSearch();
     }
-  },[]);
+  },[keyword]);
 
   const handleSearch = async () => {
     setSearchResults([]);
