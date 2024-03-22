@@ -136,13 +136,16 @@ const Recipe = (props) => {
                 throw new Error('User token not found');
             }
     
-            // Lähetetään HTTP POST -pyyntö uuden arvion lisäämiseksi
             await addReview(token, {text:text, rating:rating, recipeId:recipe.id});       
            
         } catch (error) {
-            //console.error('Error adding review:', error.message);
-            setErrorText('Login first' );
-            openErrorModal();
+            //tässä error-modaali, jos haluaa sen reitityksen sijaan:
+            //setErrorText('Login first' );
+            //openErrorModal();
+
+            //uudelleenreitys login sivulle:
+            navigate('/login');
+
         }
 
         try {
