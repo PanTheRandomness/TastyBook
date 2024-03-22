@@ -2,6 +2,7 @@ const { getRecipeRoutes, fetchRecipeImage } = require("../recipeApi");
 const { getRecipeViews } = require("../recipeApi");
 const { fetchRecipe } = require("../recipeApi");
 const { removeRecipe } = require("../recipeApi");
+const { addReview } = require("../recipeApi");//tämä lisätty
 const BASE_URL = "http://localhost:3004";
 
 describe("getRecipeRoutes", () => {
@@ -250,5 +251,64 @@ describe("fetchRecipeImage", () => {
         fetch.mockImplementationOnce(() => Promise.reject(new Error("Fetch failed")));
 
         await expect(fetchRecipeImage(null, route)).rejects.toThrow("Fetch failed");
+    });
+});
+
+//arvostelun lisäämisen testit:
+describe("addReview", () => {
+    beforeEach(() => {
+        global.fetch = jest.fn();
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should add review with token", async () => {
+        const token = "mockToken";
+        const review = {
+            recipeId: 1,
+            rating: 5,
+            comment: "Great recipe!"
+        };
+
+        const expectedFetchOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(review)
+        };
+
+        global.fetch.mockResolvedValueOnce({
+            ok: true,
+            json: jest.fn().mockResolvedValueOnce({ message: "Review added successfully" }),
+        });
+
+        const response = await addReview(token, review);
+        expect(global.fetch).toHaveBeenCalledWith(`${BASE_URL}/api/review`, expectedFetchOptions);   
+    });
+
+    it("should throw an error if adding review fails", async () => {
+        const token = "mockToken";
+        const review = {
+            recipeId: 1,
+            rating: 5,
+            comment: "Great recipe!"
+        };
+
+        global.fetch.mockRejectedValueOnce(new Error("Failed to add review"));
+
+        await expect(addReview(token, review)).rejects.toThrow("Failed to add review");
+
+        expect(global.fetch).toHaveBeenCalledWith(`${BASE_URL}/api/review`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(review)
+        });
     });
 });
