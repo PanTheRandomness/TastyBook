@@ -43,7 +43,7 @@ const Reviews = (props) => {
                             <option key={value} value={value}>{value}</option>
                         ))}
                     </select>
-                    <button className='postreviewbtn' onClick={handleAddReview}>Post</button>
+                    <button className='postreviewbtn' onClick={handleAddReview} data-testid="postreviewbtn">Post</button>
                 </div>
             </div>
         </div>

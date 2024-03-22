@@ -17,7 +17,7 @@ describe('RecipePage component', () => {
         jest.clearAllMocks();
     });
 
-    test('renders recipe page with correct data', async () => {
+    test('renders recipe page with correct data including reviews', async () => {
         const mockRecipe = {
             header: 'Testiresepti',
             description: 'Maistuva testiruoka',
@@ -30,7 +30,11 @@ describe('RecipePage component', () => {
                 { quantity: '2 kpl', name: 'Munat' },
             ],
             steps: [{ step: 'Sekoita ainekset' }, { step: 'Paista' }],
-            keywords: [{ word: 'Testi' }, { word: 'Ruoka' }]
+            keywords: [{ word: 'Testi' }, { word: 'Ruoka' }],
+            reviews: [
+                { id: 1, username: 'user1', rating: 4, text: 'Great recipe!' },
+                { id: 2, username: 'user2', rating: 5, text: 'Excellent!' },
+            ]
         };
 
         fetchRecipe.mockResolvedValue(mockRecipe);
@@ -58,6 +62,11 @@ describe('RecipePage component', () => {
             mockRecipe.ingredients.forEach(ingredient => {
                 expect(getByText(ingredient.name)).toBeInTheDocument();
                 expect(getByText(ingredient.quantity)).toBeInTheDocument();
+            });
+            mockRecipe.reviews.forEach(review => {
+                expect(getByText(`${review.username}:`)).toBeInTheDocument();
+                expect(getByText(`Rating: ${review.rating}`)).toBeInTheDocument();
+                expect(getByText(`Comment: ${review.text}`)).toBeInTheDocument();
             });
         });
     });
