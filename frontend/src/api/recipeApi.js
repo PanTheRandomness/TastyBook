@@ -124,3 +124,19 @@ export const addReview = async (token, review) => {
         throw error;
     }
 };
+
+export const getMyRecipes = async (token) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/myrecipes`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch my recipes");
+        
+        return response.json();
+    } catch (error) {
+        throw error;
+    }
+}

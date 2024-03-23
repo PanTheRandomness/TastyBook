@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { getRecipeViews } from "../api/recipeApi";
 import { useToken } from "../customHooks/useToken";
 import RecipeView from "../components/recipeView";
+import { getMyRecipes } from "../api/recipeApi";
 import "../Styles/RecipeViewPage.css";
 
-const FrontPage = ({ onLogout }) => {
-    const [token,] = useToken();
+const MyRecipes = () => {
+    const [token] = useToken();
     const [recipes, setRecipes] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(true);
@@ -13,20 +13,19 @@ const FrontPage = ({ onLogout }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await getRecipeViews(token);
-                if (!Array.isArray(response.recipes)) throw new Error();
-                setRecipes(response.recipes);
+                const response = await getMyRecipes(token);
+                if (!Array.isArray(response)) throw new Error();
+                setRecipes(response);
                 setErrorMessage("");
-                if (!response.loggedIn) onLogout();
             } catch (error) {
-                setErrorMessage("Error loading recipes ");
+                setErrorMessage("Error loading recipes");
             } finally {
                 setLoading(false);
             }
         }
 
         fetchData();
-    }, [token, onLogout]);
+    }, [token]);
 
     if (loading) return <p>Loading...</p>
 
@@ -34,7 +33,7 @@ const FrontPage = ({ onLogout }) => {
 
     return (
         <div>
-            <h1 className="pageheader">Tasty Book Recipes:</h1>
+            <h1 className="pageheader">My Recipes:</h1>
             <div className="recipeViewContainer">
                 {
                     recipes.length > 0 ? (
@@ -48,4 +47,4 @@ const FrontPage = ({ onLogout }) => {
     );
 }
 
-export default FrontPage;
+export default MyRecipes;

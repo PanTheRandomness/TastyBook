@@ -1,7 +1,10 @@
-const { addRecipe, addStep, getAllRecipeHashes, getSteps, getRecipes, deleteRecipe, deleteSteps, editRecipe, getImage } = require("../recipeSQL");
+const { addRecipe, addStep, getAllRecipeHashes, getSteps, getRecipes, deleteRecipe, deleteSteps, editRecipe, getImage, getMyRecipes } = require("../recipeSQL");
 const { executeSQL } = require("../executeSQL");
 
 jest.mock("../executeSQL");
+
+const recipeQuery = "SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id";
+const groupByQuery = " GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes";
 
 describe("getAllRecipeHashes", () => {
     afterEach(() => {
@@ -36,7 +39,7 @@ describe("getRecipes", () => {
 
         const result = await getRecipes(null, true);
 
-        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id WHERE 1=1 GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes", []);
+        expect(executeSQL).toHaveBeenCalledWith(recipeQuery + " WHERE 1=1" + groupByQuery, []);
         expect(result).toEqual([{ id: 1 }, { id: 2 }]);
     });
 
@@ -46,7 +49,7 @@ describe("getRecipes", () => {
 
         const result = await getRecipes(hash, true);
 
-        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id WHERE 1=1 AND r.hash=? GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes", [hash]);
+        expect(executeSQL).toHaveBeenCalledWith(recipeQuery + " WHERE 1=1 AND r.hash=?" + groupByQuery, [hash]);
         expect(result).toEqual([{ id: 1 }]);
     });
 
@@ -55,7 +58,7 @@ describe("getRecipes", () => {
 
         const result = await getRecipes(null, false);
 
-        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id WHERE 1=1 AND r.visibleToAll=1 GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes", []);
+        expect(executeSQL).toHaveBeenCalledWith(recipeQuery + " WHERE 1=1 AND r.visibleToAll=1" + groupByQuery, []);
         expect(result).toEqual([{ id: 1 }]);
     });
 
@@ -64,7 +67,7 @@ describe("getRecipes", () => {
         const ingredient = "test_ingredient";
 
         const result = await getRecipes(null, false, ingredient);
-        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id LEFT JOIN recipesingredient ri ON ri.Recipe_id = r.id LEFT JOIN ingredient i ON ri.Ingredient_id = i.id WHERE 1=1 AND r.visibleToAll=1 AND i.name LIKE ? GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes", [`%${ingredient}%`]);
+        expect(executeSQL).toHaveBeenCalledWith(recipeQuery + " LEFT JOIN recipesingredient ri ON ri.Recipe_id = r.id LEFT JOIN ingredient i ON ri.Ingredient_id = i.id WHERE 1=1 AND r.visibleToAll=1 AND i.name LIKE ?" + groupByQuery, [`%${ingredient}%`]);
         expect(result).toEqual([{ id: 1 }]);
     });
 
@@ -73,7 +76,7 @@ describe("getRecipes", () => {
         const keyword = "test_keyword"
 
         const result = await getRecipes(null, false, null, keyword);
-        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id LEFT JOIN recipeskeyword rk ON rk.Recipe_id = r.id LEFT JOIN keyword k ON rk.Keyword_id = k.id WHERE 1=1 AND r.visibleToAll=1 AND k.word LIKE ? GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes", [`%${keyword}%`]);
+        expect(executeSQL).toHaveBeenCalledWith(recipeQuery + " LEFT JOIN recipeskeyword rk ON rk.Recipe_id = r.id LEFT JOIN keyword k ON rk.Keyword_id = k.id WHERE 1=1 AND r.visibleToAll=1 AND k.word LIKE ?" + groupByQuery, [`%${keyword}%`]);
         expect(result).toEqual([{ id: 1 }]);
     });
 
@@ -83,7 +86,7 @@ describe("getRecipes", () => {
         const keyword = "test_keyword"
 
         const result = await getRecipes(null, false, ingredient, keyword);
-        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id LEFT JOIN recipesingredient ri ON ri.Recipe_id = r.id LEFT JOIN ingredient i ON ri.Ingredient_id = i.id LEFT JOIN recipeskeyword rk ON rk.Recipe_id = r.id LEFT JOIN keyword k ON rk.Keyword_id = k.id WHERE 1=1 AND r.visibleToAll=1 AND i.name LIKE ? AND k.word LIKE ? GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes", [`%${ingredient}%` ,`%${keyword}%`]);
+        expect(executeSQL).toHaveBeenCalledWith(recipeQuery + " LEFT JOIN recipesingredient ri ON ri.Recipe_id = r.id LEFT JOIN ingredient i ON ri.Ingredient_id = i.id LEFT JOIN recipeskeyword rk ON rk.Recipe_id = r.id LEFT JOIN keyword k ON rk.Keyword_id = k.id WHERE 1=1 AND r.visibleToAll=1 AND i.name LIKE ? AND k.word LIKE ?" + groupByQuery, [`%${ingredient}%` ,`%${keyword}%`]);
         expect(result).toEqual([{ id: 1 }]);
     });
 
@@ -92,12 +95,16 @@ describe("getRecipes", () => {
         const username = "testuser";
 
         const result = await getRecipes(null, false, null, null, username);
-        expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id WHERE 1=1 AND r.visibleToAll=1 AND u.username LIKE ? GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes", [`%${username}%`]);
+        expect(executeSQL).toHaveBeenCalledWith(recipeQuery + " WHERE 1=1 AND r.visibleToAll=1 AND u.username LIKE ?" + groupByQuery, [`%${username}%`]);
         expect(result).toEqual([{ id: 1 }]);
     });
 });
 
 describe("getImage", () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it("should get image from database if not loggedIn", async () => {
         const hash = "123";
         executeSQL.mockReturnValueOnce([{ image: 1 }]);
@@ -120,6 +127,10 @@ describe("getImage", () => {
 });
 
 describe("addRecipe", () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it("should insert a recipe into the database", async () => {
         const userId = 1;
         const header = "Header";
@@ -143,6 +154,10 @@ describe("addRecipe", () => {
 });
 
 describe("addStep", () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it("should insert a step into the database", async () => {
         const step = "Do this";
         const number = 2;
@@ -155,6 +170,10 @@ describe("addStep", () => {
 });
 
 describe("getSteps", () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it("should return all recipes steps", async () => {
         const recipeId = 1;
         executeSQL.mockReturnValueOnce([{ number: 1, step: "eka" }, { number: 2, step: "toka" }]);
@@ -167,6 +186,10 @@ describe("getSteps", () => {
 });
 
 describe("deleteRecipe", () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it("should delete recipe from database", async () => {
         const hash = "123";
         const userId = 1;
@@ -186,6 +209,10 @@ describe("deleteRecipe", () => {
 });
 
 describe("editRecipe", () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it("should update recipe in the database", async () => {
         const userId = 1;
         const header = "Header";
@@ -221,11 +248,29 @@ describe("editRecipe", () => {
 });
 
 describe("deleteSteps", () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it("should delete recipes steps from the database", async () => {
         const recipeId = 1;
 
         await deleteSteps(recipeId);
 
         expect(executeSQL).toHaveBeenCalledWith("DELETE FROM recipesteps WHERE Recipe_id=?", [recipeId]);
+    });
+});
+
+describe("getMyRecipes", () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should get my recipes from the database", async () => {
+        const userId = 1;
+
+        await getMyRecipes(userId);
+
+        expect(executeSQL).toHaveBeenCalledWith(recipeQuery + " WHERE u.id=?" + groupByQuery, [userId]);
     });
 });

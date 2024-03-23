@@ -181,6 +181,18 @@ const editRecipe = async (req, res) => {
     }
 }
 
+const getMyRecipes = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const result = await sql.getMyRecipes(userId);
+
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).send();
+    }
+}
+
 const checkRecipeBody = (header, description, visibleToAll, durationHours, durationMinutes, steps, keywords, ingredients) => {
     if (typeof header !== "string" || header.length > 45 ||
         typeof description !== "string" || description.length > 2000 ||
@@ -225,4 +237,4 @@ const getImageType = (imageData) => {
     return null;
 }
 
-module.exports = { getAllRecipes, getAllRecipeHashes, getRecipe, addRecipe, deleteRecipe, editRecipe, getImage };
+module.exports = { getAllRecipes, getAllRecipeHashes, getRecipe, addRecipe, deleteRecipe, editRecipe, getImage, getMyRecipes };

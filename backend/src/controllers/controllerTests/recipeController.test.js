@@ -1,4 +1,4 @@
-const { addRecipe, getAllRecipeHashes, getRecipe, deleteRecipe, editRecipe, getAllRecipes, deleteRecipeAdmin, getImage } = require("../recipeController");
+const { addRecipe, getAllRecipeHashes, getRecipe, deleteRecipe, editRecipe, getAllRecipes, deleteRecipeAdmin, getImage, getMyRecipes } = require("../recipeController");
 const sql = require("../../db/recipeSQL");
 const { addRecipesKeyword, getRecipesKeywords, deleteRecipesKeywords } = require("../keywordController");
 const { addRecipesIngredient, getRecipesIngredients, deleteRecipesIngredients } = require("../ingredientController");
@@ -475,6 +475,43 @@ describe("editRecipe", () => {
         sql.editRecipe.mockRejectedValue(new Error("Database error"));
 
         await editRecipe(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalled();
+    });
+});
+
+describe("getMyRecipes", () => {
+    let req, res;
+
+    beforeEach(() => {
+        req = {
+            user: { id: 123 }
+        };
+        res = {
+            status: jest.fn(() => res),
+            json: jest.fn(),
+            send: jest.fn(),
+        };
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should fetch recipes from database", async () => {
+        sql.getMyRecipes.mockReturnValue([{ id: 1 }]);
+
+        await getMyRecipes(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.json).toHaveBeenCalledWith([{ id: 1 }]);
+    });
+
+    it("should handle internal server error", async () => {
+        sql.getMyRecipes.mockRejectedValue(new Error("Database error"));
+
+        await getMyRecipes(req, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.send).toHaveBeenCalled();

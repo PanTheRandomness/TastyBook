@@ -6,9 +6,14 @@ const getAllRecipeHashes = (loggedIn) => {
     return executeSQL(query, []);
 }
 
+// Same recipequery is in favouriteSQL
+const recipeQuery = "SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id";
+// Returns only one without this
+const groupByQuery = " GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes";
+
 const getRecipes = (hash, loggedIn, ingredient, keyword, username) => {
     let params = [];
-    let query = "SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id";
+    let query = recipeQuery;
     if (ingredient) query += " LEFT JOIN recipesingredient ri ON ri.Recipe_id = r.id LEFT JOIN ingredient i ON ri.Ingredient_id = i.id";
     if (keyword) query += " LEFT JOIN recipeskeyword rk ON rk.Recipe_id = r.id LEFT JOIN keyword k ON rk.Keyword_id = k.id";
     query += " WHERE 1=1";
@@ -29,7 +34,7 @@ const getRecipes = (hash, loggedIn, ingredient, keyword, username) => {
         query += " AND u.username LIKE ?";
         params.push(`%${username}%`);
     }
-    query += " GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes";
+    query += groupByQuery;
     return executeSQL(query, params);
 }
 
@@ -82,4 +87,9 @@ const deleteSteps = (id) => {
     return executeSQL(query, [id]);
 }
 
-module.exports = { getAllRecipeHashes, getRecipes, addRecipe, addStep, getSteps, deleteRecipe, editRecipe, deleteSteps, getImage };
+const getMyRecipes = (userId) => {
+    const query = recipeQuery + " WHERE u.id=?" + groupByQuery;
+    return executeSQL(query, [userId]);
+}
+
+module.exports = { getAllRecipeHashes, getRecipes, addRecipe, addStep, getSteps, deleteRecipe, editRecipe, deleteSteps, getImage, getMyRecipes };

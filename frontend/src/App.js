@@ -20,6 +20,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import RecipeList from "./components/RecipeList";
 import './Styles/fonts.css';
 import NavigationBar from "./components/NavigationBar";
+import MyRecipes from "./pages/MyRecipes";
 
 const App = () => {
   const { user, login } = useUser();
@@ -94,7 +95,13 @@ const App = () => {
         <Route path='/forgot-password' element={<ForgotPassword />}></Route>
         <Route path='/search' element={<Search />} />
         <Route path="/search/:keyword" element={<Search />} />
-        <Route path='/recipeList' element={<RecipeList />} />
+        {
+          user && 
+          <>
+            <Route path='/recipeList' element={<RecipeList />} />
+            <Route path='/myrecipes' element={<MyRecipes />} />
+          </>
+        }
         <Route path='/*' element={<NotFound />} />
 
       </Routes>

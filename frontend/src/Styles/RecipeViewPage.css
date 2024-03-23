@@ -7,7 +7,7 @@
     padding-bottom: 30%;
 }
 
-.recipeViewContainer > * {
+.recipeViewContainer > a {
     flex: 1 1 25%;
     max-width: 25%;
     margin: 10px;
@@ -17,7 +17,7 @@
     color: #412E27;
 }
 
-.frontpageheader {
+.pageheader {
     text-align: center;
     color: #6A704C;
 }

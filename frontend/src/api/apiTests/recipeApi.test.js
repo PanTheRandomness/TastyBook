@@ -1,4 +1,4 @@
-const { getRecipeRoutes, fetchRecipeImage } = require("../recipeApi");
+const { getRecipeRoutes, fetchRecipeImage, getMyRecipes } = require("../recipeApi");
 const { getRecipeViews } = require("../recipeApi");
 const { fetchRecipe } = require("../recipeApi");
 const { removeRecipe } = require("../recipeApi");
@@ -310,5 +310,47 @@ describe("addReview", () => {
             },
             body: JSON.stringify(review)
         });
+    });
+});
+
+describe("getMyRecipes", () => {
+    beforeEach(() => {
+        global.fetch = jest.fn();
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should fetch recipes", async () => {
+        const token = "mockToken";
+        fetch.mockResolvedValueOnce({
+            ok: true,
+            json: jest.fn().mockResolvedValueOnce([{ id: 1 }, { id: 2 }])
+        });
+
+        const response = await getMyRecipes(token);
+
+        expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/myrecipes`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        expect(response).toEqual([{ id: 1 }, { id: 2 }]);
+    });
+
+    it("should throw an error if fetch fails", async () => {
+        global.fetch.mockImplementationOnce(() => Promise.reject(new Error("Fetch failed")));
+
+        await expect(getMyRecipes()).rejects.toThrow("Fetch failed");
+    });
+
+    it("should throw an error if ok is false", async () => {
+        const token = "mockToken";
+        fetch.mockResolvedValueOnce({
+            ok: false
+        });
+
+        await expect(getMyRecipes(token)).rejects.toThrow("Failed to fetch my recipes");
     });
 });

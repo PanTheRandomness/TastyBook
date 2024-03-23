@@ -174,4 +174,6 @@ router.route("/api/recipe/:hash").put(userMiddleware.verifyJWT, upload.single("i
 
 router.route("/api/recipe/image/:hash").get(userMiddleware.isUserLoggedIn, ctrl.getImage);
 
+router.route("/api/myrecipes").get(userMiddleware.verifyJWT, ctrl.getMyRecipes);
+
 module.exports = router;
