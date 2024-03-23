@@ -21,16 +21,14 @@ export const addToFavourites = async (recipeId, token) => {
         if (!response.ok) {
             throw new Error('Failed to add recipe to favorites');
         }
-
-        return response.json();
     } catch (error) {
         throw error;
     }
 };
 
-export const deleteFavourite = async (favoriteId, token) => {
+export const deleteFavourite = async (recipeId, token) => {
     try {
-        const response = await fetch(`${BASE_URL}/api/favourite/${favoriteId}`, {
+        const response = await fetch(`${BASE_URL}/api/favourite/${recipeId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -48,7 +46,6 @@ export const deleteFavourite = async (favoriteId, token) => {
 export const getFavourites = async (token) => {
     try {
         const response = await fetch(`${BASE_URL}/api/favourite`, {
-            method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -67,3 +64,15 @@ export const getFavourites = async (token) => {
         throw error;
     }
 };
+
+export const isFavourite = async (token, id) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/is-favourite/${id}`, {
+            headers: { "Authorization": `Bearer ${token}`}
+        });
+        if (!response.ok) throw new Error("Failed to fetch isFavourite");
+        return response.json();
+    } catch (error) {
+        throw error;
+    }
+}

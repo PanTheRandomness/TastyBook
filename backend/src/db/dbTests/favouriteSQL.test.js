@@ -1,5 +1,5 @@
 const { executeSQL } = require("../executeSQL");
-const { addFavourite, deleteFavourite, getFavourites } = require("../favouriteSQL");
+const { addFavourite, deleteFavourite, getFavourites, isFavourite } = require("../favouriteSQL");
 
 jest.mock("../executeSQL");
 
@@ -32,5 +32,16 @@ describe("getFavourites", () => {
         await getFavourites(userId);
 
         expect(executeSQL).toHaveBeenCalledWith("SELECT r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes, AVG(re.rating) AS average_rating FROM recipe r LEFT JOIN user u ON r.User_id=u.id LEFT JOIN review re ON re.Recipe_id=r.id LEFT JOIN favourite f ON f.Recipe_id=r.id WHERE f.User_id=? GROUP BY r.id, u.username, r.hash, r.header, r.description, r.visibleToAll, r.created, r.modified, r.durationHours, r.durationMinutes", [userId]);
+    });
+});
+
+describe("isFavourite", () => {
+    it("should check if the recipe is marked favourite", async () => {
+        const userId = 1;
+        const recipeId = 1;
+
+        await isFavourite(userId, recipeId);
+
+        expect(executeSQL).toHaveBeenCalledWith("SELECT id FROM favourite WHERE User_id=? AND Recipe_id=?", [userId, recipeId]);
     });
 });

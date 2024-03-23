@@ -87,7 +87,7 @@ const App = () => {
         
         {
           recipeRoutes.map((route) => (
-            <Route key={route.hash} path={`/recipe/${route.hash}`} element={<Recipe route={route.hash} />}></Route>
+            <Route key={route.hash} path={`/recipe/${route.hash}`} element={<Recipe route={route.hash} user={user} />}></Route>
           ))
         }
 

@@ -1,5 +1,5 @@
 const sql = require("../../db/favouriteSQL");
-const { addFavourite, deleteFavourite, getFavourites } = require("../favouriteController");
+const { addFavourite, deleteFavourite, getFavourites, isFavourite } = require("../favouriteController");
 
 jest.mock("../../db/favouriteSQL");
 
@@ -144,6 +144,53 @@ describe("deleteFavourite", () => {
         sql.getFavourites.mockRejectedValue(new Error("Database error"));
 
         await getFavourites(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalled();
+    });
+});
+
+describe("isFavourite", () => {
+    let req, res;
+
+    beforeEach(() => {
+        req = {
+            user: { id: 1 },
+            params: { recipeId: 1 }
+        };
+        res = {
+            status: jest.fn(() => res),
+            send: jest.fn(),
+            json: jest.fn()
+        };
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it("should handle recipe marked as favourite", async () => {
+        sql.isFavourite.mockResolvedValue([{ id: 1 }]);
+
+        await isFavourite(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ favourite: true });
+    });
+
+    it("should handle recipe marked not as favourite", async () => {
+        sql.isFavourite.mockResolvedValue([]);
+
+        await isFavourite(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ favourite: false });
+    });
+
+    it("should handle internal server error", async () => {
+        sql.isFavourite.mockRejectedValue(new Error("Database error"));
+
+        await isFavourite(req, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.send).toHaveBeenCalled();

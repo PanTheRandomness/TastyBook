@@ -37,4 +37,6 @@ router.route("/api/favourite/:recipeId").delete(userMiddleware.verifyJWT, ctrl.d
 
 router.route("/api/favourite").get(userMiddleware.verifyJWT, ctrl.getFavourites);
 
+router.route("/api/is-favourite/:recipeId").get(userMiddleware.verifyJWT, ctrl.isFavourite);
+
 module.exports = router;

@@ -9,10 +9,10 @@ import EllipsisMenu from '../components/EllipsisMenu';
 import ErrorModal from '../components/ErrorModal';
 import { fetchRecipe, removeRecipe, addReview } from '../api/recipeApi';
 import { Reviews } from '../components/Reviews';
-import { addToFavourites } from '../api/favouriteApi';
+import { addToFavourites, isFavourite } from '../api/favouriteApi';
 
 const Recipe = (props) => {
-    const { route } = props;
+    const { route, user } = props;
     const [currentUrl, setCurrentUrl] = useState('');
     const [token] = useToken();
     const navigate = useNavigate();
@@ -30,6 +30,7 @@ const Recipe = (props) => {
     const openShareModal = () => setShareModalOpen(true);
     const closeShareModal = () => setShareModalOpen(false);
     const [copied, setCopied] = useState(false);
+    const [isFav, setIsFav] = useState(false);
 
     const [recipe, setRecipe] = useState({
         "id": 0,
@@ -87,6 +88,10 @@ const Recipe = (props) => {
                         setErrorText("An error occurred while loading recipe's image: " + error);
                         openErrorModal();
                     }
+                }
+                if (user) {
+                    const isFavResponse = await isFavourite(token, response.id);
+                    setIsFav(isFavResponse.favourite);
                 }
             } catch (error) {
                 setErrorText("An error occurred while loading recipe: " + error);
@@ -190,14 +195,13 @@ const RecipeHead = (props) => {
     }
 
     const saveToFavourites = async (recipeId) => {
+        // TODO: jos isFav===true, poista suoskikeista käyttäen favouriteAPIsta löytyvää deleteFavourite funktiota
         if (!token) {
             console.error('Token is not defined');
             return;
         }
         try {
-            console.log('Adding recipe to favorites with recipeId:', recipeId, 'and token:', token);
-            const response = await addToFavourites(recipeId, token);
-            console.log('Recipe added to favorites:', response);
+            await addToFavourites(recipeId, token);
         } catch (error) {
             console.error('Error adding recipe to favorites:', error.message);
         }
@@ -215,12 +219,14 @@ const RecipeHead = (props) => {
             <div className='recipehead-container'>
                 <h1 style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }} data-testid="recipeheader">
                     {recipe.header}
+                    {/*TODO: Jos resepti on jo suosikki, niin eri värinen image?*/}
                     <input type='image' src="/hearticon.ico" alt="Save to Favourites" onClick={() => saveToFavourites(recipe.id)} className='picbutton' data-testid='saveToFavouritesButton' />
                     <input type='image' src="/share.ico" alt="Share" onClick={share} className='picbutton' data-testid='shareButton' />
                     <button className='printbutton' onClick={print}>Print</button>
                     <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
                 </h1>
-                <img src='/rating_star.png' alt="Star Rating" />{recipe.rating}
+                {/*TODO: average_rating muotoilu*/}
+                <img src='/rating_star.png' alt="Star Rating" />{recipe.average_rating}
                 <p>{recipe.description}</p>
                 <p> Created By: {recipe.username} <br />
                     Creation date: {createdFormatted} <br />

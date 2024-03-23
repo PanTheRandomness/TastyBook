@@ -43,4 +43,16 @@ const getFavourites = async (req, res) => {
     }
 }
 
-module.exports = { addFavourite, deleteFavourite, getFavourites };
+const isFavourite = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const recipeId = req.params.recipeId;
+
+        const result = await sql.isFavourite(userId, recipeId);
+        res.status(200).json({ favourite: result.length !== 0 });
+    } catch (error) {
+        res.status(500).send();
+    }
+}
+
+module.exports = { addFavourite, deleteFavourite, getFavourites, isFavourite };

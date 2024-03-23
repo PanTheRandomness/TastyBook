@@ -17,4 +17,9 @@ const getFavourites = (userId) => {
     return executeSQL(query, [userId]);
 }
 
-module.exports = { addFavourite, deleteFavourite, getFavourites };
+const isFavourite = (userId, recipeId) => {
+    const query = "SELECT id FROM favourite WHERE User_id=? AND Recipe_id=?";
+    return executeSQL(query, [userId, recipeId]);
+}
+
+module.exports = { addFavourite, deleteFavourite, getFavourites, isFavourite };
