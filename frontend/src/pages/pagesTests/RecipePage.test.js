@@ -123,7 +123,11 @@ describe('RecipePage component', () => {
                 { quantity: '2 kpl', name: 'Munat' },
             ],
             steps: [{ step: 'Sekoita ainekset' }, { step: 'Paista' }],
-            keywords: [{ word: 'Testi' }, { word: 'Ruoka' }]
+            keywords: [{ word: 'Testi' }, { word: 'Ruoka' }],
+            reviews: [
+                { id: 1, username: 'user1', rating: 4, text: 'Great recipe!' },
+                { id: 2, username: 'user2', rating: 5, text: 'Excellent!' },
+            ]
         };
 
         fetchRecipe.mockResolvedValue(mockRecipe);
