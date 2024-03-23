@@ -70,10 +70,10 @@ const AddRecipe = (props) => {
                     const r = await response.json();
                     setEditing(true);
                     setName(r.header);
-                    if(!r.visibleToAll){
+                    if (!r.visibleToAll) {
                         setVisibleToAll(0);
                     }
-                    else{
+                    else {
                         setVisibleToAll(1);
                     }
                     setDescription(r.description);
@@ -151,7 +151,7 @@ const AddRecipe = (props) => {
         formData.append("steps", JSON.stringify(steps));
         formData.append("keywords", JSON.stringify(keywords));
         formData.append('image', image);
-        
+
         const requestOptions = {
             method: 'PUT',
             headers: {
@@ -187,7 +187,7 @@ const AddRecipe = (props) => {
         const index = ingredients.indexOf(ingredient);
         if (index !== -1) {
             setEIngIndex(index);
-            if(ingredient.quantity){
+            if (ingredient.quantity) {
                 const [quantity, unit] = ingredient.quantity.split(' ');
                 setQt(parseFloat(quantity));
                 setUnit(unit);
@@ -203,7 +203,7 @@ const AddRecipe = (props) => {
 
     const saveEditedIngredient = () => {
         let newQuantity = qt + " " + unit;
-        if(qt == 0 || !qt) newQuantity = unit;
+        if (qt == 0 || !qt) newQuantity = unit;
         const editedIngredient = {
             quantity: newQuantity,
             name: ing
@@ -350,7 +350,7 @@ const AddRecipe = (props) => {
         }
     }
 
-    const removeImage = () =>{
+    const removeImage = () => {
         setImage(null);
     }
 
@@ -396,12 +396,12 @@ const AddRecipe = (props) => {
                                 <th>Image:</th>
                                 <td>
                                     <input data-testid="recipeImageInput" className="recipeinput" type='file' accept=".jpeg, .jpg, .png*" onChange={(e) => handleImageChange(e)} />
-                                    { wrongImage ? <div  style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage' data-testid='wrongimageerror'>Please choose either a -jpeg- or .png-file. Maximum filesize is 16MB</div> : null}
+                                    {wrongImage ? <div style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage' data-testid='wrongimageerror'>Please choose either a -jpeg- or .png-file. Maximum filesize is 16MB</div> : null}
                                 </td>
                             </tr>
                             <tr>
                                 <th>Current Image:</th>
-                                <td>{image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage' data-testid='currentimage' />:null}</td>
+                                <td>{image ? <img src={URL.createObjectURL(image)} alt="Recipe Image" className='recipeimage' data-testid='currentimage' /> : null}</td>
                                 <td><button className='removebutton' onClick={removeImage} data-testid='removeimagebutton'>Remove Image</button></td>
                             </tr>
                         </tbody>

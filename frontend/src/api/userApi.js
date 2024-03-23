@@ -24,7 +24,6 @@ export const register = async (username, name, email, password) => {
     }
 };
 
-
 export const login = async (username, password) => {
     try {
         const response = await fetch(`${BASE_URL}/api/login`, {

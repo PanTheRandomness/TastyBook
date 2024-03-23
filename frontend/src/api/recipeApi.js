@@ -34,41 +34,41 @@ export const getRecipeViews = async (token) => {
     }
 }
 
-export const fetchRecipe = async (token, route) =>{
-    try{
-        if(token) {
+export const fetchRecipe = async (token, route) => {
+    try {
+        if (token) {
             let response = await fetch(`${BASE_URL}/api/recipe/${route}`, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
             });
 
-            if(!response.ok){
+            if (!response.ok) {
                 throw new Error('Recipe not found');
             }
             return response.json();
         }
-        else{
+        else {
             let response = await fetch(`${BASE_URL}/api/recipe/${route}`);
 
-            if(!response.ok){
+            if (!response.ok) {
                 throw new Error('Recipe not found');
             }
             return response.json();
         }
-    } catch (error){
+    } catch (error) {
         throw error;
     }
 }
 
-export const removeRecipe = async (token, route) =>{
-    try{
-        if(token){
+export const removeRecipe = async (token, route) => {
+    try {
+        if (token) {
             let response = await fetch(`${BASE_URL}/api/recipe/${route}`, {
-                method:'DELETE',
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization' : "Bearer " + token
+                    'Authorization': "Bearer " + token
                 }
             });
 
@@ -78,7 +78,7 @@ export const removeRecipe = async (token, route) =>{
 
             return response;
         }
-    } catch(error){
+    } catch (error) {
         throw error;
     }
 }
@@ -89,7 +89,7 @@ export const fetchRecipeImage = async (token, route) => {
         if (token) {
             response = await fetch(`${BASE_URL}/api/recipe/image/${route}`, {
                 headers: {
-                    'Authorization' : "Bearer " + token
+                    'Authorization': "Bearer " + token
                 }
             })
         } else response = await fetch(`${BASE_URL}/api/recipe/image/${route}`);
@@ -101,7 +101,6 @@ export const fetchRecipeImage = async (token, route) => {
 }
 
 //Tämä tehty arvioinnin lisäämiseksi:
-
 export const addReview = async (token, review) => {
     try {
         const response = await fetch(`${BASE_URL}/api/review`, {
@@ -120,7 +119,7 @@ export const addReview = async (token, review) => {
                 throw new Error('Failed to add review');
             }
         }
-       
+
     } catch (error) {
         throw error;
     }

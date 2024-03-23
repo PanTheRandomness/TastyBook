@@ -15,7 +15,7 @@ const RecipeView = (props) => {
                 const response = await fetchRecipeImage(token, recipe.hash);
                 setImage(response);
             } catch (error) {
-                
+
             }
         }
 
@@ -25,12 +25,12 @@ const RecipeView = (props) => {
         <NavLink className={"recipeView"} to={`/recipe/${recipe.hash}`}>
             <div>
                 <h3>{recipe.header}</h3>
-                { recipe.username ? <div>By: {recipe.username}</div> :
-                <div>By: Deleted user</div> }
+                {recipe.username ? <div>By: {recipe.username}</div> :
+                    <div>By: Deleted user</div>}
             </div>
-            {/*<img src='/rating_star.png' alt="Star Rating"/>*/}{/*Arviointi tähän */}
+            {/*<img src='/rating_star.png' alt="Star Rating"/>*/}{/*Arvosanan KA tähän */}
             <div className="image-container">
-                {image && <img src={URL.createObjectURL(image)} alt="Recipe Image" className="recipeimage"/>}
+                {image && <img src={URL.createObjectURL(image)} alt="Recipe Image" className="recipeimage" />}
             </div>
         </NavLink>
     );

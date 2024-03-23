@@ -22,9 +22,9 @@ const Admin = () => {
         setError("Error fetching user data.");
       }
     };
-  
+
     fetchUsers();
-  }, [token]); 
+  }, [token]);
 
   const handleDeleteUser = (userId) => {
     const currentUser = users.find(user => user.id === userId);
@@ -35,7 +35,7 @@ const Admin = () => {
       setUserIdToDelete(userId);
     }
   };
-  
+
   const confirmDeletion = async (confirmed) => {
     if (confirmed) {
       try {
@@ -43,7 +43,7 @@ const Admin = () => {
         setUsers(users.filter(user => user.id !== userIdToDelete));
         setShowConfirmationModal(false);
       } catch (error) {
-        setError("Error deleting user");        
+        setError("Error deleting user");
       }
     } else {
       setShowConfirmationModal(false);
@@ -64,7 +64,7 @@ const Admin = () => {
               <th>Name</th>
               <th>Username</th>
               <th>Email</th>
-              <th>Admin</th> 
+              <th>Admin</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -75,7 +75,7 @@ const Admin = () => {
                 <td className="cell-two">{user.name}</td>
                 <td className="cell-three">{user.username}</td>
                 <td className="cell-four">{user.email}</td>
-                <td className="cell-five">{user.admin ? 1 : null }</td> 
+                <td className="cell-five">{user.admin ? 1 : null}</td>
                 <td className="cell-six">
                   <button onClick={() => handleDeleteUser(user.id)} className='adminButton'>Delete</button>
                 </td>

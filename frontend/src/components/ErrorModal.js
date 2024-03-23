@@ -1,4 +1,4 @@
-const ErrorModal = ({ isOpen, onClose, errortext}) =>{
+const ErrorModal = ({ isOpen, onClose, errortext }) => {
     return (
         <div className={`modal ${isOpen ? 'open' : ''}`}>
             <div className="modal-content">

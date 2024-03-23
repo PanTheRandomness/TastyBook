@@ -2,7 +2,7 @@ const BASE_URL = "http://localhost:3004";
 
 export const addToFavourites = async (recipeId, token) => {
     try {
-        const apiUrl = `${BASE_URL}/api/favourite`; 
+        const apiUrl = `${BASE_URL}/api/favourite`;
         const requestData = {
             recipeId: recipeId
         };

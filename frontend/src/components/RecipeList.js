@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useToken } from "../customHooks/useToken"; 
+import { useToken } from "../customHooks/useToken";
 import '../Styles/RecipeView.css';
 import RecipeView from "../components/recipeView";
 import { NavLink } from "react-router-dom";
-import { getFavourites } from '../api/favouriteApi'; 
+import { getFavourites } from '../api/favouriteApi';
 
 const BASE_URL = 'http://localhost:3004/api/recipes';
 
@@ -11,12 +11,12 @@ const RecipeList = () => {
   const [favouriteRecipes, setFavouriteRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [token] = useToken(); 
+  const [token] = useToken();
 
   useEffect(() => {
     const fetchFavourites = async () => {
       try {
-        if (token) { 
+        if (token) {
           console.log('Fetching favorites...');
           const favourites = await getFavourites(token);
           console.log('Favorites:', favourites);
@@ -29,15 +29,14 @@ const RecipeList = () => {
         setLoading(false);
       }
     };
-  
+
     if (token) {
-      console.log('User token:', token); 
+      console.log('User token:', token);
       fetchFavourites();
     } else {
       setLoading(false);
     }
   }, [token]); // Lisätään token riippuvuuslistaan
-  
 
   return (
     <div className="recipe-list-container">

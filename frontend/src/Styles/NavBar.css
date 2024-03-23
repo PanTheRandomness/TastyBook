@@ -1,7 +1,3 @@
-/*
-    Vanhat värit: #698269, #B99B6B, #F1DBBF, #AA5656, #3c493c
-    Uudet värit: Primary: #6A704C, Accent: #412E27, Background: #EDE1D1, Secondary backgound: #e2d2bd
-*/
 nav {
     display: flex;
     justify-content: space-between;
@@ -22,7 +18,6 @@ nav {
 .separator {
     border-bottom: 3px solid #6A704C;
 }
-
 
 @media print {
     nav {

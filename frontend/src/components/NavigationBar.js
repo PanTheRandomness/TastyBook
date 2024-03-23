@@ -14,8 +14,8 @@ const NavigationBar = ({ onLogout }) => {
                         <NavLink className={"navLink"} to={"/newrecipe"}>Add Recipe</NavLink>
                     </div>
                     <div>
-                    <NavLink className={"navLink"} to={"/search"}>Search</NavLink>
-                        { user.role === "admin" && <NavLink className={"navLink"} to={"/admin"}>Admin</NavLink> }
+                        <NavLink className={"navLink"} to={"/search"}>Search</NavLink>
+                        {user.role === "admin" && <NavLink className={"navLink"} to={"/admin"}>Admin</NavLink>}
                         <NavLink className={"navLink"} to={"/"} onClick={() => onLogout()}>Logout</NavLink>
                     </div>
                 </> :

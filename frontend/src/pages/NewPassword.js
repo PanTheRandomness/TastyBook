@@ -20,10 +20,8 @@ const NewPassword = () => {
         }
 
         try {
-            // Tässä voit käyttää sopivaa API-kutsua salasanan päivittämiseksi
             await updatePassword(newPassword, verificationString);
 
-            // Voit ohjata käyttäjän takaisin kirjautumissivulle tai muihin tarvittaviin sivuihin
             navigate('/login');
         } catch (error) {
             setError("Password update failed.");

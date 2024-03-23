@@ -6,15 +6,12 @@ const Reviews = (props) => {
     const { reviews, postReview } = props;
     const [rating, setRating] = useState(1);
     const [text, setText] = useState("");
-    
 
     const handleAddReview = async () => {
-        
         console.log('Text:', text);
         console.log('Rating:', rating);
         postReview(text, rating);
     };
-    
 
     const reviewItems = reviews.map((review) => (
         <div key={review.id} className="review">

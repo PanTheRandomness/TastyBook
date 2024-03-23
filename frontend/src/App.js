@@ -96,7 +96,6 @@ const App = () => {
         <Route path="/search/:keyword" element={<Search />} />
         <Route path='/recipeList' element={<RecipeList />} />
         <Route path='/*' element={<NotFound />} />
-        {/*MyList? */}
 
       </Routes>
     </Router>

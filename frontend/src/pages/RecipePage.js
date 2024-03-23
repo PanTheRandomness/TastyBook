@@ -6,9 +6,9 @@ import '../Styles/Ellipsis.css';
 import '../Styles/Print.css';
 import { useNavigate } from 'react-router-dom';
 import EllipsisMenu from '../components/EllipsisMenu';
-import ErrorModal  from '../components/ErrorModal';
-import { fetchRecipe, removeRecipe, addReview} from '../api/recipeApi'; 
-import {Reviews} from '../components/Reviews'; 
+import ErrorModal from '../components/ErrorModal';
+import { fetchRecipe, removeRecipe, addReview } from '../api/recipeApi';
+import { Reviews } from '../components/Reviews';
 import { addToFavourites } from '../api/favouriteApi';
 
 const Recipe = (props) => {
@@ -32,20 +32,20 @@ const Recipe = (props) => {
     const [copied, setCopied] = useState(false);
 
     const [recipe, setRecipe] = useState({
-        "id" : 0,
-        "header" : "",
-        "description" : "",
-        "visibleToAll" : true,
-        "creator" : "",
-        "rating" : 0,
-        "durationHours" : 0,
-        "durationMinutes" : 0,
-        "ingredients" : [],
-        "steps" : [],
-        "keywords" : [], 
-        "reviews" : [],
-       "average_rating": 0
-        });
+        "id": 0,
+        "header": "",
+        "description": "",
+        "visibleToAll": true,
+        "creator": "",
+        "rating": 0,
+        "durationHours": 0,
+        "durationMinutes": 0,
+        "ingredients": [],
+        "steps": [],
+        "keywords": [],
+        "reviews": [],
+        "average_rating": 0
+    });
 
     useEffect(() => {
         setCurrentUrl(window.location.href);
@@ -56,7 +56,7 @@ const Recipe = (props) => {
             try {
                 const response = await fetchRecipe(token, route);
                 setRecipe(response);
-                if(token){
+                if (token) {
                     try {
                         const imgresponse = await fetch("http://localhost:3004/api/recipe/image/" + route, {
                             headers: {
@@ -130,14 +130,14 @@ const Recipe = (props) => {
         navigate(`/search/${keyword}`);
     }
 
-    const postReview = async (text,rating) => { 
+    const postReview = async (text, rating) => {
         try {
             if (!token) {
                 throw new Error('User token not found');
             }
-    
-            await addReview(token, {text:text, rating:rating, recipeId:recipe.id});       
-           
+
+            await addReview(token, { text: text, rating: rating, recipeId: recipe.id });
+
         } catch (error) {
             //tässä error-modaali, jos haluaa sen reitityksen sijaan:
             //setErrorText('Login first' );
@@ -145,12 +145,11 @@ const Recipe = (props) => {
 
             //uudelleenreitys login sivulle:
             navigate('/login');
-
         }
 
         try {
             const response = await fetchRecipe(token, route);
-                setRecipe(response);
+            setRecipe(response);
 
         }
         catch (error) {
@@ -159,10 +158,8 @@ const Recipe = (props) => {
 
         }
     }
-    
-    
-    
-    return(
+
+    return (
         <div>
             <div className='recipe-border'>
                 <div className='recipe-container'>
@@ -173,7 +170,7 @@ const Recipe = (props) => {
                         <RecipeSteps steps={recipe.steps} />
                     </div>
                 </div>
-                <Reviews reviews={recipe.reviews} postReview={postReview}/>    
+                <Reviews reviews={recipe.reviews} postReview={postReview} />
             </div>
             {isDeleteModalOpen ? <DeleteDialog isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={deleteRecipe} /> : null}
             {isErrorModalOpen ? <ErrorModal isOpen={isErrorModalOpen} onClose={closeErrorModal} errortext={errorText} /> : null}
@@ -205,7 +202,7 @@ const RecipeHead = (props) => {
             console.error('Error adding recipe to favorites:', error.message);
         }
     }
-     
+
     const share = () => {
         props.onShare(true);
     }
@@ -223,7 +220,7 @@ const RecipeHead = (props) => {
                     <button className='printbutton' onClick={print}>Print</button>
                     <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
                 </h1>
-                <img src='/rating_star.png' alt="Star Rating"/>{recipe.rating}
+                <img src='/rating_star.png' alt="Star Rating" />{recipe.rating}
                 <p>{recipe.description}</p>
                 <p> Created By: {recipe.username} <br />
                     Creation date: {createdFormatted} <br />

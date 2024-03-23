@@ -46,14 +46,14 @@ const Search = () => {
   const { keyword } = useParams();
 
   useEffect(() => {
-    if(keyword){
+    if (keyword) {
       setActiveTabs(activeTabs.includes('keyword') ? activeTabs.filter(tab => tab !== 'keyword') : [...activeTabs, 'keyword']);
       setSearchParams({
         ...searchParams,
         'keyword': keyword
       });
     }
-  },[keyword]);
+  }, [keyword]);
 
   const handleSearch = async () => {
     setSearchResults([]);
@@ -100,7 +100,7 @@ const Search = () => {
             id="keywordInput"
             type="text"
             name="keyword"
-            value= {searchParams.keyword}
+            value={searchParams.keyword}
             onChange={handleInputChange}
           />
         </div>
@@ -137,7 +137,7 @@ const Search = () => {
         <div>
           <h3>Search Results:</h3>
           <ul className='recipeViewContainer'>
-            {searchResults.map((recipe) => (               
+            {searchResults.map((recipe) => (
               <RecipeView key={recipe.id} recipe={recipe} />
             ))}
           </ul>

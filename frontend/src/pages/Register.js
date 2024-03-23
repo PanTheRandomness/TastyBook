@@ -4,7 +4,6 @@ import '../Styles/Register.css';
 import '../Styles/RegistrationDialog.css';
 import { useNavigate } from "react-router-dom";
 
-
 const Register = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -14,50 +13,50 @@ const Register = () => {
     const [error, setError] = useState(null);
     const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
-   
-const onRegisterClicked = async (event) => {
-    event.preventDefault();
-    try {
-        const response = await register(username, name, email, password);
-        setIsSuccessDialogOpen(response.ok);
-    } catch (error) {
-        setError(error.message);
-    }
-};
+
+    const onRegisterClicked = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await register(username, name, email, password);
+            setIsSuccessDialogOpen(response.ok);
+        } catch (error) {
+            setError(error.message);
+        }
+    };
 
     const closeSuccessDialog = () => {
-        setIsSuccessDialogOpen(false);     
-      };
-       
+        setIsSuccessDialogOpen(false);
+    };
+
     return (
-        <div className = "register-border">
-        <div className="registerFormbody">
-            <div className="registerForm">
-                <form onSubmit={onRegisterClicked}>
-                    <h1>Register</h1>
-                    {error && <div className="error-message">{error}</div>}
-                    <input className="registerForminput" placeholder="name" value={name} onChange={e => setName(e.target.value)} />
-                    <input className="registerForminput" placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
-                    <input  className="registerForminput" placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
-                    <input className="registerForminput" placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-                    <button className="registerFormbutton" disabled={!name || !email || !username || !password} onSubmit={onRegisterClicked} data-testid="register-button">Register</button>
-                </form>
-                <div className="registerFormLoginContainer">
-                    <h3>Have you already registered?</h3>
-                    <button className="registerFormbutton" onClick={() => navigate("/login")} data-testid="login-button">Login</button>
-                </div>
-            </div>
-            {isSuccessDialogOpen && (
-                <div className="dialog-overlay" onClick={closeSuccessDialog}>
-                    <div className="dialog-content">
-                    <h3>You have received an email with a confirmation link.</h3>
-                    <button className="dialog-button" onClick={closeSuccessDialog}>OK</button>
+        <div className="register-border">
+            <div className="registerFormbody">
+                <div className="registerForm">
+                    <form onSubmit={onRegisterClicked}>
+                        <h1>Register</h1>
+                        {error && <div className="error-message">{error}</div>}
+                        <input className="registerForminput" placeholder="name" value={name} onChange={e => setName(e.target.value)} />
+                        <input className="registerForminput" placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
+                        <input className="registerForminput" placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
+                        <input className="registerForminput" placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                        <button className="registerFormbutton" disabled={!name || !email || !username || !password} onSubmit={onRegisterClicked} data-testid="register-button">Register</button>
+                    </form>
+                    <div className="registerFormLoginContainer">
+                        <h3>Have you already registered?</h3>
+                        <button className="registerFormbutton" onClick={() => navigate("/login")} data-testid="login-button">Login</button>
                     </div>
                 </div>
-            )}
-        </div>
+                {isSuccessDialogOpen && (
+                    <div className="dialog-overlay" onClick={closeSuccessDialog}>
+                        <div className="dialog-content">
+                            <h3>You have received an email with a confirmation link.</h3>
+                            <button className="dialog-button" onClick={closeSuccessDialog}>OK</button>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
 
-export {Register}
+export { Register }

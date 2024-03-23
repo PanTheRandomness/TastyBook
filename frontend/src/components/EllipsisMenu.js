@@ -9,7 +9,7 @@ const EllipsisMenu = (props) => {
   const creator = props.creator;
   const route = props.route;
   const navigate = useNavigate();
-  
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -38,22 +38,22 @@ const EllipsisMenu = (props) => {
     setIsOpen(false);
     props.onDelete();
   };
-  
+
   return (
     <div className="ellipsis-menu">
       {
         user && (user.username === creator || user.role === 'admin') ?
-        <div className="ellipsis" onClick={toggleMenu} data-testid="ellipsis">
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>: null
+          <div className="ellipsis" onClick={toggleMenu} data-testid="ellipsis">
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+          </div> : null
       }
       {isOpen && (
         <div className="dropdown" ref={dropdownRef}>
           <ul>
             <li onClick={handleEditClick} data-testid={"editrecipe"}>Edit recipe</li>
-            <li onClick={handleDeleteClick} style={{color:'red'}} data-testid={"deleterecipe"}>Delete recipe</li>
+            <li onClick={handleDeleteClick} style={{ color: 'red' }} data-testid={"deleterecipe"}>Delete recipe</li>
           </ul>
         </div>
       )}
