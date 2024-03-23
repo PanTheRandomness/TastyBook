@@ -38,7 +38,7 @@ describe('RecipePage component', () => {
         };
 
         fetchRecipe.mockResolvedValue(mockRecipe);
-        const { getByText } = render(<Recipe route={'123'} />)
+        const { getByText, queryByText } = render(<Recipe route={'123'} />)
 
         await waitFor(() => {
             expect(getByText(mockRecipe.header)).toBeInTheDocument();
@@ -64,9 +64,11 @@ describe('RecipePage component', () => {
                 expect(getByText(ingredient.quantity)).toBeInTheDocument();
             });
             mockRecipe.reviews.forEach(review => {
-                expect(getByText(`${review.username}:`)).toBeInTheDocument();
-                expect(getByText(`Rating: ${review.rating}`)).toBeInTheDocument();
-                expect(getByText(`Comment: ${review.text}`)).toBeInTheDocument();
+                const userElement = getByText(`${review.username}:`);
+                expect(userElement).toBeInTheDocument();
+                const ratingAndCommentRegex = new RegExp(`Rating: ${review.rating}.*Comment: ${review.text}`);
+                const reviewText = queryByText(ratingAndCommentRegex);
+                expect(reviewText).toBeInTheDocument();
             });
         });
     });

@@ -217,14 +217,13 @@ const RecipeHead = (props) => {
         <div className='recipe-head'>
             <div className='recipehead-container'>
                 <h1 style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }} data-testid="recipeheader">
-                    {/*Ellipsin sijoittelu!*/}
                     {recipe.header}
                     <input type='image' src="/hearticon.ico" alt="Save to Favourites" onClick={() => saveToFavourites(recipe.id)} className='picbutton' data-testid='saveToFavouritesButton' />
                     <input type='image' src="/share.ico" alt="Share" onClick={share} className='picbutton' data-testid='shareButton' />
                     <button className='printbutton' onClick={print}>Print</button>
                     <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
                 </h1>
-                {/*<img src='/rating_star.png' alt="Star Rating"/>{recipe.rating}*/}
+                <img src='/rating_star.png' alt="Star Rating"/>{recipe.rating}
                 <p>{recipe.description}</p>
                 <p> Created By: {recipe.username} <br />
                     Creation date: {createdFormatted} <br />
