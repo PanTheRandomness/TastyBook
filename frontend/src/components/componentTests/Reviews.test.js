@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
 import { Reviews } from '../Reviews';
 
 describe('Reviews component', () => {
@@ -12,15 +11,17 @@ describe('Reviews component', () => {
   const postReviewMock = jest.fn();
 
   test('renders reviews correctly', () => {
-    const { getByText } = render(<Reviews reviews={reviews} postReview={postReviewMock} />);
-    
-    expect(getByText(/user1:/)).toBeInTheDocument();
-    expect(getByText(/Rating: 4/)).toBeInTheDocument();
-    expect(getByText(/Comment: Great recipe!/)).toBeInTheDocument();
+    const { getByText, queryByText } = render(<Reviews reviews={reviews} postReview={postReviewMock} />);
 
-    expect(getByText(/user2:/)).toBeInTheDocument();
-    expect(getByText(/Rating: 5/)).toBeInTheDocument();
-    expect(getByText(/Comment: Excellent!/)).toBeInTheDocument();
+    expect(getByText('user1:')).toBeInTheDocument();
+    const ratingAndCommentRegex = new RegExp('Rating: 4.*Comment: Great recipe!');
+    const reviewText = queryByText(ratingAndCommentRegex);
+    expect(reviewText).toBeInTheDocument();
+
+    expect(getByText('user2:')).toBeInTheDocument();
+    const ratingAndCommentRegex2 = new RegExp('Rating: 5.*Comment: Excellent!');
+    const reviewText2 = queryByText(ratingAndCommentRegex2);
+    expect(reviewText2).toBeInTheDocument();
   });
 
   it('calls postReview function with correct parameters when "Post" button is clicked', async () => {
@@ -38,7 +39,7 @@ describe('Reviews component', () => {
 
   it('displays correct message when there are no reviews available', () => {
     const { getByText } = render(<Reviews reviews={[]} postReview={postReviewMock} />);
-    
+
     expect(getByText('No reviews available')).toBeInTheDocument();
   });
 });
