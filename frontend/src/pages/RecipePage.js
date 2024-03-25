@@ -189,6 +189,12 @@ const RecipeHead = (props) => {
     const token = props.token;
     const isFav = props.isFav;
     const user = props.user;
+    const [favImg, setFavImg] = useState(isFav ? "/heart_fav.ico" : "/hearticon.ico");
+    // TODO: sydämen väri vaihtuu viiveellä, pitäisi vaihtaa heti
+    //Nyt tekee sen kerran, mutta toisen kerran ei
+    useEffect(() => {
+        setFavImg(isFav ? "/heart_fav.ico" : "/hearticon.ico");
+    }, [isFav]);
 
     const calculateAvgRating = () => {
         //TODO: keskiarvon laskeminen, tuleeko tähän vai muualle?
@@ -198,11 +204,13 @@ const RecipeHead = (props) => {
         if (!token) {
             console.error('Token is not defined');
             return;
-        }         // TODO: sydämen väri vaihtuu viiveellä, pitäisi vaihtaa heti
+        }         
         try {
             if (isFav) {
+                setFavImg("/hearticon.ico");
                 await deleteFavourite(recipe.id, token);
             } else {
+                setFavImg("/heart_fav.ico");
                 await addToFavourites(recipe.id, token);
             }
             console.log('Recipe ' + (isFav ? 'removed from' : 'added to') + ' favorites successfully');
@@ -223,7 +231,7 @@ const RecipeHead = (props) => {
             <div className='recipehead-container'>
                 <h1 style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }} data-testid="recipeheader">
                     {recipe.header}
-                    {user&& <input type='image' src={isFav ? "/heart_fav.ico" : "/hearticon.ico"} alt="Save to Favourites" onClick={() => saveToFavourites(recipe.id)} className='picbutton' data-testid='saveToFavouritesButton' />}
+                    {user&& <input type='image' src={favImg} alt="Save to Favourites" onClick={() => saveToFavourites(recipe.id)} className='picbutton' data-testid='saveToFavouritesButton' />}
                     <input type='image' src="/share.ico" alt="Share" onClick={share} className='picbutton' data-testid='shareButton' />
                     <button className='printbutton' onClick={print}>Print</button>
                     <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
