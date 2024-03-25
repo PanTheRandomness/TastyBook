@@ -371,4 +371,82 @@ const recipes = [
     }
 ]
 
-module.exports = { users, recipes };
+const reviews = [
+    {
+        Recipe_id: 1,
+        User_id: 2,
+        rating: 3,
+        text: "Not like grandma's, but still good"
+    },
+    {
+        Recipe_id: 1,
+        User_id: 3,
+        rating: 5,
+        text: "Amazing as the title claims!!"
+    },
+
+    {
+        Recipe_id: 2,
+        User_id: 1,
+        rating: 4,
+        text: "Nice and fresh, made too much"
+    },
+    {
+        Recipe_id: 2,
+        User_id: 3,
+        rating: 5,
+        text: "So easy!"
+    },
+    {
+        Recipe_id: 3,
+        User_id: 3,
+        rating: 2,
+        text: "Wasn't for me..."
+    },
+    {
+        Recipe_id: 4,
+        User_id: 1,
+        rating: 3,
+        text: "Solidly ok!"
+    },
+    {
+        Recipe_id: 4,
+        User_id: 3,
+        rating: 3,
+        text: "A nice basic recipe, would've liked to make my own crutons though"
+    },
+    {
+        Recipe_id: 5,
+        User_id: 2,
+        rating: 1,
+        text: "Pickles??"
+    },
+
+    {
+        Recipe_id: 6,
+        User_id: 1,
+        rating: 5,
+        text: "So good!!"
+    },
+    {
+        Recipe_id: 6,
+        User_id: 3,
+        rating: 5,
+        text: "Loved them <3"
+    },
+
+    {
+        Recipe_id: 8,
+        User_id: 2,
+        rating: 4,
+        text: "A very unique taste! Loved it"
+    },
+    {
+        Recipe_id: 10,
+        User_id: 2,
+        rating: 5,
+        text: "My children loved it!"
+    }
+]
+
+module.exports = { users, recipes, reviews };
