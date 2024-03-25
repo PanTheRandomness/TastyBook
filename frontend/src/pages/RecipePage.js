@@ -53,53 +53,54 @@ const Recipe = (props) => {
     }, []);
 
     useEffect(() => {
-        const getRecipe = async () => {
-            try {
-                const response = await fetchRecipe(token, route);
-                setRecipe(response);
-                if (token) {
-                    try {
-                        const imgresponse = await fetch("http://localhost:3004/api/recipe/image/" + route, {
-                            headers: {
-                                "Authorization": `Bearer ${token}`
-                            }
-                        });
-                        if (imgresponse.ok) {
-                            const blob = await imgresponse.blob();
-                            setImage(blob);
-                        } else {
-                            setImage(null);
-                        }
-                    } catch (error) {
-                        setErrorText("An error occurred while loading recipe's image: " + error);
-                        openErrorModal();
-                    }
-                }
-                else {
-                    try {
-                        const imgresponse = await fetch("http://localhost:3004/api/recipe/image/" + route);
-                        if (imgresponse.ok) {
-                            const blob = await imgresponse.blob();
-                            setImage(blob);
-                        } else {
-                            setImage(null);
-                        }
-                    } catch (error) {
-                        setErrorText("An error occurred while loading recipe's image: " + error);
-                        openErrorModal();
-                    }
-                }
-                if (user) {
-                    const isFavResponse = await isFavourite(token, response.id);
-                    setIsFav(isFavResponse.favourite);
-                }
-            } catch (error) {
-                setErrorText("An error occurred while loading recipe: " + error);
-                openErrorModal();
-            }
-        }
         getRecipe();
     }, [route]);
+
+    const getRecipe = async () => {
+        try {
+            const response = await fetchRecipe(token, route);
+            setRecipe(response);
+            if (token) {
+                try {
+                    const imgresponse = await fetch("http://localhost:3004/api/recipe/image/" + route, {
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    });
+                    if (imgresponse.ok) {
+                        const blob = await imgresponse.blob();
+                        setImage(blob);
+                    } else {
+                        setImage(null);
+                    }
+                } catch (error) {
+                    setErrorText("An error occurred while loading recipe's image: " + error);
+                    openErrorModal();
+                }
+            }
+            else {
+                try {
+                    const imgresponse = await fetch("http://localhost:3004/api/recipe/image/" + route);
+                    if (imgresponse.ok) {
+                        const blob = await imgresponse.blob();
+                        setImage(blob);
+                    } else {
+                        setImage(null);
+                    }
+                } catch (error) {
+                    setErrorText("An error occurred while loading recipe's image: " + error);
+                    openErrorModal();
+                }
+            }
+            if (user) {
+                const isFavResponse = await isFavourite(token, response.id);
+                setIsFav(isFavResponse.favourite);
+            }
+        } catch (error) {
+            setErrorText("An error occurred while loading recipe: " + error);
+            openErrorModal();
+        }
+    }
 
     const copyUrlToClipboard = () => {
         navigator.clipboard.writeText(currentUrl)
@@ -166,7 +167,7 @@ const Recipe = (props) => {
         <div>
             <div className='recipe-border'>
                 <div className='recipe-container'>
-                    <RecipeHead recipe={recipe} user={user} token={token} onDelete={openDeleteModal} route={route} isShareModalOpen={isShareModalOpen} onShare={openShareModal} image={image} onSearch={toSearch} isFav={isFav}/>
+                    <RecipeHead getRecipe={getRecipe} recipe={recipe} user={user} token={token} onDelete={openDeleteModal} route={route} isShareModalOpen={isShareModalOpen} onShare={openShareModal} image={image} onSearch={toSearch} isFav={isFav}/>
                     <div className="separator"></div>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={recipe.ingredients} page="recipepage" />
@@ -190,8 +191,7 @@ const RecipeHead = (props) => {
     const isFav = props.isFav;
     const user = props.user;
     const [favImg, setFavImg] = useState(isFav ? "/heart_fav.ico" : "/hearticon.ico");
-    // TODO: sydämen väri vaihtuu viiveellä, pitäisi vaihtaa heti
-    //Nyt tekee sen kerran, mutta toisen kerran ei
+
     useEffect(() => {
         setFavImg(isFav ? "/heart_fav.ico" : "/hearticon.ico");
     }, [isFav]);
@@ -213,6 +213,7 @@ const RecipeHead = (props) => {
                 setFavImg("/heart_fav.ico");
                 await addToFavourites(recipe.id, token);
             }
+            props.getRecipe();
             console.log('Recipe ' + (isFav ? 'removed from' : 'added to') + ' favorites successfully');
         } catch (error) {
             console.error('Error ' + (isFav ? 'removing recipe from' : 'adding recipe to') + ' favorites:', error.message);
