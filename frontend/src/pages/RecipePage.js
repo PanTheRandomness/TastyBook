@@ -9,7 +9,7 @@ import EllipsisMenu from '../components/EllipsisMenu';
 import ErrorModal from '../components/ErrorModal';
 import { fetchRecipe, removeRecipe, addReview } from '../api/recipeApi';
 import { Reviews } from '../components/Reviews';
-import { addToFavourites, isFavourite } from '../api/favouriteApi';
+import { addToFavourites, isFavourite, deleteFavourite } from '../api/favouriteApi';
 
 const Recipe = (props) => {
     const { route, user } = props;
@@ -166,7 +166,7 @@ const Recipe = (props) => {
         <div>
             <div className='recipe-border'>
                 <div className='recipe-container'>
-                    <RecipeHead recipe={recipe} token={token} onDelete={openDeleteModal} route={route} isShareModalOpen={isShareModalOpen} onShare={openShareModal} image={image} onSearch={toSearch} isFav={isFav}/>
+                    <RecipeHead recipe={recipe} user={user} token={token} onDelete={openDeleteModal} route={route} isShareModalOpen={isShareModalOpen} onShare={openShareModal} image={image} onSearch={toSearch} isFav={isFav}/>
                     <div className="separator"></div>
                     <div className='recipe'>
                         <RecipeIngredients ingredients={recipe.ingredients} page="recipepage" />
@@ -188,25 +188,29 @@ const RecipeHead = (props) => {
     const createdFormatted = new Date(props.recipe.created).toLocaleDateString('fi-FI');
     const token = props.token;
     const isFav = props.isFav;
+    const user = props.user;
 
     const calculateAvgRating = () => {
         //TODO: keskiarvon laskeminen, tuleeko tähän vai muualle?
     }
 
-    const saveToFavourites = async (recipeId) => {
-        // TODO: jos isFav===true, poista suoskikeista käyttäen favouriteAPIsta löytyvää deleteFavourite funktiota
-        // TODO: sydämen väri vaihtuu viiveellä, pitäisi vaihtaa heti
+    const saveToFavourites = async () => {
         if (!token) {
             console.error('Token is not defined');
             return;
-        }
+        }         // TODO: sydämen väri vaihtuu viiveellä, pitäisi vaihtaa heti
         try {
-            await addToFavourites(recipeId, token);
+            if (isFav) {
+                await deleteFavourite(recipe.id, token);
+            } else {
+                await addToFavourites(recipe.id, token);
+            }
+            console.log('Recipe ' + (isFav ? 'removed from' : 'added to') + ' favorites successfully');
         } catch (error) {
-            console.error('Error adding recipe to favorites:', error.message);
+            console.error('Error ' + (isFav ? 'removing recipe from' : 'adding recipe to') + ' favorites:', error.message);
         }
     }
-
+    
     const share = () => {
         props.onShare(true);
     }
@@ -219,7 +223,7 @@ const RecipeHead = (props) => {
             <div className='recipehead-container'>
                 <h1 style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }} data-testid="recipeheader">
                     {recipe.header}
-                    <input type='image' src={isFav ? "/heart_fav.ico" : "/hearticon.ico"} alt="Save to Favourites" onClick={() => saveToFavourites(recipe.id)} className='picbutton' data-testid='saveToFavouritesButton' />
+                    {user&& <input type='image' src={isFav ? "/heart_fav.ico" : "/hearticon.ico"} alt="Save to Favourites" onClick={() => saveToFavourites(recipe.id)} className='picbutton' data-testid='saveToFavouritesButton' />}
                     <input type='image' src="/share.ico" alt="Share" onClick={share} className='picbutton' data-testid='shareButton' />
                     <button className='printbutton' onClick={print}>Print</button>
                     <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
