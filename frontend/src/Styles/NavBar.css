@@ -1,5 +1,6 @@
 nav {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
 }
 
@@ -13,6 +14,7 @@ nav {
     text-decoration: none;
     margin-left: 1rem;
     margin-right: 1rem;
+    white-space: nowrap;
 }
 
 @media print {
