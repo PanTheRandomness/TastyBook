@@ -139,7 +139,6 @@ const Recipe = (props) => {
     const postReview = async (text, rating) => {
         try {
             if (!token) {
-                //throw new Error('User token not found');
                 navigate('/login');
                 return;
             }
@@ -150,14 +149,7 @@ const Recipe = (props) => {
             await addReview(token, { text: text, rating: rating, recipeId: recipe.id });
 
         } catch (error) {
-            //tässä error-modaali, jos haluaa sen reitityksen sijaan:
-            //setErrorText('Login first' );
-            //openErrorModal();
-
-            //uudelleenreitys login sivulle:
-            //navigate('/login');
             setErrorText(error.message);
-             // Näytetään virhe käyttöliittymässä
              openErrorModal();
         }
 
