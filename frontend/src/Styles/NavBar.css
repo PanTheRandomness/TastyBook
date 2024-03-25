@@ -15,10 +15,6 @@ nav {
     margin-right: 1rem;
 }
 
-.separator {
-    border-bottom: 3px solid #6A704C;
-}
-
 @media print {
     nav {
         display: none !important;
