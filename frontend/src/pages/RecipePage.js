@@ -155,12 +155,10 @@ const Recipe = (props) => {
         try {
             const response = await fetchRecipe(token, route);
             setRecipe(response);
-
         }
         catch (error) {
             setErrorText("An error occurred while deleting recipe: " + error);
             openErrorModal();
-
         }
     }
 
@@ -197,6 +195,7 @@ const RecipeHead = (props) => {
 
     const saveToFavourites = async (recipeId) => {
         // TODO: jos isFav===true, poista suoskikeista käyttäen favouriteAPIsta löytyvää deleteFavourite funktiota
+        // TODO: sydämen väri vaihtuu viiveellä, pitäisi vaihtaa heti
         if (!token) {
             console.error('Token is not defined');
             return;
