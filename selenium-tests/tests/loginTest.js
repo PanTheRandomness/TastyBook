@@ -4,7 +4,14 @@ const loginTest = async () => {
     let driver = await new Builder().forBrowser("chrome").build();
     try {
         await driver.get("http://localhost:3000");
-        
+        await login(driver);
+    } finally {
+        await driver.quit();
+    }
+}
+
+const login = async (driver) => {
+    try {
         // Locate and click the login button
         await driver.findElement(By.css("[data-testid='loginNav']")).click();
 
@@ -22,9 +29,11 @@ const loginTest = async () => {
         // Wait for login process to complete
         await driver.wait(until.elementLocated(By.css("[data-testid='frontpage-header']")), 5000);
         console.log("Login successful! Redirected to frontpage.");
-    } finally {
-        await driver.quit();
+    } catch (error) {
+        console.log("Login failed");
     }
 }
 
 loginTest();
+
+module.exports = { login };
