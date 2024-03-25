@@ -139,7 +139,12 @@ const Recipe = (props) => {
     const postReview = async (text, rating) => {
         try {
             if (!token) {
-                throw new Error('User token not found');
+                //throw new Error('User token not found');
+                navigate('/login');
+                return;
+            }
+            if (text.length > 255) {
+                throw new Error('Too long text');
             }
 
             await addReview(token, { text: text, rating: rating, recipeId: recipe.id });
@@ -150,7 +155,10 @@ const Recipe = (props) => {
             //openErrorModal();
 
             //uudelleenreitys login sivulle:
-            navigate('/login');
+            //navigate('/login');
+            setErrorText(error.message);
+             // Näytetään virhe käyttöliittymässä
+             openErrorModal();
         }
 
         try {

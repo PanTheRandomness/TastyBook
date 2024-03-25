@@ -23,7 +23,7 @@ const NavigationBar = ({ onLogout }) => {
                 </> :
                 <div>
                     <NavLink className={"navLink"} to={"/search"}>Search</NavLink>
-                    <NavLink className={"navLink"} to={"/register"}>Register</NavLink>
+                    <NavLink className={"navLink"} to={"/register"} data-testid="registerNav">Register</NavLink>
                     <NavLink className={"navLink"} to={"/login"} data-testid="loginNav">Login</NavLink>
                 </div>
             }
