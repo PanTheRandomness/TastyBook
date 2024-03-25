@@ -34,7 +34,7 @@ const FrontPage = ({ onLogout }) => {
 
     return (
         <div>
-            <h1 className="pageheader">Tasty Book Recipes:</h1>
+            <h1 data-testid="frontpage-header" className="pageheader">Tasty Book Recipes:</h1>
             <div className="recipeViewContainer">
                 {
                     recipes.length > 0 ? (
