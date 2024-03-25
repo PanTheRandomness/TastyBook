@@ -33,11 +33,11 @@ const RecipeList = () => {
     } else {
       setLoading(false);
     }
-  }, [token]); // Lisätään token riippuvuuslistaan
+  }, [token]); 
 
   return (
     <div>
-      <h1 className="pageheader">My Recipes:</h1>
+      <h1 className="pageheader">My Favourites:</h1>
       <div className="recipeViewContainer">
         {favouriteRecipes.length > 0 ? (
           favouriteRecipes.map(recipe => (
