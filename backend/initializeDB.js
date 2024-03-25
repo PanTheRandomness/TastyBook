@@ -3,7 +3,7 @@ var bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const fs = require("fs");
 
-const { users, recipes } = require("./initialValues");
+const { users, recipes, reviews } = require("./initialValues");
 
 const initialize = async () => {
     try {
@@ -50,6 +50,10 @@ const initialize = async () => {
                     await addStep(step, index + 1, result.insertId)
                 ));
             }
+        }
+
+        for (const r of reviews) {
+            await addReview(r.rating, r.text, r.Recipe_id, r.User_id);
         }
 
         console.log("Database initialized");
@@ -111,6 +115,11 @@ const addRecipesKeyword = (keywordId, recipeId) => {
 const addStep = (step, number, recipeId) => {
     const query = "INSERT INTO recipesteps (step, number, Recipe_id) VALUES (?,?,?)";
     return executeSQL(query, [step, number, recipeId]);
+}
+
+const addReview = (rating, text, recipeId, userId) => {
+    const query = "INSERT INTO review (rating, text, Recipe_id, User_id) VALUES (?,?,?,?)";
+    return executeSQL(query, [rating, text, recipeId, userId]);
 }
 
 module.exports = { initialize };
