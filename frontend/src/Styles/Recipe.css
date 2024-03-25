@@ -184,7 +184,7 @@ button {
 
 .review {
     background-color: #6A704C;
-    
+    border-radius: 10px;
 }
 
 .recipe-head {
@@ -281,4 +281,9 @@ button {
 
 .separator {
     border-bottom: 3px solid #6A704C;
+}
+
+.review-rating-star {
+    width: 1em;
+    height: 1em;
 }
