@@ -14,12 +14,12 @@ describe('Reviews component', () => {
     const { getByText, queryByText } = render(<Reviews reviews={reviews} postReview={postReviewMock} />);
 
     expect(getByText('user1:')).toBeInTheDocument();
-    const ratingAndCommentRegex = new RegExp('Rating: 4.*Comment: Great recipe!');
+    const ratingAndCommentRegex = new RegExp('4/5 Comment: Great recipe!');
     const reviewText = queryByText(ratingAndCommentRegex);
     expect(reviewText).toBeInTheDocument();
 
     expect(getByText('user2:')).toBeInTheDocument();
-    const ratingAndCommentRegex2 = new RegExp('Rating: 5.*Comment: Excellent!');
+    const ratingAndCommentRegex2 = new RegExp('5/5 Comment: Excellent!');
     const reviewText2 = queryByText(ratingAndCommentRegex2);
     expect(reviewText2).toBeInTheDocument();
   });
