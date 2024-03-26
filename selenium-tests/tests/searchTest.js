@@ -1,7 +1,7 @@
 const { Builder, By, until } = require("selenium-webdriver");
 
-const searchTest = async (keyword) => { 
-    let driver = await new Builder().forBrowser("chrome").build();
+const searchTest = async () => { 
+    let driver = await new Builder().forBrowser(process.env.BROWSER || "chrome").build();
     try {
         await driver.get("http://localhost:3000");
         
@@ -12,18 +12,14 @@ const searchTest = async (keyword) => {
         await driver.findElement(By.css("[data-testid='searchByKeywordBtn']")).click();
         console.log("Clicked search by keyword button.");
 
-        // Valitse hakukenttä ja syötä hakusana
-        await driver.findElement(By.id("keywordInput")).sendKeys(keyword);
-        console.log("Clicked post review button.");
+        await driver.findElement(By.id("keywordInput")).sendKeys("soup");
+        console.log("Soup keyword");
 
-        // Klikkaa hakupainiketta
         await driver.findElement(By.css("[data-testid='searchviewbtn']")).click();
         console.log("Clicked search button.");
 
-        // Odota hakutuloksia
         await driver.wait(until.elementLocated(By.css(".recipeViewContainer")), 5000);
 
-        // Tulosta hakutulokset
         const searchResults = await driver.findElements(By.css(".recipeViewContainer > li"));
         console.log("Search successfully.");
         console.log("Search test finished!");
@@ -35,4 +31,5 @@ const searchTest = async (keyword) => {
     }
 };
 
-searchTest("soup"); 
+module.exports = { searchTest};
+

@@ -2,7 +2,7 @@ const { Builder, By, until } = require("selenium-webdriver");
 const { login } = require("./loginTest");
 
 const favouriteTest = async () => {
-    let driver = await new Builder().forBrowser("chrome").build();
+    let driver = await new Builder().forBrowser(process.env.BROWSER || "chrome").build();
     try {
         await driver.get("http://localhost:3000");
 
@@ -51,4 +51,4 @@ const favouriteTest = async () => {
     }
 }
 
-favouriteTest();
+module.exports = { favouriteTest };
