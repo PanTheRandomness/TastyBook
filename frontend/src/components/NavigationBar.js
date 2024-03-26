@@ -16,13 +16,13 @@ const NavigationBar = ({ onLogout }) => {
                         <NavLink className={"navLink"} to={"/recipelist"}>Favourites</NavLink>
                     </div>
                     <div>
-                        <NavLink className={"navLink"} to={"/search"}>Search</NavLink>
+                        <NavLink className={"navLink"} to={"/search"} data-testid="searchNav">Search</NavLink>
                         {user.role === "admin" && <NavLink className={"navLink"} to={"/admin"}>Admin</NavLink>}
                         <NavLink className={"navLink"} to={"/"} onClick={() => onLogout()}>Logout</NavLink>
                     </div>
                 </> :
                 <div>
-                    <NavLink className={"navLink"} to={"/search"}>Search</NavLink>
+                    <NavLink className={"navLink"} to={"/search"} data-testid="searchNav">Search</NavLink>
                     <NavLink className={"navLink"} to={"/register"} data-testid="registerNav">Register</NavLink>
                     <NavLink className={"navLink"} to={"/login"} data-testid="loginNav">Login</NavLink>
                 </div>
