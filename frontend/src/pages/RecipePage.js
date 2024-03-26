@@ -240,10 +240,10 @@ const RecipeHead = (props) => {
                     <EllipsisMenu onDelete={props.onDelete} creator={recipe.username} route={props.route} />
                 </h1>
                 {stars.map((star, index) => (<span key={index}>{star}</span>))}
-                <p>{recipe.description}</p>
+                <p data-testid="recipedescription">{recipe.description}</p>
                 <p> Created By: {recipe.username} <br />
                     Creation date: {createdFormatted} <br />
-                    <i>Duration: {recipe.durationHours}h {recipe.durationMinutes}min</i>
+                    <i data-testid="duration">Duration: {recipe.durationHours}h {recipe.durationMinutes}min</i>
                 </p>
                 <RecipeKeywords keywords={recipe.keywords} onSearch={props.onSearch} /> <br />
             </div>
@@ -257,7 +257,7 @@ const RecipeHead = (props) => {
 const RecipeKeywords = (props) => {
 
     const words = props.keywords.map((w, i) => {
-        return <li key={i}><a onClick={() => props.onSearch(w.word)}>{w.word}</a></li>
+        return <li key={i} data-testid="likeyword"><a onClick={() => props.onSearch(w.word)}>{w.word}</a></li>
     });
 
     return (
@@ -269,7 +269,7 @@ const RecipeKeywords = (props) => {
 
 const RecipeIngredients = (props) => {
     const ingredientList = props.ingredients.map((ing, i) => {
-        return <tr key={i}><th>{ing.quantity} {ing.unit}</th><td>{ing.name}</td></tr>
+        return <tr key={i} data-testid="liingredient"><th>{ing.quantity} {ing.unit}</th><td>{ing.name}</td></tr>
     });
 
     return (
@@ -281,7 +281,7 @@ const RecipeIngredients = (props) => {
 
 const RecipeSteps = (props) => {
     const steps = props.steps.map((step, i) => {
-        return <li key={i}>{step.step} </li>
+        return <li key={i} data-testid="listep">{step.step} </li>
     });
 
     return (

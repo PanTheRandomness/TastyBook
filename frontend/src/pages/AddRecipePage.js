@@ -377,7 +377,7 @@ const AddRecipe = (props) => {
                                     <label>
                                         <input data-testid="visibleInput" className="recipeinput" type='checkbox' checked={visibleToAll} onChange={(e) => e.target.checked ? setVisibleToAll(1) : setVisibleToAll(0)} />
                                         Public
-                                        {visibleToAll ? null : <div style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage'>Recipe will only be visible to registered users</div>}
+                                        {visibleToAll ? null : <div style={{ color: "#412E27", fontStyle: "italic" }} className='visibilityMessage' data-testid="visibilityMessage">Recipe will only be visible to registered users</div>}
                                     </label>
                                 </td>
                             </tr>
@@ -431,8 +431,8 @@ const AddRecipe = (props) => {
                 </div>
                 <div className='recipeform-bottom'>
                     {!editing ?
-                        <button className='postbutton' onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1 || keywords.length < 1}>Save & Post Recipe</button> :
-                        <button className='saverecipebutton' onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1 || keywords.length < 1}>Save Recipe</button>
+                        <button className='postbutton' data-testid="postbutton" onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1 || keywords.length < 1}>Save & Post Recipe</button> :
+                        <button className='saverecipebutton' data-testid="saverecipebutton" onClick={postBtnClicked} disabled={!name || !description || (durationH == 0 && durationMin == 0) || ingredients.length < 1 || steps.length < 1 || keywords.length < 1}>Save Recipe</button>
                     }
                 </div>
             </div>

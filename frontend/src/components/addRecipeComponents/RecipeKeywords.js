@@ -4,8 +4,8 @@ const RecipeKeywords = (props) =>{
                     className='recipeform-keyword'
                     data-testid={`keyword-${i}`}
                     key={i}>{word}
-                    <button className='editremovebutton' onClick={() => props.onEdit(word)}>Edit keyword</button>
-                    <button className='editremovebutton' onClick={() => props.onRemove(word)}>Remove keyword</button>
+                    <button className='editremovebutton' onClick={() => props.onEdit(word)} data-testid={`edit-keyword-${i}`}>Edit keyword</button>
+                    <button className='editremovebutton' onClick={() => props.onRemove(word)} data-testid={`remove-keyword-${i}`}>Remove keyword</button>
                 </li>
     });
 
@@ -24,12 +24,12 @@ const KeywordDialog =({ isOpen, onClose, onAdd, onSaveEdited, editingKeyword, w,
                 <span className="close" onClick={onClose}>&times;</span>
                 <label>
                     <b className="modal-text">Type keyword:</b>
-                    <input type='text' className="modalInput" value={w} onChange={(e) => onWChange(e.target.value)}/><br/>
+                    <input type='text' className="modalInput" value={w} onChange={(e) => onWChange(e.target.value)} data-testid="keyword-input"/><br/>
                 </label>
                 {
                     editingKeyword?
-                    <button onClick={() => onSaveEdited(w)} disabled={!w}>Save Keyword</button>:
-                    <button onClick={() => onAdd(w)} disabled={!w}>Add Keyword</button>
+                    <button onClick={() => onSaveEdited(w)} disabled={!w} data-testid="savekeywordbutton">Save Keyword</button>:
+                    <button onClick={() => onAdd(w)} disabled={!w} data-testid="addkeywordbutton">Add Keyword</button>
                 }
             </div>
         </div>
