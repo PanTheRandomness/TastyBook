@@ -5,7 +5,7 @@ const { frontpageTest } = require("./tests/frontpageTest");
 const { reviewsTest } = require("./tests/reviewsTest");
 const { searchTest } = require("./tests/searchTest");
 const { shareModalTest } = require("./tests/shareModalTest");
-//const { registerTest } = require("./tests/shareModalTest");
+const { registerTest } = require("./tests/registerTest");
 
 const testAll = async () => {
     await frontpageTest();
@@ -14,7 +14,7 @@ const testAll = async () => {
     await favouriteTest();
     await shareModalTest();
     await deleteUserTest();
-    //await registerTest();
+    await registerTest();
 }
 
 testAll();
