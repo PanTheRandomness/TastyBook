@@ -1,14 +1,4 @@
-const { Builder, By, until } = require("selenium-webdriver");
-
-const loginTest = async () => {
-    let driver = await new Builder().forBrowser("chrome").build();
-    try {
-        await driver.get("http://localhost:3000");
-        await login(driver);
-    } finally {
-        await driver.quit();
-    }
-}
+const { By, until } = require("selenium-webdriver");
 
 const login = async (driver) => {
     try {
@@ -33,7 +23,5 @@ const login = async (driver) => {
         console.log("Login failed");
     }
 }
-
-loginTest();
 
 module.exports = { login };
