@@ -8,10 +8,9 @@ const recipetest = async () => {
         //Kirjaudutaan sisään
         login(driver);
         
-        addrecipetest(driver);
-        await driver.sleep(10000);
-        //editrecipetest(driver);
-        //deleterecipetest(driver);
+        await addrecipetest(driver);
+        await editrecipetest(driver);
+        await deleterecipetest(driver);
     } finally {
         await driver.quit();
     }
@@ -174,17 +173,32 @@ const addrecipetest = async (driver) => {
 
 const editrecipetest = async (driver) => {
     try{
+        console.log("starting editrecipetest");
         //Painetaan ellipsistä
+        await driver.wait(until.elementLocated(By.css("[data-testid='ellipsis']")), 5000);
+        await driver.findElement(By.css("[data-testid='ellipsis']")).click();
 
         //Painetaan edit recipe
+        await driver.wait(until.elementLocated(By.css("[data-testid='editrecipe']")), 5000);
+        await driver.findElement(By.css("[data-testid='editrecipe']")).click();
 
         //Muokataan otsikkoa ja kuvausta
+        await driver.findElement(By.css("[data-testid='recipeNameInput']")).sendKeys(" MODIFIED");
+        await driver.findElement(By.css("[data-testid='recipeDescriptionInput']")).sendKeys(" Modified");
+        console.log("Modified header and description");
 
-        //Painetaan tallenna
+        await driver.wait(until.elementLocated(By.css("[data-testid='saverecipebutton']")), 5000);
+        await driver.findElement(By.css("[data-testid='saverecipebutton']")).click();
 
         //Painetaan confirm
+        await driver.wait(until.elementLocated(By.css("[data-testid='save-dialog']")), 5000);
+        await driver.findElement(By.css("[data-testid='confirm-button']")).click();
 
-        //Odotetaan reseptin latautumista ja tarkistetaan oikeat tiedot
+        //Odotetaan, että reseptisivu latautuu ja tarkistetaan onko oikeat tiedot
+        await driver.wait(until.elementLocated(By.css("[data-testid='recipeheader']")), 5000);
+        await driver.wait(until.elementTextContains(driver.findElement(By.css("[data-testid='recipeheader']")), "Test Recipe MODIFIED"), 5000);
+        await driver.wait(until.elementTextContains(driver.findElement(By.css("[data-testid='recipedescription']")), "Testing, testing... Modified"), 5000);
+        console.log("Recipe modified successfully!");
 
     } catch (error) {
         console.error(error);
@@ -193,17 +207,29 @@ const editrecipetest = async (driver) => {
 
 const deleterecipetest = async (driver) => {
     try{
+        console.log("starting deleterecipetest");
         //Painetaan ellipsistä
+        await driver.wait(until.elementLocated(By.css("[data-testid='ellipsis']")), 5000);
+        await driver.findElement(By.css("[data-testid='ellipsis']")).click();
 
         //Painetaan delete recipe
+        await driver.wait(until.elementLocated(By.css("[data-testid='deleterecipe']")), 5000);
+        await driver.findElement(By.css("[data-testid='deleterecipe']")).click();
 
         //Painetaan confirm
+        await driver.wait(until.elementLocated(By.css("[data-testid='delete-dialog']")), 5000);
+        await driver.findElement(By.css("[data-testid='confirm-button']")).click();
 
-        //Odotetaan etusivun latautumista ja varmistetaan, ettei resepti ole olemassa
+        //Odotetaan etusivun latautumista ja varmistetaan, ettei resepti löydy sieltä
+        await driver.wait(until.elementLocated(By.className("recipeView")), 5000);
+        let recipeViews = await driver.findElements(By.className("recipeView"));
+        let count = recipeViews.length;
+        if (count === 10) console.log("Recipe was deleted successfully!");
+        else console.log("An error occured while deleting the recipe");
 
     } catch (error) {
         console.error(error);
     }
 }
-//ajo pois lopuksi, module.exports = { recipetest };
-recipetest();
+
+module.exports = { recipetest };
