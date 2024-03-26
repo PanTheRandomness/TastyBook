@@ -102,6 +102,7 @@ const Search = () => {
             name="keyword"
             value={searchParams.keyword}
             onChange={handleInputChange}
+            data-testid="keywordInput"
           />
         </div>
       )}
@@ -129,7 +130,7 @@ const Search = () => {
           />
         </div>
       )}
-      <button className="searchviewbtn" onClick={handleSearch} disabled={loading}>
+      <button className="searchviewbtn" data-testid = "searchviewbtn" onClick={handleSearch} disabled={loading}>
         {loading ? 'Searching...' : 'Search'}
       </button>
       {error && <div className="error-message">{error}</div>}
