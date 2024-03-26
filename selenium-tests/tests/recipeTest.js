@@ -8,12 +8,9 @@ const recipetest = async () => {
         //Kirjaudutaan sisään
         login(driver);
         
-        addrecipetest(driver);
-        await driver.sleep(5000);
-        editrecipetest(driver);
-        await driver.sleep(5000);
-        deleterecipetest(driver);
-        await driver.sleep(5000);
+        await addrecipetest(driver);
+        await editrecipetest(driver);
+        await deleterecipetest(driver);
     } finally {
         await driver.quit();
     }
