@@ -2,6 +2,7 @@ import { useState } from "react";
 import { forgotPassword } from "../api/userApi";
 import '../Styles/ForgotPassword.css';
 
+
 const ForgotPassword = () => {
     const [email, setEmail] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
