@@ -1,7 +1,7 @@
 const { Builder, By, until } = require("selenium-webdriver");
 const { login } = require("./loginTest");
 
-const reviewsTest = async () => {
+const favouriteTest = async () => {
     let driver = await new Builder().forBrowser(process.env.BROWSER || "chrome").build();
     try {
         await driver.get("http://localhost:3000");
@@ -27,26 +27,28 @@ const reviewsTest = async () => {
         console.log("Navigated to recipe page.");
 
         // Now, you are on the recipe page
-        // Locate the review input field and enter some text
-        await driver.findElement(By.css("[data-testid='reviewInput']")).sendKeys("This is a test review.");
-        console.log("Entered review text.");
+        // Locate the favourite button and click it
+        await driver.findElement(By.css("[data-testid='saveToFavouritesButton']")).click();
+        console.log("Clicked on the 'Add to favourites' button.");
 
-        // Select a rating
-        await driver.findElement(By.css("[data-testid='ratingselect']")).sendKeys("5");
-        console.log("Selected rating.");
+        // Go back to the recipe list page
+        await driver.findElement(By.css("[data-testid='favouriteNav']")).click();
+        console.log("Navigated back to recipe list page.");
+        console.log("Favourite add successfully.");
 
-        // Click the post review button
-        await driver.findElement(By.css("[data-testid='postreviewbtn']")).click();
-        console.log("Clicked post review button.");
+        // Locate and click on the specific recipe again to navigate to its page
+        await driver.wait(until.elementLocated(By.xpath("//*[contains(text(), 'Amazing Apple Pie')]")), 5000).click(); 
+        console.log("Navigated to recipe page again.");
 
-        // Wait for the review to be posted
-        await driver.wait(until.elementLocated(By.css(".review")), 5000);
-        console.log("Review posted successfully.");
+        // Locate and click on the remove from favourites button
+        await driver.findElement(By.css("[data-testid='saveToFavouritesButton']")).click();
+        console.log("Clicked on the 'Remove from favourites' button.");
 
-        console.log("Reviews test finished");
+        console.log("Favourite removed successfully.");
+        console.log("Favourite test finished");
     } finally {
         await driver.quit();
     }
 }
 
-module.exports = { reviewsTest };
+module.exports = { favouriteTest };
