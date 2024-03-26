@@ -22,7 +22,7 @@ const searchTest = async (keyword) => {
 
         // Tulosta hakutulokset
         const searchResults = await driver.findElements(By.css(".recipeViewContainer > li"));
-        console.log("Search results: search successful!");
+        console.log("Search successful!");
         for (let i = 0; i < searchResults.length; i++) {
             console.log(await searchResults[i].getText());
         }
