@@ -66,7 +66,7 @@ describe('RecipePage component', () => {
             mockRecipe.reviews.forEach(review => {
                 const userElement = getByText(`${review.username}:`);
                 expect(userElement).toBeInTheDocument();
-                const ratingAndCommentRegex = new RegExp(`Rating: ${review.rating}.*Comment: ${review.text}`);
+                const ratingAndCommentRegex = new RegExp(`${review.rating}/5 *Comment: ${review.text}`);
                 const reviewText = queryByText(ratingAndCommentRegex);
                 expect(reviewText).toBeInTheDocument();
             });
