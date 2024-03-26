@@ -35,10 +35,10 @@ const Register = () => {
                     <form onSubmit={onRegisterClicked}>
                         <h1>Register</h1>
                         {error && <div className="error-message">{error}</div>}
-                        <input className="registerForminput" placeholder="name" value={name} onChange={e => setName(e.target.value)} />
-                        <input className="registerForminput" placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
-                        <input className="registerForminput" placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
-                        <input className="registerForminput" placeholder="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                        <input className="registerForminput" placeholder="name" data-testid="name" value={name} onChange={e => setName(e.target.value)} />
+                        <input className="registerForminput" placeholder="email" data-testid="email" value={email} onChange={e => setEmail(e.target.value)} />
+                        <input className="registerForminput" placeholder="username" data-testid="username" value={username} onChange={e => setUsername(e.target.value)} />
+                        <input className="registerForminput" placeholder="password" data-testid="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
                         <button className="registerFormbutton" disabled={!name || !email || !username || !password} onSubmit={onRegisterClicked} data-testid="register-button">Register</button>
                     </form>
                     <div className="registerFormLoginContainer">
@@ -49,7 +49,7 @@ const Register = () => {
                 {isSuccessDialogOpen && (
                     <div className="dialog-overlay" onClick={closeSuccessDialog}>
                         <div className="dialog-content">
-                            <h3>You have received an email with a confirmation link.</h3>
+                            <h3 data-testid="confirmation-message">You have received an email with a confirmation link.</h3>
                             <button className="dialog-button" onClick={closeSuccessDialog}>OK</button>
                         </div>
                     </div>

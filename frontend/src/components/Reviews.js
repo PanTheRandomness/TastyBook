@@ -15,7 +15,7 @@ const Reviews = (props) => {
 
     const reviewItems = reviews.map((review) => (
         <div key={review.id} className="review">
-            <p style={{ color: 'white' }}><strong>{review.username}: </strong>Rating: {review.rating} Comment: {review.text}</p>
+            <p style={{ color: 'white' }}><strong>{review.username}: </strong><img src='/rating_star.png' alt="Star Rating" className='review-rating-star' /> {review.rating}/5 <br /> Comment: {review.text}</p>
         </div>
     ));
 

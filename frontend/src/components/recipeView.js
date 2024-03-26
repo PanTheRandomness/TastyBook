@@ -28,7 +28,7 @@ const RecipeView = (props) => {
                 {recipe.username ? <div>By: {recipe.username}</div> :
                     <div>By: Deleted user</div>}
             </div>
-            {/*<img src='/rating_star.png' alt="Star Rating"/>*/}{/*Arvosanan KA tähän */}
+            
             <div className="image-container">
                 {image && <img src={URL.createObjectURL(image)} alt="Recipe Image" className="recipeimage" />}
             </div>

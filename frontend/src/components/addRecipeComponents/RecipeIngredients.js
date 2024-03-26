@@ -6,8 +6,8 @@ const RecipeIngredients = (props) => {
             data-testid={`ingredient-${i}`}>
             <td><b>{ing.quantity} {ing.unit}</b>{ing.name}</td>
             <td>
-                <button className='editremovebutton' onClick={() => props.onEdit(ing)}>Edit ingredient</button>
-                <button className='editremovebutton' onClick={() => props.onRemove(ing)}>Remove ingredient</button>
+                <button className='editremovebutton' data-testid={`edit-ingredient-${i}`} onClick={() => props.onEdit(ing)}>Edit ingredient</button>
+                <button className='editremovebutton' data-testid={`remove-ingredient-${i}`} onClick={() => props.onRemove(ing)}>Remove ingredient</button>
             </td>
         </tr>
     });
