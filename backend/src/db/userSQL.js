@@ -21,7 +21,7 @@ const getAllUsers = () => {
 }
 
 const deleteUser = (userId) => {
-    const query = "DELETE FROM user WHERE id=?";
+    const query = "DELETE FROM user WHERE id=? AND admin IS NULL";
     return executeSQL(query, [userId]);
 }
 

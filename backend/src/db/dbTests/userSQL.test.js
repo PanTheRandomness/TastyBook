@@ -80,7 +80,7 @@ describe("deleteUser", () => {
         const result = await deleteUser(userId);
 
         // Check if executeSQL is called with the correct query and parameters
-        expect(executeSQL).toHaveBeenCalledWith("DELETE FROM user WHERE id=?", [userId]);
+        expect(executeSQL).toHaveBeenCalledWith("DELETE FROM user WHERE id=? AND admin IS NULL", [userId]);
 
         // Check if the function returns the expected result
         expect(result).toEqual({ affectedRows: 1 });
@@ -95,7 +95,7 @@ describe("deleteUser", () => {
         const result = await deleteUser(userId);
 
         // Check if executeSQL is called with the correct query and parameters
-        expect(executeSQL).toHaveBeenCalledWith("DELETE FROM user WHERE id=?", [userId]);
+        expect(executeSQL).toHaveBeenCalledWith("DELETE FROM user WHERE id=? AND admin IS NULL", [userId]);
 
         // Check if the function returns the expected result
         expect(result).toEqual({ affectedRows: 0 });

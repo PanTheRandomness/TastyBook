@@ -87,7 +87,8 @@ const getAllUsers = async (req, res) => {
 const deleteUser = async (req, res) => {
     try {
         const { userId } = req.params;
-        await sql.deleteUser(userId);
+        const result = await sql.deleteUser(userId);
+        if (result.affectedRows === 0) return res.status(404).send();
         res.status(200).send();
     } catch (error) {
         res.status(500).send();

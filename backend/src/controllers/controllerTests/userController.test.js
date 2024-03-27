@@ -276,11 +276,20 @@ describe("deleteUser", () => {
         jest.clearAllMocks();
     });
     it("should delete a user and return 200 status on success", async () => {
-
+        sql.deleteUser.mockResolvedValue({ affectedRows: 1 });
         await deleteUser(req, res);
 
         expect(sql.deleteUser).toHaveBeenCalledWith(userId);
         expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.send).toHaveBeenCalled();
+    });
+
+    it("should 404 status if affectedRows is 0", async () => {
+        sql.deleteUser.mockResolvedValue({ affectedRows: 0 });
+        await deleteUser(req, res);
+
+        expect(sql.deleteUser).toHaveBeenCalledWith(userId);
+        expect(res.status).toHaveBeenCalledWith(404);
         expect(res.send).toHaveBeenCalled();
     });
 
