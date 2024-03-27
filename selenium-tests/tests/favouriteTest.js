@@ -61,4 +61,6 @@ const favouriteTest = async () => {
     }
 }
 
+favouriteTest();
+
 module.exports = { favouriteTest };

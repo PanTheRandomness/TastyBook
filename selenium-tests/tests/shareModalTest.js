@@ -41,8 +41,7 @@ const shareModalTest = async () => {
          await driver.quit();
      }
  }
- 
 
-        
+shareModalTest();
 
- module.exports = { shareModalTest };
+module.exports = { shareModalTest };

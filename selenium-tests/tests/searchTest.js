@@ -31,5 +31,7 @@ const searchTest = async () => {
     }
 };
 
+searchTest();
+
 module.exports = { searchTest};
 

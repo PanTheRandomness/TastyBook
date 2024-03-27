@@ -35,6 +35,6 @@ const frontpageTest = async () => {
     }
 }
 
-//frontpageTest();
+frontpageTest();
 
 module.exports = { frontpageTest };

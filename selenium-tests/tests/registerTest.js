@@ -37,4 +37,6 @@ const registerTest = async () => {
     }
 }
 
+registerTest();
+
 module.exports = { registerTest };

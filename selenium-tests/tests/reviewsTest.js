@@ -49,4 +49,6 @@ const reviewsTest = async () => {
     }
 }
 
+reviewsTest();
+
 module.exports = { reviewsTest };

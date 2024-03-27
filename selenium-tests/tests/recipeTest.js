@@ -232,4 +232,6 @@ const deleterecipetest = async (driver) => {
     }
 }
 
+recipetest();
+
 module.exports = { recipetest };

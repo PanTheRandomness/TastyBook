@@ -70,5 +70,6 @@ const login = async (driver) => {
     }
 }
 
+deleteUserTest();
 
 module.exports = { deleteUserTest };
