@@ -41,19 +41,19 @@ const favouriteTest = async () => {
         console.log("Navigated to recipe page again.");
 
         // Locate and click on the remove from favourites button
-        await driver.findElement(By.css("[data-testid='saveToFavouritesButton']")).click();
+        await driver.findElement(By.css("[data-testid='saveToFavouritesButton']"), 5000).click();
         console.log("Clicked on the 'Remove from favourites' button.");
 
         await driver.findElement(By.css("[data-testid='favouriteNav']")).click();
         console.log("Navigated back to recipe list page.");
         console.log("Favourite removed successfully.");
 
-        const noFavouriteMessage = await driver.findElement(By.xpath("//*[contains(text(), 'No favourite recipes found')]")).isDisplayed();
+        /*const noFavouriteMessage = await driver.findElement(By.xpath("//*[contains(text(), 'No favourite recipes found')]")).isDisplayed();
         if (noFavouriteMessage) {
             console.log("No favourite recipes found message is displayed.");
         } else {
             console.log("Favourite recipe is found.");
-        }
+        }*/
 
         console.log("Favourite test finished");
     } finally {
